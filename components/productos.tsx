@@ -1,6 +1,11 @@
+'use client';
+import {usePathname} from 'next/navigation';
 export async function ProductosComponent() {
-  const response = await fetch('http://localhost:3000/api/products');
+  const pathname = usePathname();
+
+  const response = await fetch(location.href + 'api/products');
   const {newRecords} = await response.json();
+  console.log(pathname.length);
 
   return (
     <div>
