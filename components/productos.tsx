@@ -1,7 +1,7 @@
 export async function ProductosComponent() {
   const response = await fetch('http://localhost:3000/api/products');
   const {newRecords} = await response.json();
-  console.log(newRecords);
+
   return (
     <div>
       {newRecords.length}
