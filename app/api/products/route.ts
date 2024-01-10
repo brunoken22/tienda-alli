@@ -35,5 +35,6 @@ export async function GET() {
     return Response.json(newRecords);
   } catch (e) {
     console.log(e);
+    return Response.json(e);
   }
 }
