@@ -20,6 +20,7 @@ export async function ProductosComponent() {
               alt={item.Name}
               className='w-[100px] h-full object-cover
               '
+              loading='lazy'
             />
             <div className='flex flex-col gap-4'>
               <h2>{item.Name || 'prueba'} </h2>

@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "airtable": "^0.12.2",
+    "airtable": "^0.8.1",
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18"
