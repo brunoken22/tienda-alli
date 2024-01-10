@@ -2,14 +2,14 @@ import Link from 'next/link';
 
 export async function ProductosComponent() {
   const response = await fetch(
-    process.env.API + '/api/products' || 'http://localhost:3000/api/products',
+    process.env.API || 'http://localhost:3000/api/products',
     {
       cache: 'no-cache',
     }
   );
   const data = await response.json();
   return data ? (
-    <div className='flex  justify-center flex-wrap gap-8 m-8'>
+    <div className='flex  justify-center flex-wrap gap-8 m-8 max-md:m-2'>
       {data.map((item: any) => {
         return (
           <div
