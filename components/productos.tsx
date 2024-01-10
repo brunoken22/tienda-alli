@@ -35,16 +35,12 @@ export async function ProductosComponent() {
         ))}
         <div className='fixed bottom-5 right-5 z-9 bg-[#40ea41] rounded-full p-2 shadow-[0_0_10px_0.5px] hover:opacity-80'>
           <Link href='https://api.whatsapp.com/send?phone=+541159102865&text=Hola%20te%20hablo%20desde%20la%20p%C3%A1gina'>
-            <a>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 480 512'
-                width='30px'
-                height='30px'
-                fill='#fff'>
-                {/* ...tu contenido SVG */}
-              </svg>
-            </a>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 480 512'
+              width='30px'
+              height='30px'
+              fill='#fff'></svg>
           </Link>
         </div>
       </div>
