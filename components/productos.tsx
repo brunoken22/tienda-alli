@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export async function ProductosComponent() {
   const response = await fetch(
-    process.env.API || 'http://localhost:3000/api/products',
+    process.env.API + '/api/products' || 'http://localhost:3000/api/products',
     {
       cache: 'no-cache',
     }
