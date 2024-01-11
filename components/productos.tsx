@@ -2,19 +2,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 export async function ProductosComponent() {
   try {
-    // const response = await fetch(
-    //   process.env.API || 'http://localhost:3000/api/products',
-    //   {
-    //     cache: 'no-cache',
-    //   }
-    // );
+    const response = await fetch(
+      process.env.API || 'http://localhost:3000/api/product'
+    );
 
-    // if (!response.ok) {
-    //   throw new Error(`Error: ${response.status} - ${response.statusText}`);
-    // }
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
 
-    // const data = await response.json();
-    const data: any = [];
+    const data = await response.json();
+    // const data: any = [];
     return (
       <div className='flex justify-center flex-wrap gap-8 m-8 max-md:m-2'>
         {data.length &&
@@ -25,6 +22,9 @@ export async function ProductosComponent() {
               <Image
                 src={item.img}
                 alt={item.Name}
+                // placeholder='blur'
+                width={100}
+                height={100}
                 className='w-[100px] h-full object-cover'
                 loading='lazy'
               />
