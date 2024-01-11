@@ -4,6 +4,7 @@ export const runtime = 'edge';
 
 export async function ProductosComponent() {
   const data = await getDataProduct();
+  console.log(data.length);
   return (
     <div className='flex justify-center flex-wrap gap-8 m-8 max-md:m-2'>
       {data.length &&
