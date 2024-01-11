@@ -3,11 +3,7 @@ import Image from 'next/image';
 export const runtime = 'edge';
 
 export async function ProductosComponent() {
-  const response = await fetch(
-    process.env.API || 'http://localhost:3000/api/product'
-  );
-  const data = await response.json();
-  // const data: any = [];
+  const data = await getDataProduct();
   return (
     <div className='flex justify-center flex-wrap gap-8 m-8 max-md:m-2'>
       {data.length &&
@@ -44,4 +40,11 @@ export async function ProductosComponent() {
       </div>
     </div>
   );
+}
+export async function getDataProduct() {
+  const response = await fetch(
+    process.env.API || 'http://localhost:3000/api/product'
+  );
+  const data = await response.json();
+  return data;
 }
