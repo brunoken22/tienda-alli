@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
+export const runtime = 'edge';
+
 export async function ProductosComponent() {
   const response = await fetch(
     process.env.API || 'http://localhost:3000/api/product'
