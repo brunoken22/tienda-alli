@@ -78,6 +78,14 @@ export function ProductosComponent() {
           </Link>
         </div>
       </div>
+      <Link
+        href={'https://www.facebook.com/marketplace/profile/100025099413594/'}
+        className='flex justify-center gap-4 items-center mt-8 flex-wrap'>
+        <Image src={'/facebook.svg'} width={100} height={100} alt='facebook' />
+        <h2 className='text-3xl font-bold max-md:text-center'>
+          VISÍTANOS <br></br>EN NUESTRO<br></br> MARKETPLACE
+        </h2>
+      </Link>
     </>
   );
 }
