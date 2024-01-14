@@ -17,7 +17,7 @@ export function ProductosComponent() {
               key={item.id}
               className='flex gap-4 w-[350px] items-center  bg-[#ffefa9] rounded-lg'>
               <Image
-                src={item.img}
+                src={item.Images[0].url}
                 alt={item.Name}
                 // placeholder='blur'
                 width={100}
@@ -27,7 +27,7 @@ export function ProductosComponent() {
               />
               <div className='flex flex-col gap-4'>
                 <h2>{item.Name || 'prueba'} </h2>
-                <p className='font-bold'>${item.price}</p>
+                <p className='font-bold'>${item['Unit cost']}</p>
               </div>
             </div>
           ))}

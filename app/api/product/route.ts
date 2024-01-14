@@ -1,9 +1,9 @@
-import {airtableData} from '@/lib/airtable';
+import {index} from '@/lib/algolia';
 import {NextResponse} from 'next/server';
 export async function GET() {
   try {
-    const data = await airtableData();
-    return NextResponse.json(data);
+    const data = await index.search('');
+    return NextResponse.json(data.hits);
   } catch (e) {
     return NextResponse.json(e);
   }
