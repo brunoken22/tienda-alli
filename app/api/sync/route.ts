@@ -3,7 +3,7 @@ import {index} from '@/lib/algolia';
 export async function GET() {
   base('Furniture')
     .select({
-      pageSize: 10,
+      pageSize: 20,
     })
     .eachPage(
       async function page(records, fetchNextPage) {
@@ -13,6 +13,7 @@ export async function GET() {
             ...r.fields,
           };
         });
+        console.log(object.length);
 
         await index.saveObjects(object);
         fetchNextPage();
