@@ -1,4 +1,6 @@
-import {index} from '@/lib/algolia';
+export const dynamic = "force-dynamic";
+
+import { index } from '@/lib/algolia';
 import {NextResponse} from 'next/server';
 export async function GET(req: Request) {
   try {
