@@ -1,5 +1,6 @@
 import Airtable from 'airtable';
 export async function airtableData() {
+  console.log(process.env.AIRTABLE);
   return new Promise<any[]>((resolve, reject) => {
     const base = new Airtable({apiKey: process.env.AIRTABLE}).base(
       'appXu0aYFo1OsZRi0'
