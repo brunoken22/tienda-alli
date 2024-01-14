@@ -1,16 +1,17 @@
+'use client';
 import Link from 'next/link';
 import Image from 'next/image';
 import {GetDataProduct} from '@/lib/hook';
 
-export async function ProductosComponent() {
-  const {data, isLoading} = await GetDataProduct();
+export function ProductosComponent() {
+  const {data, isLoading} = GetDataProduct();
   return (
     <>
       <h2 className='text-center font-bold text-2xl'>
         Útiles escolares y mochilas
       </h2>
       <div className='flex justify-center flex-wrap gap-8 m-8 max-md:m-2'>
-        {data.length &&
+        {data?.length &&
           data.map((item: any) => (
             <div
               key={item.id}

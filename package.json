@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev ",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "airtable": "^0.12.2",
-    "next": "^14.0.5-canary.1",
+    "next": "^14.0.4",
     "react": "^18",
     "react-dom": "^18",
     "swr": "^2.2.4"
