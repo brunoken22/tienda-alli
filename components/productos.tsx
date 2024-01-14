@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-export const runtime = 'edge';
 
 export async function ProductosComponent() {
   const data = await getDataProduct();
