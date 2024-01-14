@@ -1,12 +1,11 @@
 import Airtable from 'airtable';
 export async function airtableData() {
-  return new Promise<any[]>((resolve, reject) => {
-    const base = new Airtable({apiKey: process.env.AIRTABLE}).base(
-      'appXu0aYFo1OsZRi0'
-    );
+  const base = new Airtable({apiKey: process.env.AIRTABLE}).base(
+    'appXu0aYFo1OsZRi0'
+  );
+  let newRecords: any[] = [];
 
-    let newRecords: any[] = [];
-
+  return new Promise((resolve, reject) => {
     base('Furniture')
       .select({
         pageSize: 10,
