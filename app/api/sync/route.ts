@@ -13,6 +13,7 @@ export async function GET() {
             ...r.fields,
           };
         });
+
         await index.saveObjects(object);
         fetchNextPage();
       },

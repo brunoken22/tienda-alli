@@ -1,7 +1,7 @@
-import useSWR from 'swr';
+import useSWRImmutable from 'swr/immutable';
 
 export function GetDataProduct(search?: string) {
-  const {data, isLoading} = useSWR(
+  const {data, isLoading} = useSWRImmutable(
     `/api/product${search ? '?q=' + search : ''}`,
     fetcher
   );
