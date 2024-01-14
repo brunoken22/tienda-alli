@@ -7,12 +7,13 @@ import React, {useState} from 'react';
 
 export function ProductosComponent() {
   const [search, setSearch] = useState('');
-  const {data} = GetDataProduct(search);
+  const {data, isLoading} = GetDataProduct(search);
   const handleChange = (e: React.ChangeEvent) => {
     e.preventDefault();
     const target = e.target as HTMLInputElement;
     setSearch(target.value);
   };
+
   return (
     <>
       <h2 className='text-center font-bold text-2xl mt-4'>
@@ -28,7 +29,7 @@ export function ProductosComponent() {
             className='bg-transparent focus-visible:outline-none'
           />
           <button>
-            <img src='/search.svg' alt='search' />
+            <Image src='/search.svg' alt='search' width={20} height={20} />
           </button>
         </div>
       </div>
@@ -55,10 +56,15 @@ export function ProductosComponent() {
                 </div>
               </div>
             ))
-          : [
+          : data?.length == 0
+          ? 'No hay producto'
+          : ''}
+        {isLoading
+          ? [
               1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
               20,
-            ].map((item: number) => <EsqueletonProduct key={item} />)}
+            ].map((item: number) => <EsqueletonProduct key={item} />)
+          : ''}
         <div className='fixed bottom-5 right-5 z-9 bg-[#40ea41] rounded-full p-2 shadow-[0_0_10px_0.5px] hover:opacity-80'>
           <Link href='https://api.whatsapp.com/send?phone=+541159102865&text=Hola%20te%20hablo%20desde%20la%20p%C3%A1gina'>
             <svg
