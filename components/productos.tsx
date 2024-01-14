@@ -16,7 +16,7 @@ export function ProductosComponent() {
           ? data.map((item: any) => (
               <div
                 key={item.objectID}
-                className='flex gap-4 w-[350px] items-center  bg-[#ffefa9] rounded-lg'>
+                className='flex gap-4 w-[350px] items-center  bg-[#ffefa9] rounded-lg h-[130px]'>
                 <Image
                   src={item.Images[0].url}
                   alt={item.Name}
