@@ -6,7 +6,6 @@ export async function GET() {
       page: 0, // Número de página
       hitsPerPage: 50,
     });
-    console.log(data.hits.length);
     return NextResponse.json(data.hits);
   } catch (e) {
     return NextResponse.json(e);

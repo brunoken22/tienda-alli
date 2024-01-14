@@ -2,35 +2,42 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import {GetDataProduct} from '@/lib/hook';
+import {EsqueletonProduct} from './esqueleton';
 
 export function ProductosComponent() {
-  const {data, isLoading} = GetDataProduct();
+  const {data} = GetDataProduct();
   return (
     <>
-      <h2 className='text-center font-bold text-2xl'>
+      <h2 className='text-center font-bold text-2xl mt-4'>
         Útiles escolares y mochilas
       </h2>
-      <div className='flex justify-center flex-wrap gap-8 m-8 max-md:m-2'>
-        {data?.length &&
-          data.map((item: any) => (
-            <div
-              key={item.objectID}
-              className='flex gap-4 w-[350px] items-center  bg-[#ffefa9] rounded-lg'>
-              <Image
-                src={item.Images[0].url}
-                alt={item.Name}
-                // placeholder='blur'
-                width={100}
-                height={100}
-                className='w-[100px] h-full object-cover'
-                loading='lazy'
-              />
-              <div className='flex flex-col gap-4'>
-                <h2>{item.Name || 'prueba'} </h2>
-                <p className='font-bold'>${item['Unit cost']}</p>
+      <div className='flex justify-center flex-wrap gap-8 m-8 max-md:m-2 mt-16 max-md:mt-10'>
+        {data?.length
+          ? data.map((item: any) => (
+              <div
+                key={item.objectID}
+                className='flex gap-4 w-[350px] items-center  bg-[#ffefa9] rounded-lg'>
+                <Image
+                  src={item.Images[0].url}
+                  alt={item.Name}
+                  width={100}
+                  height={100}
+                  quality={100}
+                  className='w-[100px] h-full object-cover'
+                  loading='lazy'
+                />
+                <div className='flex flex-col gap-4'>
+                  <h2 className='h-[48px] overflow-hidden'>
+                    {item.Name || 'prueba'}{' '}
+                  </h2>
+                  <p className='font-bold'>${item['Unit cost']}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          : [
+              1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+              20,
+            ].map((item: number) => <EsqueletonProduct key={item} />)}
         <div className='fixed bottom-5 right-5 z-9 bg-[#40ea41] rounded-full p-2 shadow-[0_0_10px_0.5px] hover:opacity-80'>
           <Link href='https://api.whatsapp.com/send?phone=+541159102865&text=Hola%20te%20hablo%20desde%20la%20p%C3%A1gina'>
             <svg
