@@ -3,14 +3,35 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {GetDataProduct} from '@/lib/hook';
 import {EsqueletonProduct} from './esqueleton';
+import React, {useState} from 'react';
 
 export function ProductosComponent() {
-  const {data} = GetDataProduct();
+  const [search, setSearch] = useState('');
+  const {data} = GetDataProduct(search);
+  const handleChange = (e: React.ChangeEvent) => {
+    e.preventDefault();
+    const target = e.target as HTMLInputElement;
+    setSearch(target.value);
+  };
   return (
     <>
       <h2 className='text-center font-bold text-2xl mt-4'>
         Útiles escolares y mochilas
       </h2>
+      <div className='flex justify-center  mt-4'>
+        <div className='flex justify-center bg-gray-200 p-2'>
+          <input
+            type='text'
+            name='search'
+            id=''
+            onChange={handleChange}
+            className='bg-transparent focus-visible:outline-none'
+          />
+          <button>
+            <img src='/search.svg' alt='search' />
+          </button>
+        </div>
+      </div>
       <div className='flex justify-center flex-wrap gap-8 m-8 max-md:m-2 mt-16 max-md:mt-10'>
         {data?.length
           ? data.map((item: any) => (

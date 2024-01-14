@@ -1,7 +1,10 @@
 import useSWR from 'swr';
 
-export function GetDataProduct() {
-  const {data, isLoading} = useSWR('/api/product', fetcher);
+export function GetDataProduct(search?: string) {
+  const {data, isLoading} = useSWR(
+    `/api/product${search ? '?q=' + search : ''}`,
+    fetcher
+  );
   return {data, isLoading};
 }
 
