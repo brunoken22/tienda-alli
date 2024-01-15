@@ -26,6 +26,7 @@ export function ProductosComponent() {
             name='search'
             id=''
             onChange={handleChange}
+            placeholder='Mochila'
             className='bg-transparent focus-visible:outline-none'
           />
           <button>
