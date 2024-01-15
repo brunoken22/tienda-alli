@@ -5,15 +5,25 @@ import {GetDataProduct} from '@/lib/hook';
 import {EsqueletonProduct} from './esqueleton';
 import React, {useState} from 'react';
 import {useDebouncedCallback} from 'use-debounce';
+import {useRouter, useSearchParams} from 'next/navigation';
 
 export function ProductosComponent() {
+  const {replace} = useRouter();
+  const searchParams = useSearchParams();
   const [search, setSearch] = useState('');
   const [openLinkProduct, setOpenLinkProduct] = useState('');
   const {data, isLoading} = GetDataProduct(search);
 
   const debounced = useDebouncedCallback((e: React.ChangeEvent) => {
     const target = e.target as HTMLInputElement;
+    const params = new URLSearchParams(searchParams);
+    if (target.value) {
+      params.set('q', target.value);
+    } else {
+      params.delete('q');
+    }
     setSearch(target.value);
+    replace(`?${params.toString()}`);
   }, 300);
   return (
     <>
@@ -29,6 +39,7 @@ export function ProductosComponent() {
             onChange={debounced}
             placeholder='Mochila'
             className='bg-transparent focus-visible:outline-none placeholder:white-500'
+            defaultValue={searchParams.get('q')?.toString()}
           />
           <button>
             <Image src='/search.svg' alt='search' width={20} height={20} />
