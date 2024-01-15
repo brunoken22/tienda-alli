@@ -3,7 +3,7 @@ import {index} from '@/lib/algolia';
 export async function GET() {
   base('Furniture')
     .select({
-      pageSize: 20,
+      pageSize: 100,
     })
     .eachPage(
       async function page(records, fetchNextPage) {
@@ -18,10 +18,11 @@ export async function GET() {
         await index.saveObjects(object);
         fetchNextPage();
       },
-      async function done(err) {
+      function done(err) {
         if (err) {
           return;
         }
+        console.log('TERMINADO');
       }
     );
   return Response.json('Todo bien la API');
