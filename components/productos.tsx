@@ -13,7 +13,7 @@ export function ProductosComponent() {
     const target = e.target as HTMLInputElement;
     setSearch(target.value);
   };
-
+  console.log(data?.length);
   return (
     <>
       <h2 className='text-center font-bold text-2xl mt-4'>
@@ -27,7 +27,7 @@ export function ProductosComponent() {
             id=''
             onChange={handleChange}
             placeholder='Mochila'
-            className='bg-transparent focus-visible:outline-none'
+            className='bg-transparent focus-visible:outline-none placeholder:white-500'
           />
           <button>
             <Image src='/search.svg' alt='search' width={20} height={20} />
@@ -46,7 +46,7 @@ export function ProductosComponent() {
                   width={100}
                   height={100}
                   quality={100}
-                  className='w-[100px] h-full object-cover'
+                  className=' h-full object-cover rounded-b-lg rounded-l-lg'
                   loading='lazy'
                 />
                 <div className='flex flex-col gap-4'>
