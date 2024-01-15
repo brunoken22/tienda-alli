@@ -1,6 +1,6 @@
 import Airtable from 'airtable';
 import {index} from './algolia';
-const base = new Airtable({apiKey: process.env.AIRTABLE}).base(
+export const base = new Airtable({apiKey: process.env.AIRTABLE}).base(
   'appXu0aYFo1OsZRi0'
 );
 export async function getDataAirtable() {
