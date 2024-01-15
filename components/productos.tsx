@@ -4,17 +4,17 @@ import Image from 'next/image';
 import {GetDataProduct} from '@/lib/hook';
 import {EsqueletonProduct} from './esqueleton';
 import React, {useState} from 'react';
+import {useDebouncedCallback} from 'use-debounce';
 
 export function ProductosComponent() {
   const [search, setSearch] = useState('');
   const [openLinkProduct, setOpenLinkProduct] = useState('');
   const {data, isLoading} = GetDataProduct(search);
-  const handleChange = (e: React.ChangeEvent) => {
-    e.preventDefault();
+
+  const debounced = useDebouncedCallback((e: React.ChangeEvent) => {
     const target = e.target as HTMLInputElement;
     setSearch(target.value);
-  };
-
+  }, 300);
   return (
     <>
       <h2 className='text-center font-bold text-2xl mt-4'>
@@ -26,7 +26,7 @@ export function ProductosComponent() {
             type='text'
             name='search'
             id=''
-            onChange={handleChange}
+            onChange={debounced}
             placeholder='Mochila'
             className='bg-transparent focus-visible:outline-none placeholder:white-500'
           />
