@@ -7,7 +7,7 @@ export async function GET() {
   console.log('GET', data);
   return Response.json(data);
 }
-export async function getDataAirtable() {
+async function getDataAirtable() {
   const newBase = base('Furniture').select({
     pageSize: 100,
   });
