@@ -7,13 +7,13 @@ import React, {useState} from 'react';
 
 export function ProductosComponent() {
   const [search, setSearch] = useState('');
+  const [openLinkProduct, setOpenLinkProduct] = useState('');
   const {data, isLoading} = GetDataProduct(search);
   const handleChange = (e: React.ChangeEvent) => {
     e.preventDefault();
     const target = e.target as HTMLInputElement;
     setSearch(target.value);
   };
-  console.log(data?.length);
   return (
     <>
       <h2 className='text-center font-bold text-2xl mt-4'>
@@ -40,15 +40,21 @@ export function ProductosComponent() {
               <div
                 key={item.objectID}
                 className='flex gap-4 w-[350px] items-center  bg-[#ffefa9] rounded-lg h-[130px]'>
-                <Image
-                  src={item.Images[0].url}
-                  alt={item.Name}
-                  width={100}
-                  height={100}
-                  quality={100}
-                  className=' h-full object-cover rounded-b-lg rounded-l-lg'
-                  loading='lazy'
-                />
+                <button
+                  onClick={() => {
+                    setOpenLinkProduct(item.Images[0].url);
+                    document.body.style.overflow = 'hidden';
+                  }}>
+                  <Image
+                    src={item.Images[0].url}
+                    alt={item.Name}
+                    width={100}
+                    height={100}
+                    quality={100}
+                    className=' w-[100px] h-full object-cover rounded-b-lg rounded-l-lg'
+                    loading='lazy'
+                  />
+                </button>
                 <div className='flex flex-col gap-4'>
                   <h2 className='h-[48px] overflow-hidden'>
                     {item.Name || 'prueba'}{' '}
@@ -79,6 +85,30 @@ export function ProductosComponent() {
           </Link>
         </div>
       </div>
+      {openLinkProduct ? (
+        <>
+          <div className='flex flex-col fixed inset-0 backdrop-brightness-50	justify-center items-center'>
+            <div className='fixed top-8 right-8 z-10'>
+              {' '}
+              <button
+                onClick={() => {
+                  setOpenLinkProduct('');
+                  document.body.style.overflow = 'auto';
+                }}>
+                {' '}
+                <Image src='/close.svg' width={30} height={30} alt='close' />
+              </button>
+            </div>
+            <Image
+              src={openLinkProduct}
+              width={600}
+              height={600}
+              alt='product'
+              className='w-[60%] max-md:w-[80%] h-[90%] object-contain'
+            />
+          </div>
+        </>
+      ) : null}
       <Link
         href={'https://www.facebook.com/marketplace/profile/100025099413594/'}
         className='flex justify-center gap-4 items-center mt-12 flex-wrap mb-8'>
