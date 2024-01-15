@@ -25,5 +25,6 @@ export async function GET() {
         console.log('TERMINADO');
       }
     );
+
   return Response.json('Todo bien la API');
 }
