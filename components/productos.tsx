@@ -44,7 +44,8 @@ export function ProductosComponent() {
                   onClick={() => {
                     setOpenLinkProduct(item.Images[0].url);
                     document.body.style.overflow = 'hidden';
-                  }}>
+                  }}
+                  className='h-full'>
                   <Image
                     src={item.Images[0].url}
                     alt={item.Name}
