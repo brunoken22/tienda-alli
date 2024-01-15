@@ -14,6 +14,7 @@ export function ProductosComponent() {
     const target = e.target as HTMLInputElement;
     setSearch(target.value);
   };
+
   return (
     <>
       <h2 className='text-center font-bold text-2xl mt-4'>
