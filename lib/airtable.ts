@@ -12,6 +12,7 @@ export async function getDataAirtable() {
     objectID: r.id,
     ...r.fields,
   }));
-  await index.saveObjects(object);
-  return object.length;
+  const res = await index.replaceAllObjects(object);
+  console.log('res', res.objectIDs);
+  return res.objectIDs;
 }
