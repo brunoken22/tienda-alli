@@ -2,5 +2,5 @@ import {getDataAirtable} from '@/lib/airtable';
 
 export async function GET() {
   const data = await getDataAirtable();
-  return Response.json(data);
+  return Response.json(data.length);
 }
