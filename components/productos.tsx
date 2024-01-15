@@ -43,12 +43,12 @@ export function ProductosComponent() {
                 className='flex gap-4 w-[350px] items-center  bg-[#ffefa9] rounded-lg h-[130px]'>
                 <button
                   onClick={() => {
-                    setOpenLinkProduct(item.Images[0].url);
+                    setOpenLinkProduct(item.Images[0].thumbnails.full.url);
                     document.body.style.overflow = 'hidden';
                   }}
                   className='h-full'>
                   <Image
-                    src={item.Images[0].url}
+                    src={item.Images[0].thumbnails.full.url}
                     alt={item.Name}
                     width={100}
                     height={100}
