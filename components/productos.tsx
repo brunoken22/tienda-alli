@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {GetDataProduct} from '@/lib/hook';
 import {EsqueletonProduct} from './esqueleton';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDebouncedCallback} from 'use-debounce';
 import {useRouter, useSearchParams} from 'next/navigation';
 
@@ -25,6 +25,9 @@ export function ProductosComponent() {
     setSearch(target.value);
     replace(`?${params.toString()}`);
   }, 300);
+  useEffect(() => {
+    setSearch(searchParams.get('q') as string);
+  }, [searchParams.get('q')]);
   return (
     <>
       <h2 className='text-center font-bold text-2xl mt-4'>
@@ -57,7 +60,7 @@ export function ProductosComponent() {
                     setOpenLinkProduct(item.Images[0].thumbnails.full.url);
                     document.body.style.overflow = 'hidden';
                   }}
-                  className='h-full'>
+                  className='h-full relative'>
                   <Image
                     src={item.Images[0].thumbnails.full.url}
                     alt={item.Name}
@@ -67,12 +70,28 @@ export function ProductosComponent() {
                     className=' w-[100px] h-full object-cover rounded-b-lg rounded-l-lg'
                     loading='lazy'
                   />
+                  {item.oferta ? (
+                    <div className='absolute top-[-0.5rem] left-[-2rem] rotate-[-40deg]  bg-red-500 text-white p-1 pr-4 pl-4'>
+                      <h2 className='font-bold'>OFERTA</h2>
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </button>
                 <div className='flex flex-col gap-4'>
                   <h2 className='h-[48px] overflow-hidden'>
                     {item.Name || 'prueba'}{' '}
                   </h2>
-                  <p className='font-bold'>${item['Unit cost']}</p>
+                  {item.oferta ? (
+                    <div className='flex justify-evenly'>
+                      <p className='text-gray-500 line-through	'>
+                        ${item['Unit cost']}
+                      </p>
+                      <p className='font-bold'>${item.priceOfert}</p>
+                    </div>
+                  ) : (
+                    <p className='font-bold'>${item['Unit cost']}</p>
+                  )}
                 </div>
               </div>
             ))
