@@ -12,6 +12,7 @@ export function ProductosComponent() {
   const searchParams = useSearchParams();
   const [search, setSearch] = useState('');
   const [openLinkProduct, setOpenLinkProduct] = useState('');
+  const [dataModi, setDataModi] = useState<any>();
   const {data, isLoading} = GetDataProduct(search);
 
   const debounced = useDebouncedCallback((e: React.ChangeEvent) => {
@@ -28,6 +29,14 @@ export function ProductosComponent() {
   useEffect(() => {
     setSearch(searchParams.get('q') as string);
   }, [searchParams.get('q')]);
+  useEffect(() => {
+    if (data) {
+      const ordenados = data.sort((a: any, b: any) => {
+        return a.oferta === b.oferta ? 0 : a.oferta ? -1 : 1;
+      });
+      setDataModi(ordenados);
+    }
+  }, [data]);
   return (
     <>
       <h2 className='text-center font-bold text-2xl mt-4'>
@@ -50,8 +59,8 @@ export function ProductosComponent() {
         </div>
       </div>
       <div className='flex justify-center flex-wrap gap-8 m-8 max-md:m-2 mt-16 max-md:mt-10'>
-        {data?.length
-          ? data.map((item: any) => (
+        {dataModi?.length
+          ? dataModi.map((item: any) => (
               <div
                 key={item.objectID}
                 className='flex gap-4 w-[350px] items-center  bg-[#ffefa9] rounded-lg h-[130px]'>
@@ -95,7 +104,7 @@ export function ProductosComponent() {
                 </div>
               </div>
             ))
-          : data?.length == 0
+          : dataModi?.length == 0
           ? 'No hay producto'
           : ''}
         {isLoading
