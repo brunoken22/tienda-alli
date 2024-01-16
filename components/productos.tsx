@@ -136,7 +136,7 @@ export function ProductosComponent() {
       {openLinkProduct ? (
         <>
           <div className='flex flex-col fixed inset-0 backdrop-brightness-50	justify-center items-center'>
-            <div className='fixed top-8 right-8 z-10'>
+            <div className='fixed top-8 right-8 z-10 max-sm:top-[0.5rem] max-sm:right-[0.5rem]'>
               {' '}
               <button
                 onClick={() => {
