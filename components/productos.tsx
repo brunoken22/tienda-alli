@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import Image from 'next/image';
 import {GetDataProduct} from '@/lib/hook';
 import {EsqueletonProduct} from './esqueleton';
 import React, {useEffect, useState} from 'react';
@@ -60,7 +59,7 @@ export function ProductosComponent() {
               defaultValue={searchParams.get('q')?.toString()}
             />
             <button>
-              <Image src='/search.svg' alt='search' width={20} height={20} />
+              <img src='/search.svg' alt='search' width={20} height={20} />
             </button>
           </form>
         </div>
@@ -77,12 +76,11 @@ export function ProductosComponent() {
                     document.body.style.overflow = 'hidden';
                   }}
                   className='h-full relative'>
-                  <Image
+                  <img
                     src={item.Images[0].thumbnails.full.url}
                     alt={item.Name}
                     width={100}
                     height={100}
-                    quality={100}
                     className=' w-[100px] h-full object-cover rounded-b-lg rounded-l-lg'
                     loading='lazy'
                   />
@@ -144,10 +142,10 @@ export function ProductosComponent() {
                   document.body.style.overflow = 'auto';
                 }}>
                 {' '}
-                <Image src='/close.svg' width={30} height={30} alt='close' />
+                <img src='/close.svg' width={30} height={30} alt='close' />
               </button>
             </div>
-            <Image
+            <img
               src={openLinkProduct}
               width={600}
               height={600}
@@ -160,7 +158,7 @@ export function ProductosComponent() {
       <Link
         href={'https://www.facebook.com/marketplace/profile/100025099413594/'}
         className='flex justify-center gap-4 items-center mt-12 flex-wrap mb-8'>
-        <Image src={'/facebook.svg'} width={100} height={100} alt='facebook' />
+        <img src={'/facebook.svg'} width={100} height={100} alt='facebook' />
         <h2 className='text-3xl font-bold max-md:text-center'>
           VISÍTANOS <br></br>EN NUESTRO<br></br> MARKETPLACE
         </h2>
