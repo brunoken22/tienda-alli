@@ -5,6 +5,7 @@ import {EsqueletonProduct} from './esqueleton';
 import React, {useEffect, useRef, useState} from 'react';
 import {useDebouncedCallback} from 'use-debounce';
 import {useRouter, useSearchParams} from 'next/navigation';
+import {TemplateProduct} from './tempalte';
 
 export function ProductosComponent() {
   const {replace} = useRouter();
@@ -80,47 +81,15 @@ export function ProductosComponent() {
       <div className='flex justify-center flex-wrap gap-8 m-8 max-md:m-2 mt-16 max-md:mt-10'>
         {dataModi?.length
           ? dataModi.map((item: any) => (
-              <div
+              <TemplateProduct
                 key={item.objectID}
-                className='flex gap-4 w-[350px] items-center  bg-[#ffefa9] rounded-lg h-[130px]'>
-                <button
-                  onClick={() => {
-                    setOpenLinkProduct(item.Images[0].thumbnails.full.url);
-                    document.body.style.overflow = 'hidden';
-                  }}
-                  className='h-full relative'>
-                  <img
-                    src={item.Images[0].thumbnails.full.url}
-                    alt={item.Name}
-                    width={100}
-                    height={100}
-                    className=' w-[100px] h-full object-cover rounded-b-lg rounded-l-lg'
-                    loading='lazy'
-                  />
-                  {item.oferta ? (
-                    <div className='absolute top-[-0.5rem] left-[-2rem] rotate-[-40deg]  bg-red-500 text-white p-1 pr-4 pl-4'>
-                      <h2 className='font-bold'>OFERTA</h2>
-                    </div>
-                  ) : (
-                    ''
-                  )}
-                </button>
-                <div className='flex flex-col gap-4'>
-                  <h2 className='h-[48px] overflow-hidden'>
-                    {item.Name || 'prueba'}{' '}
-                  </h2>
-                  {item.oferta ? (
-                    <div className='flex justify-evenly'>
-                      <p className='text-gray-500 line-through	'>
-                        ${item['Unit cost']}
-                      </p>
-                      <p className='font-bold'>${item.priceOfert}</p>
-                    </div>
-                  ) : (
-                    <p className='font-bold'>${item['Unit cost']}</p>
-                  )}
-                </div>
-              </div>
+                openImg={(data: string) => setOpenLinkProduct(data)}
+                Name={item.Name}
+                Images={item.Images[0].thumbnails.full.url}
+                priceOfert={item.priceOfert}
+                price={item['Unit cost']}
+                oferta={item.oferta}
+              />
             ))
           : dataModi?.length == 0
           ? 'No hay producto'
