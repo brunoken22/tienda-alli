@@ -44,11 +44,16 @@ export function ProductosComponent() {
           Útiles escolares y mochilas y más
         </h2>
         <div className='flex justify-center  '>
-          <div className='flex justify-center bg-gray-200 p-2'>
+          <form
+            className='flex justify-center bg-gray-200 p-2'
+            onSubmit={(e: any) => {
+              e.preventDefault();
+              setSearch(e.target.search.value);
+            }}>
             <input
               type='text'
               name='search'
-              id=''
+              id='search'
               onChange={debounced}
               placeholder='Mochila'
               className='bg-transparent focus-visible:outline-none placeholder:white-500'
@@ -57,7 +62,7 @@ export function ProductosComponent() {
             <button>
               <Image src='/search.svg' alt='search' width={20} height={20} />
             </button>
-          </div>
+          </form>
         </div>
       </div>
       <div className='flex justify-center flex-wrap gap-8 m-8 max-md:m-2 mt-16 max-md:mt-10'>
