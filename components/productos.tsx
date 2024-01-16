@@ -41,7 +41,7 @@ export function ProductosComponent() {
     <>
       <div className='bg-[#272727] pt-4 pb-4 flex flex-col gap-4'>
         <h2 className='text-center font-bold text-2xl text-white '>
-          Útiles escolares y mochilas
+          Útiles escolares y mochilas y más
         </h2>
         <div className='flex justify-center  '>
           <div className='flex justify-center bg-gray-200 p-2'>
