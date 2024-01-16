@@ -155,7 +155,7 @@ export function ProductosComponent() {
                   document.body.style.overflow = 'auto';
                 }}>
                 {' '}
-                <img src='/close.svg' width={30} height={30} alt='close' />
+                <img src='/closeWhite.svg' width={30} height={30} alt='close' />
               </button>
             </div>
             <img
