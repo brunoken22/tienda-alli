@@ -2,12 +2,13 @@
 import Link from 'next/link';
 import {GetDataProduct} from '@/lib/hook';
 import {EsqueletonProduct} from './esqueleton';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useDebouncedCallback} from 'use-debounce';
 import {useRouter, useSearchParams} from 'next/navigation';
 
 export function ProductosComponent() {
   const {replace} = useRouter();
+  const inputSearch: any = useRef();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState('');
   const [openLinkProduct, setOpenLinkProduct] = useState('');
@@ -26,7 +27,7 @@ export function ProductosComponent() {
     replace(`?${params.toString()}`);
   }, 300);
   useEffect(() => {
-    setSearch(searchParams.get('q') as string);
+    setSearch((searchParams.get('q') as string) || '');
   }, [searchParams.get('q')]);
   useEffect(() => {
     if (data) {
@@ -40,11 +41,11 @@ export function ProductosComponent() {
     <>
       <div className='bg-[#272727] pt-4 pb-4 flex flex-col gap-4'>
         <h2 className='text-center font-bold text-2xl text-white '>
-          Útiles escolares y mochilas y más
+          Tienda de ALLI
         </h2>
-        <div className='flex justify-center  '>
+        <div className='flex justify-center'>
           <form
-            className='flex justify-center bg-gray-200 p-2'
+            className='flex justify-center items-center  bg-gray-200 p-2'
             onSubmit={(e: any) => {
               e.preventDefault();
               setSearch(e.target.search.value);
@@ -56,9 +57,21 @@ export function ProductosComponent() {
               onChange={debounced}
               placeholder='Mochila'
               className='bg-transparent focus-visible:outline-none placeholder:white-500'
-              defaultValue={searchParams.get('q')?.toString()}
+              defaultValue={search || ''}
+              ref={inputSearch}
             />
-            <button>
+            {search ? (
+              <button
+                type='button'
+                className='mr-2 ml-2'
+                onClick={() => {
+                  inputSearch.current.value = '';
+                  replace('/');
+                }}>
+                <img src='/close.svg' alt='clear' width={12} height={8} />
+              </button>
+            ) : null}
+            <button type='submit'>
               <img src='/search.svg' alt='search' width={20} height={20} />
             </button>
           </form>
