@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 export function TemplateProduct({
   Images,
@@ -27,9 +27,9 @@ export function TemplateProduct({
         <img
           src={Images}
           alt={Name}
-          width={100}
+          width={120}
           height={100}
-          className=' w-[100px] h-full object-cover rounded-b-lg rounded-l-lg'
+          className=' w-[120px] h-full object-cover rounded-b-lg rounded-l-lg'
           loading='lazy'
         />
         {oferta ? (
@@ -64,5 +64,39 @@ export function TemplateProduct({
         )}
       </div>
     </div>
+  );
+}
+
+export function TemplateCategory({
+  name,
+  isCategoria,
+  valueDefault,
+  type,
+}: {
+  valueDefault: boolean;
+  type: string;
+  name: string;
+  isCategoria: (categoria: string) => void;
+}) {
+  const [isActiveClick, setIsActiveClick] = useState(valueDefault);
+  useEffect(() => {
+    return setIsActiveClick(valueDefault);
+  }, [valueDefault]);
+
+  return (
+    <button
+      key={name}
+      className={`hover:opacity-60 transition-[border] duration-100 ease-linear ${
+        isActiveClick
+          ? 'text-[#ffefa9] font-bold border-b-2 border-b-[#ffefa9]'
+          : 'font-normal border-none text-black max-md:text-white'
+      }	`}
+      id={type}
+      onClick={(e: React.MouseEvent) => {
+        isCategoria(e.currentTarget.id);
+        setIsActiveClick(!isActiveClick);
+      }}>
+      {name}
+    </button>
   );
 }

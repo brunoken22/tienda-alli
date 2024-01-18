@@ -34,3 +34,19 @@ body::-webkit-scrollbar-thumb {
   border-radius: 20px; /* roundness of the scroll thumb */
   border: 1px solid white; /* creates padding around scroll thumb */
 }
+.rc-slider-track {
+  background-color: #ffefa9 !important;
+}
+.rc-slider-track-1 {
+  background-color: #ffefa9 !important;
+}
+.rc-slider-handle {
+  border-color: #ffefa9 !important;
+}
+.rc-slider-handle:hover {
+  border-color: #ffefa9 !important;
+}
+.rc-slider-handle-dragging {
+  border-color: #ffefa9 !important;
+  box-shadow: 0 0 5px 5px #ffefa9 !important;
+}
