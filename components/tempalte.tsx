@@ -31,7 +31,10 @@ export function TemplateProduct({
   };
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    setOpenShoppingCartValue(true);
+    const windowWidth = window.innerWidth;
+    if (windowWidth > 1024) {
+      setOpenShoppingCartValue(true);
+    }
     setShoppingCartUserData((prev) => {
       let newShoppingCart = [];
       if (prev.length) {

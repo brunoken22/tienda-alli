@@ -82,7 +82,7 @@ export function ProductosComponent() {
             </button>
           </div>
         </div>
-        <div className=' hidden justify-center max-lg:flex mr-4 ml-4'>
+        <div className=' hidden justify-center max-sm:justify-between max-lg:flex mr-4 ml-4'>
           <FormSearch value={search} modValue={handleModValueFormSearch} />
           <button
             onClick={() => {
