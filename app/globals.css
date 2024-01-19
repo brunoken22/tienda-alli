@@ -50,3 +50,7 @@ body::-webkit-scrollbar-thumb {
   border-color: #ffefa9 !important;
   box-shadow: 0 0 5px 5px #ffefa9 !important;
 }
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

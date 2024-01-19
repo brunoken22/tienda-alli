@@ -7,6 +7,9 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {TemplateProduct} from './tempalte';
 import {FiltroSearch} from './filtro';
 import {FormSearch} from '@/ui/form';
+import {ShoppingCart} from './shoppingCart';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {openShoppingCart, shoppingCart} from '@/lib/atom';
 
 export function ProductosComponent() {
   const {replace} = useRouter();
@@ -18,6 +21,9 @@ export function ProductosComponent() {
   const [openLinkProduct, setOpenLinkProduct] = useState('');
   const [dataModi, setDataModi] = useState<any>();
   const {data, isLoading} = GetDataProduct(search, typeSearch, typePrice);
+  const [openShoppingCartValue, setOpenShoppingCartValue] =
+    useRecoilState(openShoppingCart);
+  const shoppingCartUserData = useRecoilValue(shoppingCart);
   useEffect(() => {
     setSearch((searchParams.get('q') as string) || '');
   }, [searchParams.get('q')]);
@@ -59,9 +65,23 @@ export function ProductosComponent() {
   return (
     <>
       <div className='bg-[#272727] pt-4 pb-4 flex flex-col gap-4 fixed top-0 left-0 right-0 z-10'>
-        <h2 className='text-center font-bold text-2xl text-white '>
-          Tienda de ALLI
-        </h2>
+        <div className='relative'>
+          <h2 className='text-center font-bold text-2xl text-white '>
+            Tienda de ALLI
+          </h2>
+          <div className='absolute left-[90%] top-[20%]'>
+            <button
+              className='relative '
+              onClick={() => setOpenShoppingCartValue(true)}>
+              <img src='/cart-shopping.svg' alt='cart-shopping' width={23} />
+              {shoppingCartUserData.length ? (
+                <span className='absolute bottom-[60%] left-[60%] bg-[#ffefa9] text-[0.8rem] pr-[0.4rem] pl-[0.4rem] rounded-full'>
+                  {shoppingCartUserData.length}
+                </span>
+              ) : null}
+            </button>
+          </div>
+        </div>
         <div className=' hidden justify-center max-lg:flex mr-4 ml-4'>
           <FormSearch value={search} modValue={handleModValueFormSearch} />
           <button
@@ -101,6 +121,7 @@ export function ProductosComponent() {
                   priceOfert={item.priceOfert}
                   price={item['Unit cost']}
                   oferta={item.oferta}
+                  id={item.objectID}
                 />
               ))
             : dataModi?.length == 0 && !isLoading
@@ -159,6 +180,7 @@ export function ProductosComponent() {
           isMobile={true}
         />
       ) : null}
+      {openShoppingCartValue ? <ShoppingCart /> : null}
       <Link
         href={'https://www.facebook.com/marketplace/profile/100025099413594/'}
         className={`flex justify-center gap-4 items-center ${
