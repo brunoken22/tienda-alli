@@ -106,8 +106,22 @@ export function FiltroSearch({
           }}
         />
         <div className='flex justify-between'>
-          <p>${minPrice}</p>
-          <p>${maxPrice}</p>
+          <p>
+            {minPrice.toLocaleString('es-AR', {
+              style: 'currency',
+              currency: 'ARS', // Cambiado a pesos argentinos
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}
+          </p>
+          <p>
+            {maxPrice.toLocaleString('es-AR', {
+              style: 'currency',
+              currency: 'ARS', // Cambiado a pesos argentinos
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}
+          </p>
         </div>
       </div>
     </div>

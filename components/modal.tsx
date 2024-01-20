@@ -70,12 +70,18 @@ export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
                   <h2 className='font-bold text-1xl'>Total:</h2>
                   <div>
                     <h2 className='font-bold text-1xl'>
-                      $
-                      {shoppingCartUserData.reduce(
-                        (acumalador, objeto) =>
-                          acumalador + objeto.price * (objeto.cantidad || 1),
-                        0
-                      ) || 0}
+                      {shoppingCartUserData
+                        .reduce(
+                          (acumalador, objeto) =>
+                            acumalador + objeto.price * (objeto.cantidad || 1),
+                          0
+                        )
+                        .toLocaleString('es-AR', {
+                          style: 'currency',
+                          currency: 'ARS',
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }) || '$ ' + 0}
                     </h2>
                   </div>
                 </div>
@@ -101,7 +107,7 @@ export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
                 type='button'
                 onClick={() => closeModal(false)}>
                 Seguir comprando
-              </button>
+              </button>{' '}
               <Link
                 href={
                   'https://api.whatsapp.com/send?phone=+541159102865&text=Hola%20te%20hablo%20desde%20la%20p%C3%A1gina'

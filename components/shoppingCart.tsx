@@ -57,12 +57,18 @@ export function ShoppingCart() {
             <h2 className='font-bold text-2xl'>Total:</h2>
             <div>
               <h2 className='font-bold text-2xl'>
-                $
-                {shoppingCartValue.reduce(
-                  (acumalador, objeto) =>
-                    acumalador + objeto.price * (objeto.cantidad || 1),
-                  0
-                ) || 0}
+                {shoppingCartValue
+                  .reduce(
+                    (acumalador, objeto) =>
+                      acumalador + objeto.price * (objeto.cantidad || 1),
+                    0
+                  )
+                  .toLocaleString('es-AR', {
+                    style: 'currency',
+                    currency: 'ARS',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }) || '$' + 0}
               </h2>
             </div>
           </div>

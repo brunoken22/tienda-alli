@@ -72,6 +72,7 @@ export function TemplateProduct({
       return newShoppingCart as any[];
     });
   };
+
   return (
     <div className='grid grid-cols-[repeat(1,120px_1fr)] gap-4 w-[370px] items-center  bg-[#ffefa9] rounded-lg h-[150px]'>
       <button onClick={handleClickOpenImg} className='h-[150px] relative'>
@@ -108,11 +109,32 @@ export function TemplateProduct({
           </div>
           {oferta ? (
             <div className='flex justify-start gap-4'>
-              <p className='text-gray-500 line-through	'>${price}</p>
-              <p className='font-bold'>${priceOfert}</p>
+              <p className='text-gray-500 line-through	'>
+                {price.toLocaleString('es-AR', {
+                  style: 'currency',
+                  currency: 'ARS',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}
+              </p>
+              <p className='font-bold'>
+                {priceOfert.toLocaleString('es-AR', {
+                  style: 'currency',
+                  currency: 'ARS',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}
+              </p>
             </div>
           ) : (
-            <p className='font-bold'>${price}</p>
+            <p className='font-bold'>
+              {price.toLocaleString('es-AR', {
+                style: 'currency',
+                currency: 'ARS',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })}
+            </p>
           )}
         </div>
         <div>
@@ -206,7 +228,15 @@ export function TemplateShopppingCartProduct({
               </span>
             ) : null}
           </p>
-          <h3 className='font-bold'>$ {price}</h3>
+          <h3 className='font-bold'>
+            {' '}
+            {price.toLocaleString('es-AR', {
+              style: 'currency',
+              currency: 'ARS',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}
+          </h3>
           <InputNumber cantidad={cantidad || 1} id={id} />
         </div>
       </div>
