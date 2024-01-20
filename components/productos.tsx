@@ -4,7 +4,7 @@ import {GetDataProduct} from '@/lib/hook';
 import {EsqueletonProduct} from './esqueleton';
 import React, {useEffect, useState} from 'react';
 import {useRouter, useSearchParams} from 'next/navigation';
-import {TemplateProduct} from './tempalte';
+import {TemplateProduct} from './template';
 import {FiltroSearch} from './filtro';
 import {FormSearch} from '@/ui/form';
 import {ShoppingCart} from './shoppingCart';

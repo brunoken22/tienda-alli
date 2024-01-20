@@ -1,4 +1,5 @@
 import {openShoppingCart, shoppingCart} from '@/lib/atom';
+import {InputNumber} from '@/ui/input';
 import {useEffect, useState} from 'react';
 import {useRecoilState} from 'recoil';
 
@@ -100,7 +101,7 @@ export function TemplateProduct({
               {Name}{' '}
             </h2>
             {openFocusName ? (
-              <span className=' absolute botton-0 left-[50%] bg-gray-900 text-white p-[2px] pr-4 pl-4 text-[0.7rem] z-10 '>
+              <span className='w-full absolute botton-0 left-[20%] bg-gray-900 text-white p-[2px] pr-4 pl-4 text-[0.7rem] z-10 '>
                 {Name}
               </span>
             ) : null}
@@ -158,5 +159,63 @@ export function TemplateCategory({
       }}>
       {name}
     </button>
+  );
+}
+
+export function TemplateShopppingCartProduct({
+  id,
+  title,
+  price,
+  cantidad,
+  img,
+}: {
+  id: string;
+  title: string;
+  price: number;
+  cantidad: number;
+  img: string;
+}) {
+  const [openFocusName, setOpenFocusName] = useState(false);
+  const [shoppingCartValue, setShoppingCartValue] =
+    useRecoilState(shoppingCart);
+  const handleDelete = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const newShoppingCart = shoppingCartValue.filter(
+      (item: any) => item.id !== e.currentTarget.id
+    );
+    setShoppingCartValue(newShoppingCart);
+  };
+  return (
+    <div className='flex justify-between border-b-2 border-b-white  pb-6 last:border-none pr-2 pl-2 h-[106px]'>
+      <div className='flex gap-4'>
+        <img
+          src={img}
+          alt={title}
+          loading='lazy'
+          className='h-full w-[80px] object-cover'
+        />
+        <div>
+          <p
+            onMouseEnter={() => setOpenFocusName(true)}
+            onMouseLeave={() => setOpenFocusName(false)}
+            className='h-[24px] overflow-hidden max-w-[220px]'>
+            {title}
+            {openFocusName ? (
+              <span className=' absolute botton-0 left-[20%] bg-gray-900 text-white p-[2px] pr-4 pl-4 text-[0.7rem] z-10 '>
+                {title}
+              </span>
+            ) : null}
+          </p>
+          <h3 className='font-bold'>$ {price}</h3>
+          <InputNumber cantidad={cantidad || 1} id={id} />
+        </div>
+      </div>
+      <button
+        onClick={handleDelete}
+        id={id}
+        className='fill-white hover:fill-red-400'>
+        <img src='/delete.svg' alt='delete' width={14} />
+      </button>
+    </div>
   );
 }

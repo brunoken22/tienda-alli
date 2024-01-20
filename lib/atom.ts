@@ -5,6 +5,7 @@ type typeCompra = {
   id: string;
   title: string;
   price: number;
+  img: string;
 };
 export const shoppingCart = atom({
   key: 'shoppingCart',
