@@ -3,7 +3,9 @@ import useSWRImmutable from 'swr/immutable';
 export function GetDataProduct(
   search?: string,
   typeSearch?: string[] | '',
-  typePrice?: number[] | ''
+  typePrice?: number[] | '',
+  limit?: number,
+  offset?: number
 ) {
   const {data, isLoading} = useSWRImmutable(
     `/api/product${search ? '?q=' + search : ''}${
@@ -12,7 +14,7 @@ export function GetDataProduct(
         : '?price=' + JSON.stringify(typePrice)
     }${
       typeSearch?.length ? '&type=' + JSON.stringify(typeSearch) : '&type=[]'
-    }`,
+    }&limit=${limit}&offset=${offset}`,
     fetcher
   );
   return {data, isLoading};
