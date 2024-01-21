@@ -1,4 +1,4 @@
-// export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 import {searchProduct} from '@/lib/controllers/product';
 import {NextResponse} from 'next/server';
 export async function GET(req: Request) {
