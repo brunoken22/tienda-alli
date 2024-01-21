@@ -8,7 +8,7 @@ import {TemplateProduct} from './template';
 import {FiltroSearch} from './filtro';
 import {FormSearch} from '@/ui/form';
 import {ShoppingCart} from './shoppingCart';
-import {useRecoilState, useRecoilValue} from 'recoil';
+import {useRecoilState} from 'recoil';
 import {openShoppingCart, shoppingCart} from '@/lib/atom';
 
 export function ProductosComponent() {
@@ -31,7 +31,8 @@ export function ProductosComponent() {
   );
   const [openShoppingCartValue, setOpenShoppingCartValue] =
     useRecoilState(openShoppingCart);
-  const shoppingCartUserData = useRecoilValue(shoppingCart);
+  const [shoppingCartUserData, setShoppingCartUserData] =
+    useRecoilState(shoppingCart);
 
   useEffect(() => {
     if (data?.results?.length) {
@@ -52,7 +53,6 @@ export function ProductosComponent() {
       setSearch('');
     }
     params.set('price', JSON.stringify(typePrice));
-
     params.set('type', JSON.stringify(typeSearch || []));
     replace(`?${params.toString()}`);
   }, [typeSearch, typePrice, search]);
@@ -61,6 +61,13 @@ export function ProductosComponent() {
       setOffset(0);
     }
   }, [typeSearch]);
+  useEffect(() => {
+    const data = localStorage.getItem('category');
+    if (window !== undefined && data) {
+      setShoppingCartUserData(JSON.parse(data));
+    }
+  }, []);
+
   const handleTypeCategoryPrice = (category: string[], price: number[]) => {
     setTypePrice(price);
     setTypeSearch(category);
@@ -122,6 +129,12 @@ export function ProductosComponent() {
           </FiltroSearch>
         </div>
         <div>
+          {data?.results.length ? (
+            <p className='flex justify-center mb-8 font-medium'>
+              {data.results.length + data.pagination.offset} de{' '}
+              {data.pagination.total}
+            </p>
+          ) : null}
           <div className='flex justify-center flex-wrap gap-8  max-md:m-2   '>
             {dataModi?.length
               ? dataModi.map((item: any) => (

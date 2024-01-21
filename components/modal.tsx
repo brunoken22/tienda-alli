@@ -79,8 +79,8 @@ export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
                         .toLocaleString('es-AR', {
                           style: 'currency',
                           currency: 'ARS',
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
                         }) || '$ ' + 0}
                     </h2>
                   </div>

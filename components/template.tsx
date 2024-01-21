@@ -102,7 +102,7 @@ export function TemplateProduct({
               {Name}{' '}
             </h2>
             {openFocusName ? (
-              <span className='w-full absolute botton-0 left-[20%] bg-gray-900 text-white p-[2px] pr-4 pl-4 text-[0.7rem] z-10 '>
+              <span className='w-full max-md:w-auto absolute botton-0 left-[20%] bg-gray-900 text-white p-[2px] pr-4 pl-4 text-[0.7rem] z-10 '>
                 {Name}
               </span>
             ) : null}
