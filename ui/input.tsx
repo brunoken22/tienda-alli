@@ -19,7 +19,11 @@ export function InputNumber({cantidad, id}: {cantidad: number; id: string}) {
       });
     });
   }, [cantidadState]);
-
+  useEffect(() => {
+    if (shoppingCartValue.length) {
+      localStorage.setItem('category', JSON.stringify(shoppingCartValue));
+    }
+  }, [shoppingCartValue]);
   const handleCantidadChange = (e: React.ChangeEvent) => {
     e.preventDefault();
     const target = e.target as HTMLInputElement;

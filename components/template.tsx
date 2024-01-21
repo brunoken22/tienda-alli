@@ -50,21 +50,7 @@ export function TemplateProduct({
             return item;
           });
         } else {
-          localStorage.setItem(
-            'category',
-            JSON.stringify([
-              {
-                cantidad: 1,
-                id: id,
-                title: Name,
-                img: Images,
-                price: priceOfert || price,
-              },
-              ...prev,
-            ])
-          );
-
-          return [
+          const newShoppingCart = [
             {
               cantidad: 1,
               id: id,
@@ -74,6 +60,9 @@ export function TemplateProduct({
             },
             ...prev,
           ];
+          localStorage.setItem('category', JSON.stringify(newShoppingCart));
+
+          return newShoppingCart;
         }
       } else {
         newShoppingCart.push({
@@ -84,9 +73,10 @@ export function TemplateProduct({
           price: priceOfert || price,
         });
       }
-      if (window !== undefined && shoppingCartUserData.length) {
-        localStorage.setItem('category', JSON.stringify(newShoppingCart));
-      }
+
+      console.log(newShoppingCart);
+
+      localStorage.setItem('category', JSON.stringify(newShoppingCart));
       return newShoppingCart as any[];
     });
   };
