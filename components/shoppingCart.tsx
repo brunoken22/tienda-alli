@@ -13,7 +13,7 @@ export function ShoppingCart() {
 
   useEffect(() => {
     if (!shoppingCartValue.length) return;
-    localStorage.setItem('category', JSON.stringify(shoppingCartValue));
+  
 
     let buysMod = 'Hola, quisiera pedirte estas cosas';
     shoppingCartValue.map((item) => {

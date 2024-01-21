@@ -14,13 +14,13 @@ import {openShoppingCart, shoppingCart} from '@/lib/atom';
 export function ProductosComponent() {
   const {replace} = useRouter();
   const searchParams = useSearchParams();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(searchParams.get('q') || '');
   const [typeSearch, setTypeSearch] = useState<string[]>([]);
   const [typePrice, setTypePrice] = useState<number[]>([0, 60000]);
   const [isOpenFilter, setIsOpenFilter] = useState(false);
   const [openLinkProduct, setOpenLinkProduct] = useState('');
-  const [limit, setLimit] = useState(15);
-  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(Number(searchParams.get('limit')) || 15);
+  const [offset, setOffset] = useState(Number(searchParams.get('offset')) || 0);
   const [dataModi, setDataModi] = useState<any>();
   const {data, isLoading} = GetDataProduct(
     search,

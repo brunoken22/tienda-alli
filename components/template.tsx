@@ -33,6 +33,7 @@ export function TemplateProduct({
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     const windowWidth = window.innerWidth;
+
     if (windowWidth > 1024) {
       setOpenShoppingCartValue(true);
     }
@@ -49,6 +50,20 @@ export function TemplateProduct({
             return item;
           });
         } else {
+          localStorage.setItem(
+            'category',
+            JSON.stringify([
+              {
+                cantidad: 1,
+                id: id,
+                title: Name,
+                img: Images,
+                price: priceOfert || price,
+              },
+              ...prev,
+            ])
+          );
+
           return [
             {
               cantidad: 1,
@@ -68,6 +83,9 @@ export function TemplateProduct({
           img: Images,
           price: priceOfert || price,
         });
+      }
+      if (window !== undefined && shoppingCartUserData.length) {
+        localStorage.setItem('category', JSON.stringify(newShoppingCart));
       }
       return newShoppingCart as any[];
     });
@@ -202,9 +220,13 @@ export function TemplateShopppingCartProduct({
     useRecoilState(shoppingCart);
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
+
     const newShoppingCart = shoppingCartValue.filter(
       (item: any) => item.id !== e.currentTarget.id
     );
+    if (window !== undefined) {
+      localStorage.setItem('category', JSON.stringify(newShoppingCart));
+    }
     setShoppingCartValue(newShoppingCart);
   };
   return (

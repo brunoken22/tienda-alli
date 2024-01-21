@@ -50,7 +50,8 @@ export function FormSearch({
           className='mr-2 ml-2'
           onClick={() => {
             inputSearch.current.value = '';
-            replace('/');
+            modValue('');
+            // replace('/');
           }}>
           <img src='/close.svg' alt='clear' width={12} height={8} />
         </button>
