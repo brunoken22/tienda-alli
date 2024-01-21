@@ -13,7 +13,6 @@ export function ShoppingCart() {
 
   useEffect(() => {
     if (!shoppingCartValue.length) return;
-  
 
     let buysMod = 'Hola, quisiera pedirte estas cosas';
     shoppingCartValue.map((item) => {
@@ -59,18 +58,20 @@ export function ShoppingCart() {
             <h2 className='font-bold text-2xl'>Total:</h2>
             <div>
               <h2 className='font-bold text-2xl'>
-                {shoppingCartValue
-                  .reduce(
-                    (acumalador, objeto) =>
-                      acumalador + objeto.price * (objeto.cantidad || 1),
-                    0
-                  )
-                  .toLocaleString('es-AR', {
-                    style: 'currency',
-                    currency: 'ARS',
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                  }) || '$' + 0}
+                {(shoppingCartValue.length &&
+                  shoppingCartValue
+                    .reduce(
+                      (acumalador, objeto) =>
+                        acumalador + objeto.price * (objeto.cantidad || 1),
+                      0
+                    )
+                    .toLocaleString('es-AR', {
+                      style: 'currency',
+                      currency: 'ARS',
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    })) ||
+                  '$' + 0}
               </h2>
             </div>
           </div>

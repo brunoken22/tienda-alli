@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import {GetDataProduct} from '@/lib/hook';
+import {GetDataCartShopping, GetDataProduct} from '@/lib/hook';
 import {EsqueletonProduct} from './esqueleton';
 import React, {useEffect, useState} from 'react';
 import {useRouter, useSearchParams} from 'next/navigation';
@@ -28,6 +28,9 @@ export function ProductosComponent() {
     typePrice,
     limit,
     offset
+  );
+  const {dataCartShopping} = GetDataCartShopping(
+    typeof window !== 'undefined' ? localStorage.getItem('category') : null
   );
   const [openShoppingCartValue, setOpenShoppingCartValue] =
     useRecoilState(openShoppingCart);
@@ -62,12 +65,10 @@ export function ProductosComponent() {
     }
   }, [typeSearch]);
   useEffect(() => {
-    const data = localStorage.getItem('category');
-    if (window !== undefined && data) {
-      setShoppingCartUserData(JSON.parse(data));
+    if (dataCartShopping) {
+      setShoppingCartUserData(dataCartShopping);
     }
-  }, []);
-
+  }, [dataCartShopping]);
   const handleTypeCategoryPrice = (category: string[], price: number[]) => {
     setTypePrice(price);
     setTypeSearch(category);

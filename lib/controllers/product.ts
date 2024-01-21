@@ -34,6 +34,21 @@ export async function searchProduct(req: Request) {
     return e;
   }
 }
+export async function getCartShopping(dataParans: any[]) {
+  const ids = dataParans.map((item) => item.id);
+  const data = await index.getObjects(ids);
+
+  const newDataFinal = data.results.map((item: any) => ({
+    cantidad:
+      dataParans.find((itemParams) => itemParams.id == item.objectID)
+        .cantidad || 0,
+    id: item?.objectID,
+    title: item['Name'],
+    img: item?.Images[0].url,
+    price: item.priceOfert || item['Unit cost'],
+  }));
+  return newDataFinal;
+}
 export function getOffsetAndLimitFom(
   limit: number,
   offset: number,
