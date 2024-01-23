@@ -19,6 +19,7 @@
 body {
   box-sizing: border-box;
   background-color: #c3c3c3;
+  overflow-x: hidden;
 }
 
 body::-webkit-scrollbar {
