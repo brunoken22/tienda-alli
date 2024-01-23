@@ -74,8 +74,6 @@ export function TemplateProduct({
         });
       }
 
-      console.log(newShoppingCart);
-
       localStorage.setItem('category', JSON.stringify(newShoppingCart));
       return newShoppingCart as any[];
     });

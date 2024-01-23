@@ -15,27 +15,30 @@ export function ProductosComponent() {
   const {replace} = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get('q') || '');
-  const [typeSearch, setTypeSearch] = useState<string[]>([]);
-  const [typePrice, setTypePrice] = useState<number[]>([0, 60000]);
+  const [typeSearch, setTypeSearch] = useState<string[]>(
+    JSON.parse(searchParams.get('type')!) || []
+  );
+  const [typePrice, setTypePrice] = useState<number[]>(
+    JSON.parse(searchParams.get('price')!) || [0, 60000]
+  );
   const [isOpenFilter, setIsOpenFilter] = useState(false);
   const [openLinkProduct, setOpenLinkProduct] = useState('');
-  const [limit, setLimit] = useState(Number(searchParams.get('limit')) || 15);
   const [offset, setOffset] = useState(Number(searchParams.get('offset')) || 0);
   const [dataModi, setDataModi] = useState<any>();
+  const [openShoppingCartValue, setOpenShoppingCartValue] =
+    useRecoilState(openShoppingCart);
+  const [shoppingCartUserData, setShoppingCartUserData] =
+    useRecoilState(shoppingCart);
   const {data, isLoading} = GetDataProduct(
     search,
     typeSearch,
     typePrice,
-    limit,
+    15,
     offset
   );
   const {dataCartShopping} = GetDataCartShopping(
     typeof window !== 'undefined' ? localStorage.getItem('category') : null
   );
-  const [openShoppingCartValue, setOpenShoppingCartValue] =
-    useRecoilState(openShoppingCart);
-  const [shoppingCartUserData, setShoppingCartUserData] =
-    useRecoilState(shoppingCart);
 
   useEffect(() => {
     if (data?.results?.length) {
@@ -56,9 +59,12 @@ export function ProductosComponent() {
       setSearch('');
     }
     params.set('price', JSON.stringify(typePrice));
-    params.set('type', JSON.stringify(typeSearch || []));
+    params.set('type', JSON.stringify(typeSearch));
+    params.set('limit', JSON.stringify(15));
+    params.set('offset', JSON.stringify(offset));
+
     replace(`?${params.toString()}`);
-  }, [typeSearch, typePrice, search]);
+  }, [typeSearch, typePrice, search, offset]);
   useEffect(() => {
     if (typeSearch) {
       setOffset(0);
@@ -69,6 +75,7 @@ export function ProductosComponent() {
       setShoppingCartUserData(dataCartShopping);
     }
   }, [dataCartShopping]);
+
   const handleTypeCategoryPrice = (category: string[], price: number[]) => {
     setTypePrice(price);
     setTypeSearch(category);

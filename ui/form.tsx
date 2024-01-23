@@ -1,4 +1,3 @@
-import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useRef} from 'react';
 import {useDebouncedCallback} from 'use-debounce';
 
@@ -9,20 +8,10 @@ export function FormSearch({
   value: string;
   modValue: (data: string) => any;
 }) {
-  const searchParams = useSearchParams();
-  const {replace} = useRouter();
   const inputSearch: any = useRef();
-
   const debounced = useDebouncedCallback((e: React.ChangeEvent) => {
     const target = e.target as HTMLInputElement;
-    const params = new URLSearchParams(searchParams);
-    if (target.value) {
-      params.set('q', target.value);
-    } else {
-      params.delete('q');
-    }
     modValue(target.value);
-    replace(`?${params.toString()}`);
   }, 300);
   useEffect(() => {
     inputSearch.current.value = value;
@@ -51,7 +40,6 @@ export function FormSearch({
           onClick={() => {
             inputSearch.current.value = '';
             modValue('');
-            // replace('/');
           }}>
           <img src='/close.svg' alt='clear' width={12} height={8} />
         </button>

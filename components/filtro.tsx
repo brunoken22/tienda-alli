@@ -33,14 +33,18 @@ export function FiltroSearch({
   const [minPrice, setMinPrice] = useState(valueDefault.typePrice[0]);
   const [maxPrice, setMaxPrice] = useState(valueDefault.typePrice[1]);
   const [categoria, setCategoria] = useState<string[]>(valueDefault.typeSearch);
+
   useEffect(() => {
     typeCategoriaPrice(categoria, [minPrice, maxPrice]);
   }, [categoria, maxPrice, minPrice]);
-
   useEffect(() => {
     if (search) return setCategoria([]);
   }, [search]);
-
+  useEffect(() => {
+    if (!search) {
+      setCategoria(valueDefault.typeSearch);
+    }
+  }, [valueDefault.typeSearch]);
   const handleIsCategoria = (data: string) => {
     if (categoria.length) {
       if (!categoria.includes(data)) {
@@ -54,6 +58,7 @@ export function FiltroSearch({
     }
     setCategoria([data]);
   };
+
   return (
     <div
       className={
