@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import {GetDataCartShopping, GetDataProduct} from '@/lib/hook';
 import {EsqueletonProduct} from './esqueleton';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useRouter, useSearchParams} from 'next/navigation';
 import {TemplateProduct} from './template';
 import {FiltroSearch} from './filtro';
@@ -39,9 +39,15 @@ export function ProductosComponent() {
   const {dataCartShopping} = GetDataCartShopping(
     typeof window !== 'undefined' ? localStorage.getItem('category') : null
   );
+  const seccionDestinoRef: any = useRef(null);
+
+  // Función que manejará el clic en el botón
 
   useEffect(() => {
     if (data?.results?.length) {
+      seccionDestinoRef.current.scrollIntoView({
+        behavior: 'smooth',
+      });
       const ordenados = data.results.sort((a: any, b: any) => {
         return a.oferta === b.oferta ? 0 : a.oferta ? -1 : 1;
       });
@@ -76,6 +82,10 @@ export function ProductosComponent() {
     }
   }, [dataCartShopping]);
 
+  const handleButtonClick = () => {
+    // Usa la referencia para acceder al elemento y desplázate hacia él
+    seccionDestinoRef.current.scrollIntoView({behavior: 'smooth'});
+  };
   const handleTypeCategoryPrice = (category: string[], price: number[]) => {
     setTypePrice(price);
     setTypeSearch(category);
@@ -136,7 +146,7 @@ export function ProductosComponent() {
             <FormSearch value={search} modValue={handleModValueFormSearch} />
           </FiltroSearch>
         </div>
-        <div>
+        <div ref={seccionDestinoRef}>
           {data?.results.length ? (
             <p className='flex justify-center mb-8 font-medium'>
               {data.results.length + data.pagination.offset} de{' '}
