@@ -5,12 +5,11 @@ import {useEffect, useState} from 'react';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {useRecoilState} from 'recoil';
 import {GeneratePdf} from './generatePdf';
-import {PDFViewer, PDFDownloadLink} from '@react-pdf/renderer';
+import {PDFDownloadLink} from '@react-pdf/renderer';
 export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
   const [shoppingCartUserData] = useRecoilState(shoppingCart);
   const [textShoppingCopy, setTextShoppingCopy] = useState('');
   const [mostrarDiv, setMostrarDiv] = useState(false);
-  const [openViewPdf, setOpenViewPdf] = useState(false);
 
   useEffect(() => {
     if (shoppingCartUserData) {
@@ -38,6 +37,7 @@ export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
       return () => clearTimeout(timeout);
     }
   }, [mostrarDiv]);
+
   return (
     <>
       <div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-[9] outline-none focus:outline-none backdrop-brightness-50	'>
@@ -104,12 +104,6 @@ export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
               </div>
             </div>
             <div className='flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b max-md:p-2'>
-              <button
-                className='text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'
-                type='button'
-                onClick={() => setOpenViewPdf(true)}>
-                Ver compra
-              </button>{' '}
               <PDFDownloadLink
                 document={<GeneratePdf data={shoppingCartUserData} />}
                 fileName='tiendaAlli.pdf'>
@@ -140,18 +134,6 @@ export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
           </div>
         </div>
       </div>
-      {openViewPdf ? (
-        <div className='fixed inset-0 z-10 backdrop-brightness-50	'>
-          <div className='flex justify-end m-4'>
-            <button onClick={() => setOpenViewPdf(false)}>
-              <img src='/closeWhite.svg' alt='close' width={30} />
-            </button>
-          </div>
-          <PDFViewer className='h-full w-full'>
-            <GeneratePdf data={shoppingCartUserData} />
-          </PDFViewer>
-        </div>
-      ) : null}
     </>
   );
 }
