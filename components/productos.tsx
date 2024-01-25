@@ -41,8 +41,6 @@ export function ProductosComponent() {
   );
   const seccionDestinoRef: any = useRef(null);
 
-  // Función que manejará el clic en el botón
-
   useEffect(() => {
     if (data?.results?.length) {
       seccionDestinoRef.current.scrollIntoView({
@@ -82,10 +80,6 @@ export function ProductosComponent() {
     }
   }, [dataCartShopping]);
 
-  const handleButtonClick = () => {
-    // Usa la referencia para acceder al elemento y desplázate hacia él
-    seccionDestinoRef.current.scrollIntoView({behavior: 'smooth'});
-  };
   const handleTypeCategoryPrice = (category: string[], price: number[]) => {
     setTypePrice(price);
     setTypeSearch(category);
