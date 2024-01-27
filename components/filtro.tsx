@@ -7,6 +7,7 @@ const categoriesAll = [
   {id: 'Utiles escolares ', type: 'utiles'},
   {id: 'Cartucheras ', type: 'cartucheras'},
   {id: 'Mochilas ', type: 'mochilas'},
+  {id: 'Carteras/Bandoleras ', type: 'carteras'},
   {id: 'Riñoneras ', type: 'riñoneras'},
   {id: 'Mochilas de Nene', type: 'mochilas_nene'},
   {id: 'Mochilas de Nena', type: 'mochilas_nena'},
