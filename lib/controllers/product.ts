@@ -22,6 +22,8 @@ export async function searchProduct(req: Request) {
         cadenaDeBusquedaCategory ? ' AND ' + cadenaDeBusquedaCategory : ''
       }`,
     });
+    console.log(data);
+
     return {
       results: data.hits,
       pagination: {

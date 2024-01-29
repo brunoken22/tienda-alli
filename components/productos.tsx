@@ -40,6 +40,7 @@ export function ProductosComponent() {
     typeof window !== 'undefined' ? localStorage.getItem('category') : null
   );
   const seccionDestinoRef: any = useRef(null);
+  console.log(data);
 
   useEffect(() => {
     if (data?.results?.length) {
