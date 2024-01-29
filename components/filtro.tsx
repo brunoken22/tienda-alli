@@ -67,67 +67,69 @@ export function FiltroSearch({
           ? ' absolute inset-0 bg-[#262626] z-10	p-8 flex flex-col gap-8 text-white'
           : 'w-full flex flex-col gap-8 max-lg:hidden '
       }>
-      <div className='flex justify-end'>
-        {isMobile ? (
-          <button
-            onClick={() => {
-              document.body.style.overflow = 'auto';
-              closeFilter(true);
-            }}>
-            <img
-              src='/closeWhite.svg'
-              color={'white'}
-              width='25px'
-              height='25px'
-            />
-          </button>
-        ) : (
-          children
-        )}
-      </div>
-      <div>
-        <h2 className='font-bold text-[1.5rem]'>Categorías</h2>
-        <div className='flex flex-col gap-2 text-start mt-5 items-start'>
-          {categoriesAll.map((item) => (
-            <TemplateCategory
-              valueDefault={categoria.includes(item.type)}
-              key={item.id}
-              type={item.type}
-              isCategoria={handleIsCategoria}
-              name={item.id}
-            />
-          ))}
+      <div className='flex flex-col gap-6'>
+        <div className='flex justify-end'>
+          {isMobile ? (
+            <button
+              onClick={() => {
+                document.body.style.overflow = 'auto';
+                closeFilter(true);
+              }}>
+              <img
+                src='/closeWhite.svg'
+                color={'white'}
+                width='25px'
+                height='25px'
+              />
+            </button>
+          ) : (
+            children
+          )}
         </div>
-      </div>
-      <div>
-        <h2 className='font-bold text-[1.5rem] mb-5'>Precio</h2>
-        <Slider
-          min={0}
-          max={60000}
-          range
-          value={[minPrice, maxPrice]}
-          onChange={(e: any) => {
-            setMinPrice(e[0]);
-            setMaxPrice(e[1]);
-          }}
-        />
-        <div className='flex justify-between'>
-          <p>
-            {minPrice.toLocaleString('es-AR', {
-              style: 'currency',
-              currency: 'ARS', // Cambiado a pesos argentinos
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })}
-          </p>
-          <p>
-            {maxPrice.toLocaleString('es-AR', {
-              style: 'currency',
-              currency: 'ARS', // Cambiado a pesos argentinos
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })}
-          </p>
+        <div>
+          <h2 className='font-bold text-[1.5rem]'>Categorías</h2>
+          <div className='flex flex-col gap-2 text-start mt-5 items-start'>
+            {categoriesAll.map((item) => (
+              <TemplateCategory
+                valueDefault={categoria.includes(item.type)}
+                key={item.id}
+                type={item.type}
+                isCategoria={handleIsCategoria}
+                name={item.id}
+              />
+            ))}
+          </div>
+        </div>
+        <div>
+          <h2 className='font-bold text-[1.5rem] mb-5'>Precio</h2>
+          <Slider
+            min={0}
+            max={70000}
+            range
+            value={[minPrice, maxPrice]}
+            onChange={(e: any) => {
+              setMinPrice(e[0]);
+              setMaxPrice(e[1]);
+            }}
+          />
+          <div className='flex justify-between'>
+            <p>
+              {minPrice.toLocaleString('es-AR', {
+                style: 'currency',
+                currency: 'ARS', // Cambiado a pesos argentinos
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })}
+            </p>
+            <p>
+              {maxPrice.toLocaleString('es-AR', {
+                style: 'currency',
+                currency: 'ARS', // Cambiado a pesos argentinos
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })}
+            </p>
+          </div>
         </div>
       </div>
     </div>

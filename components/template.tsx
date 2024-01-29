@@ -178,7 +178,7 @@ export function TemplateCategory({
       className={`hover:opacity-60 transition-[border] duration-100 ease-linear ${
         isActiveClick
           ? 'text-[#ffefa9] font-bold border-b-2 border-b-[#ffefa9]'
-          : 'font-normal border-none text-black max-md:text-white'
+          : 'font-normal border-none text-black max-lg:text-white'
       }	`}
       id={type}
       onClick={(e: React.MouseEvent) => {

@@ -19,7 +19,7 @@ export function ProductosComponent() {
     JSON.parse(searchParams.get('type')!) || []
   );
   const [typePrice, setTypePrice] = useState<number[]>(
-    JSON.parse(searchParams.get('price')!) || [0, 60000]
+    JSON.parse(searchParams.get('price')!) || [0, 70000]
   );
   const [isOpenFilter, setIsOpenFilter] = useState(false);
   const [openLinkProduct, setOpenLinkProduct] = useState('');
@@ -40,7 +40,6 @@ export function ProductosComponent() {
     typeof window !== 'undefined' ? localStorage.getItem('category') : null
   );
   const seccionDestinoRef: any = useRef(null);
-  console.log(data);
 
   useEffect(() => {
     if (data?.results?.length) {

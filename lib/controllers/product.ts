@@ -18,11 +18,10 @@ export async function searchProduct(req: Request) {
       hitsPerPage: finalLimit,
       offset: finalOffset,
       length: finalLimit,
-      filters: ` ${cadenaDeBusquedaPrice ? cadenaDeBusquedaPrice : ''}  ${
+      filters: `${cadenaDeBusquedaPrice ? cadenaDeBusquedaPrice : ''}   ${
         cadenaDeBusquedaCategory ? ' AND ' + cadenaDeBusquedaCategory : ''
       }`,
     });
-    console.log(data);
 
     return {
       results: data.hits,
