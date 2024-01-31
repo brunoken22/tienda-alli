@@ -117,7 +117,14 @@ export function GeneratePdf({data}: {data: TypeCompra[]}) {
 
             {data.map((producto) => (
               <View style={styles.tableRow} key={producto.id}>
-                <Image src={producto.img} style={styles.image}></Image>
+                <Image
+                  src={{
+                    uri: producto.img,
+                    method: 'GET',
+                    headers: {'Cache-Control': 'no-cache'},
+                    body: '',
+                  }}
+                  style={styles.image}></Image>
                 <Text style={styles.tableCell}>{producto.title}</Text>
                 <Text style={styles.tableCell}>{producto.cantidad}</Text>
                 <Text style={styles.tableCell}>{`$${producto.price.toFixed(
