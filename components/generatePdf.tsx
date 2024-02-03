@@ -57,6 +57,8 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 50,
+    height: 55,
+    objectFit: 'cover',
     flex: 1,
     padding: 8,
   },
