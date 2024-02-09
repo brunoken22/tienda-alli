@@ -41,21 +41,27 @@ export function Header() {
               <Link
                 href={'/'}
                 className={`${
-                  pathname == '/' ? 'text-[#ffefa9]' : 'text-white'
+                  pathname == '/'
+                    ? 'text-[#ffefa9] border-b-[1px] border-solid	 border-[#ffefa9]'
+                    : 'text-white'
                 }`}>
                 Inicio
               </Link>
               <Link
                 href={'/nosotros'}
                 className={`${
-                  pathname == '/nosotros' ? 'text-[#ffefa9]' : 'text-white'
+                  pathname == '/nosotros'
+                    ? 'text-[#ffefa9] border-b-[1px] border-solid	 border-[#ffefa9]'
+                    : 'text-white'
                 }`}>
                 Nosotros
               </Link>
               <Link
                 href={'/productos'}
                 className={`${
-                  pathname == '/productos' ? 'text-[#ffefa9]' : 'text-white'
+                  pathname == '/productos'
+                    ? 'text-[#ffefa9] border-b-[1px] border-solid	 border-[#ffefa9]'
+                    : 'text-white'
                 }`}>
                 Productos
               </Link>
