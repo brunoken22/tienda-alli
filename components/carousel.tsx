@@ -25,8 +25,8 @@ export function CarouselHeader() {
         spaceBetween={30}
         centeredSlides={true}
         autoplay={{
-          delay: 500,
-          disableOnInteraction: true,
+          delay: 10,
+          disableOnInteraction: false,
         }}
         pagination={{
           clickable: true,

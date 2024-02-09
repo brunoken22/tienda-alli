@@ -5,12 +5,23 @@ import Link from 'next/link';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {ShoppingCart} from './shoppingCart';
 import {usePathname} from 'next/navigation';
+import {GetDataCartShopping} from '@/lib/hook';
+import {useEffect} from 'react';
 
 export function Header() {
   const [openShoppingCartValue, setOpenShoppingCartValue] =
     useRecoilState(openShoppingCart);
-  const shoppingCartUserData = useRecoilValue(shoppingCart);
   const pathname = usePathname();
+  const {dataCartShopping} = GetDataCartShopping(
+    typeof window !== 'undefined' ? localStorage.getItem('category') : null
+  );
+  const [shoppingCartUserData, setShoppingCartUserData] =
+    useRecoilState(shoppingCart);
+  useEffect(() => {
+    if (dataCartShopping) {
+      setShoppingCartUserData(dataCartShopping);
+    }
+  }, [dataCartShopping]);
   return (
     <>
       <div className='bg-[#272727] pt-4 pb-4 flex flex-col gap-4 fixed top-0 left-0 right-0 z-10'>

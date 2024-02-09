@@ -1,17 +1,15 @@
 'use client';
 import Link from 'next/link';
-import {GetDataCartShopping, GetDataProduct} from '@/lib/hook';
+import {GetDataProduct} from '@/lib/hook';
 import {EsqueletonProduct} from './esqueleton';
 import React, {useEffect, useRef, useState} from 'react';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import {TemplateProduct} from './template';
 import {FiltroSearch} from './filtro';
 import {FormSearch} from '@/ui/form';
-import {useRecoilState} from 'recoil';
-import {shoppingCart} from '@/lib/atom';
 
 export function ProductosComponent() {
-  const {replace, push} = useRouter();
+  const {replace} = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get('q') || '');
@@ -25,11 +23,7 @@ export function ProductosComponent() {
   const [openLinkProduct, setOpenLinkProduct] = useState('');
   const [offset, setOffset] = useState(Number(searchParams.get('offset')) || 0);
   const [dataModi, setDataModi] = useState<any>();
-  const [shoppingCartUserData, setShoppingCartUserData] =
-    useRecoilState(shoppingCart);
-  const {dataCartShopping} = GetDataCartShopping(
-    typeof window !== 'undefined' ? localStorage.getItem('category') : null
-  );
+
   const {data, isLoading} = GetDataProduct(
     search,
     typeSearch,
@@ -57,11 +51,7 @@ export function ProductosComponent() {
       setOffset(0);
     }
   }, [typeSearch]);
-  useEffect(() => {
-    if (dataCartShopping) {
-      setShoppingCartUserData(dataCartShopping);
-    }
-  }, [dataCartShopping]);
+
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
     if (!typeSearch.length) {
