@@ -8,5 +8,6 @@ export async function GET() {
       filters: 'featured:true AND NOT fontPage:false',
     })
     .catch((e) => e);
+
   return Response.json(products.hits);
 }
