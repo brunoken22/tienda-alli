@@ -40,18 +40,18 @@ export function Header() {
             <div className=' flex gap-4'>
               <Link
                 href={'/'}
-                className={`${
+                className={` ${
                   pathname == '/'
-                    ? 'text-[#ffefa9] border-b-[1px] border-solid	 border-[#ffefa9]'
+                    ? '	 text-[#ffefa9] border-b-[1px] border-solid	 border-[#ffefa9] '
                     : 'text-white'
                 }`}>
                 Inicio
               </Link>
               <Link
                 href={'/nosotros'}
-                className={`${
+                className={` ${
                   pathname == '/nosotros'
-                    ? 'text-[#ffefa9] border-b-[1px] border-solid	 border-[#ffefa9]'
+                    ? ' text-[#ffefa9] border-b-[1px] border-solid	 border-[#ffefa9] '
                     : 'text-white'
                 }`}>
                 Nosotros
@@ -60,7 +60,7 @@ export function Header() {
                 href={'/productos'}
                 className={`${
                   pathname == '/productos'
-                    ? 'text-[#ffefa9] border-b-[1px] border-solid	 border-[#ffefa9]'
+                    ? ' text-[#ffefa9] border-b-[1px] border-solid	 border-[#ffefa9] '
                     : 'text-white'
                 }`}>
                 Productos
