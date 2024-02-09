@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import {index} from '@/lib/algolia';
 
 export async function GET() {

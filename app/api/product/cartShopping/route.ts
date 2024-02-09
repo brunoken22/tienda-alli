@@ -1,4 +1,6 @@
-import {getCartShopping} from '@/lib/controllers/product';
+export const dynamic = 'force-dynamic';
+
+import { getCartShopping } from '@/lib/controllers/product';
 import {NextResponse} from 'next/server';
 
 export async function POST(req: Request) {
