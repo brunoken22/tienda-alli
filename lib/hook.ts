@@ -1,5 +1,4 @@
 import useSWR from 'swr';
-import useSWRImmutable from 'swr/immutable';
 
 export function GetDataProduct(
   search?: string,

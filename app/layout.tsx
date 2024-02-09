@@ -13,6 +13,20 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang='es'>
+      <head>
+        <link
+          rel='preload'
+          href='https://tienda-alli.vercel.app/api/product/featured'
+          as='fetch'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preload'
+          href='https://tienda-alli.vercel.app/api/product/frontPage'
+          as='fetch'
+          crossOrigin='anonymous'
+        />
+      </head>
       <body className={inter.className}>
         <LayoutRecoilRoot>{children}</LayoutRecoilRoot>
       </body>
