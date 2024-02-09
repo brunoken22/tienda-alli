@@ -2,7 +2,7 @@
 import {openShoppingCart, shoppingCart} from '@/lib/atom';
 import {FormSearchHome} from '@/ui/form';
 import Link from 'next/link';
-import {useRecoilState, useRecoilValue} from 'recoil';
+import {useRecoilState} from 'recoil';
 import {ShoppingCart} from './shoppingCart';
 import {usePathname} from 'next/navigation';
 import {GetDataCartShopping} from '@/lib/hook';
@@ -37,10 +37,28 @@ export function Header() {
             </div>
           ) : null}
           <div className='flex justify-between gap-6 items-center max-md:justify-center'>
-            <div className='text-white flex gap-4'>
-              <Link href={'/'}>Inicio</Link>
-              <Link href={'/nosotros'}>Nosotros</Link>
-              <Link href={'/productos'}>Productos</Link>
+            <div className=' flex gap-4'>
+              <Link
+                href={'/'}
+                className={`${
+                  pathname == '/' ? 'text-[#ffefa9]' : 'text-white'
+                }`}>
+                Inicio
+              </Link>
+              <Link
+                href={'/nosotros'}
+                className={`${
+                  pathname == '/nosotros' ? 'text-[#ffefa9]' : 'text-white'
+                }`}>
+                Nosotros
+              </Link>
+              <Link
+                href={'/productos'}
+                className={`${
+                  pathname == '/productos' ? 'text-[#ffefa9]' : 'text-white'
+                }`}>
+                Productos
+              </Link>
             </div>
             <div className='max-md:absolute max-md:left-[85%] max-md:top-[10%]'>
               <button
