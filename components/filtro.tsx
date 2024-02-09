@@ -65,7 +65,7 @@ export function FiltroSearch({
       className={
         isMobile
           ? ' fixed inset-0 bg-[#262626] z-10	p-8 flex flex-col gap-8 text-white'
-          : 'w-full flex flex-col gap-8 max-md:hidden fixed w-[230px]'
+          : 'flex flex-col gap-8 max-md:hidden fixed w-[230px]'
       }>
       <div className='flex flex-col gap-6'>
         <div className='flex justify-end'>
