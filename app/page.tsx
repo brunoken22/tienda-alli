@@ -24,7 +24,7 @@ export default function Home() {
             Destacados
           </h2>
           <div
-            className={`flex justify-evenly items-center  gap-y-4 flex-wrap	 pb-6`}>
+            className={`flex justify-evenly items-center gap-x-[0.4rem]  gap-y-4 flex-wrap	 pb-6`}>
             <ProductsFeatured />
           </div>
         </div>
