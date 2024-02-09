@@ -31,7 +31,7 @@ export function CarouselHeader() {
         pagination={{
           clickable: true,
         }}
-        modules={[Autoplay, Pagination]}
+        modules={[Pagination]}
         onAutoplayTimeLeft={onAutoplayTimeLeft}
         className='mySwiper'>
         {data &&
