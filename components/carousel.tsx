@@ -25,13 +25,13 @@ export function CarouselHeader() {
         spaceBetween={30}
         centeredSlides={true}
         autoplay={{
-          delay: 10,
+          delay: 2500,
           disableOnInteraction: false,
         }}
         pagination={{
           clickable: true,
         }}
-        modules={[Pagination]}
+        modules={[Autoplay, Pagination]}
         onAutoplayTimeLeft={onAutoplayTimeLeft}
         className='mySwiper'>
         {data &&
