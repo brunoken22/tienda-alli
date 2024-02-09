@@ -8,7 +8,7 @@ export function GetDataProduct(
   limit?: number,
   offset?: number
 ) {
-  const {data, isLoading} = useSWRImmutable(
+  const {data, isLoading} = useSWR(
     [
       `/api/product${search ? '?q=' + search : ''}${
         typePrice?.length && search
@@ -35,6 +35,14 @@ export function GetDataCartShopping(ids: string | null) {
     fetcher
   );
   return {dataCartShopping: data};
+}
+export function GetProductFeatured() {
+  const {data} = useSWR([`/api/product/featured`], fetcher);
+  return {data};
+}
+export function GetFrontPage() {
+  const {data} = useSWR([`/api/product/frontPage`], fetcher);
+  return {data};
 }
 async function fetcher(dataParams: any[]) {
   const option = dataParams[1] || {};

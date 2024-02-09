@@ -32,7 +32,7 @@ export function ShoppingCart() {
 
   return (
     <>
-      <div className='fixed right-0 z-10 top-[8.5rem] bottom-0 z-1 bg-[#ffefa9] w-[400px]    max-md:inset-0 max-md:w-auto rounded-tl-lg max-md:rounded-none transition-all ease-linear duration-1000	'>
+      <div className='fixed right-0  top-[8.5rem] bottom-0 z-10 bg-[#ffefa9] w-[400px]    max-md:inset-0 max-md:w-auto rounded-tl-lg max-md:rounded-none transition-all ease-linear duration-1000	'>
         <div className='p-4 h-full flex justify-between flex-col'>
           <div className='flex justify-between'>
             <h2 className='font-bold text-2xl'>Carrito de compras</h2>
@@ -81,8 +81,11 @@ export function ShoppingCart() {
             </div>
             <div className='flex justify-center mt-4 mb-4'>
               <button
+                disabled={shoppingCartValue.length ? false : true}
                 onClick={() => setOpenIsCompraLink(true)}
-                className='bg-black p-4 pt-2 pb-2 text-[#ffefa9] rounded-lg'>
+                className={`p-4 pt-2 text-[#ffefa9]  pb-2 rounded-lg ${
+                  shoppingCartValue.length ? 'bg-black' : 'bg-gray-400'
+                }`}>
                 INICIAR COMPRA
               </button>
             </div>

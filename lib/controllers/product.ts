@@ -20,7 +20,7 @@ export async function searchProduct(req: Request) {
       length: finalLimit,
       filters: `${cadenaDeBusquedaPrice ? cadenaDeBusquedaPrice : ''}   ${
         cadenaDeBusquedaCategory ? ' AND ' + cadenaDeBusquedaCategory : ''
-      }`,
+      } AND (NOT fontPage:true OR NOT _exists_:fontPage)`,
     });
 
     return {

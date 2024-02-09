@@ -18,7 +18,7 @@
 
 body {
   box-sizing: border-box;
-  background-color: #c3c3c3;
+  /* background-color: #c3c3c3;
   overflow-x: hidden;
 }
 
@@ -33,7 +33,7 @@ body::-webkit-scrollbar-track {
 body::-webkit-scrollbar-thumb {
   background-color: #ffefa9; /* color of the scroll thumb */
   border-radius: 20px; /* roundness of the scroll thumb */
-  border: 1px solid white; /* creates padding around scroll thumb */
+  border: 1px solid white; /*creates padding around scroll thumb*/
 }
 .rc-slider-track {
   background-color: #ffefa9 !important;
@@ -54,4 +54,7 @@ body::-webkit-scrollbar-thumb {
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+swiper-wrapper swiper-slide {
+  background-color: #ffffee !important;
 }

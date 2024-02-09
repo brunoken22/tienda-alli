@@ -11,6 +11,7 @@ export function TemplateProduct({
   openImg,
   price,
   id,
+  inicio,
 }: {
   id: string;
   Images: any;
@@ -19,6 +20,7 @@ export function TemplateProduct({
   price: number;
   priceOfert: number;
   openImg: (data: any) => any;
+  inicio: boolean;
 }) {
   const [openFocusName, setOpenFocusName] = useState(false);
   const [shoppingCartUserData, setShoppingCartUserData] =
@@ -78,9 +80,13 @@ export function TemplateProduct({
       return newShoppingCart as any[];
     });
   };
-
   return (
-    <div className='grid grid-cols-[repeat(1,120px_1fr)] gap-4 w-[370px] items-center  bg-[#ffefa9] rounded-lg h-[150px]'>
+    <div
+      className={` grid-cols-[repeat(1,120px_1fr)] gap-4  items-center  bg-[#ffefa9] rounded-lg ${
+        inicio
+          ? 'flex flex-col h-auto w-[200px] p-2'
+          : 'grid w-[370px] h-[150px]'
+      }`}>
       <button onClick={handleClickOpenImg} className='h-[150px] relative'>
         <img
           src={Images}
@@ -98,11 +104,14 @@ export function TemplateProduct({
           ''
         )}
       </button>
-      <div className='flex flex-col gap-2'>
+      <div
+        className={`flex flex-col gap-2 ${
+          inicio && 'items-center text-center'
+        }`}>
         <div className='flex flex-col gap-4'>
           <div className='relative'>
             <h2
-              className='max-h-[48px] overflow-hidden font-semibold	'
+              className='h-[48px] overflow-hidden font-medium	'
               onMouseEnter={() => setOpenFocusName(true)}
               onMouseLeave={() => setOpenFocusName(false)}>
               {Name}{' '}
@@ -114,7 +123,10 @@ export function TemplateProduct({
             ) : null}
           </div>
           {oferta ? (
-            <div className='flex justify-start gap-4'>
+            <div
+              className={`flex justify-start gap-4 ${
+                inicio && 'items-center justify-center'
+              }`}>
               <p className='text-gray-500 line-through	'>
                 {price.toLocaleString('es-AR', {
                   style: 'currency',
@@ -123,7 +135,7 @@ export function TemplateProduct({
                   maximumFractionDigits: 0,
                 })}
               </p>
-              <p className='font-bold'>
+              <p className='font-bold text-[1.2rem]'>
                 {priceOfert.toLocaleString('es-AR', {
                   style: 'currency',
                   currency: 'ARS',
@@ -133,7 +145,7 @@ export function TemplateProduct({
               </p>
             </div>
           ) : (
-            <p className='font-bold'>
+            <p className='font-bold text-[1.2rem]'>
               {price.toLocaleString('es-AR', {
                 style: 'currency',
                 currency: 'ARS',
@@ -178,7 +190,7 @@ export function TemplateCategory({
       className={`hover:opacity-60 transition-[border] duration-100 ease-linear ${
         isActiveClick
           ? 'text-[#ffefa9] font-bold border-b-2 border-b-[#ffefa9]'
-          : 'font-normal border-none text-black max-lg:text-white'
+          : 'font-normal border-none text-black max-md:text-white'
       }	`}
       id={type}
       onClick={(e: React.MouseEvent) => {

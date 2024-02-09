@@ -1,0 +1,26 @@
+#app {
+  height: 100%;
+}
+html,
+body {
+  position: relative;
+  height: 100%;
+}
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+.swiper-slide-active {
+  background-color: #fff;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.swiper-slide-active img {
+  object-fit: contain;
+  height: 100%;
+}
+
+.swiper-backface-hidden .swiper-slide {
+  background-color: #ffefa9;
+}
