@@ -17,7 +17,11 @@ export function GetDataProduct(
         typeSearch?.length ? '&type=' + JSON.stringify(typeSearch) : '&type=[]'
       }&limit=${limit}&offset=${offset}`,
     ],
-    fetcher
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      refreshInterval: 3600000,
+    }
   );
   return {data, isLoading};
 }
