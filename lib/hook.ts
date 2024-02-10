@@ -31,16 +31,26 @@ export function GetDataCartShopping(ids: string | null) {
   };
   const {data, isLoading} = useSWR(
     ids ? [`/api/product/cartShopping`, option] : null,
-    fetcher
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      refreshInterval: 3600000,
+    }
   );
   return {dataCartShopping: data};
 }
 export function GetProductFeatured() {
-  const {data} = useSWR([`/api/product/featured`], fetcher);
+  const {data} = useSWR([`/api/product/featured`], fetcher, {
+    revalidateOnFocus: false,
+    refreshInterval: 3600000,
+  });
   return {data};
 }
 export function GetFrontPage() {
-  const {data} = useSWR([`/api/product/frontPage`], fetcher);
+  const {data} = useSWR([`/api/product/frontPage`], fetcher, {
+    revalidateOnFocus: false,
+    refreshInterval: 3600000,
+  });
   return {data};
 }
 async function fetcher(dataParams: any[]) {
