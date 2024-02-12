@@ -14,6 +14,8 @@ const categoriesAll = [
   {id: 'Mochilas juveniles', type: 'mochilas_juveniles'},
   {id: 'Cartucheras de Nene', type: 'cartucheras_nene'},
   {id: 'Cartucheras de Nena', type: 'cartucheras_nena'},
+  {id: 'Loncheras', type: 'loncheras'},
+  {id: 'Billeteras', type: 'billeteras'},
 ];
 export function FiltroSearch({
   children,
