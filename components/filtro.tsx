@@ -3,19 +3,37 @@ import {TemplateCategory} from './template';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-const categoriesAll = [
+const categoriesAll: any[] = [
   {id: 'Utiles escolares ', type: 'utiles'},
-  {id: 'Cartucheras ', type: 'cartucheras'},
-  {id: 'Mochilas ', type: 'mochilas'},
+  {
+    id: 'Cartucheras',
+    type: [
+      {id: 'Todas las cartucheras', type: 'cartucheras'},
+      {id: 'Cartucheras de Nene', type: 'cartucheras_nene'},
+      {id: 'Cartucheras de Nena', type: 'cartucheras_nena'},
+    ],
+  },
+  {
+    id: 'Mochilas ',
+    type: [
+      {id: 'Todas las mochilas', type: 'mochilas'},
+      {id: 'Mochilas de Nene', type: 'mochilas_nene'},
+      {id: 'Mochilas de Nena', type: 'mochilas_nena'},
+      {id: 'Mochilas juveniles', type: 'mochilas_juveniles'},
+    ],
+  },
+  {
+    id: 'Loncheras',
+    type: [
+      {id: 'Todas las loncheras', type: 'loncheras'},
+      {id: 'Loncheras de Nene', type: 'loncheras_nene'},
+      {id: 'Loncheras de Nena', type: 'loncheras_nena'},
+    ],
+  },
   {id: 'Carteras/Bandoleras ', type: 'carteras'},
   {id: 'Riñoneras ', type: 'riñoneras'},
-  {id: 'Mochilas de Nene', type: 'mochilas_nene'},
-  {id: 'Mochilas de Nena', type: 'mochilas_nena'},
-  {id: 'Mochilas juveniles', type: 'mochilas_juveniles'},
-  {id: 'Cartucheras de Nene', type: 'cartucheras_nene'},
-  {id: 'Cartucheras de Nena', type: 'cartucheras_nena'},
-  {id: 'Loncheras', type: 'loncheras'},
   {id: 'Billeteras', type: 'billeteras'},
+  ,
 ];
 export function FiltroSearch({
   children,
@@ -93,7 +111,12 @@ export function FiltroSearch({
           <div className='flex flex-col gap-2 text-start mt-5 items-start'>
             {categoriesAll.map((item) => (
               <TemplateCategory
-                valueDefault={categoria.includes(item.type)}
+                valueDefault={
+                  !Array.isArray(item.type)
+                    ? categoria.includes(item.type as string)
+                    : false
+                }
+                categoriaAllUser={categoria}
                 key={item.id}
                 type={item.type}
                 isCategoria={handleIsCategoria}
@@ -136,4 +159,18 @@ export function FiltroSearch({
       </div>
     </div>
   );
+}
+
+function filterCategoryExist(categorySearch: {}[], category: string[]) {
+  let buscarProductoPorTipo = categorySearch.find((item: any) => {
+    console.log(item);
+    item.type.some((subType: any) => category.includes(subType.type));
+    return;
+  });
+
+  if (buscarProductoPorTipo) {
+    return true;
+  } else {
+    return false;
+  }
 }

@@ -2,7 +2,6 @@ import {openShoppingCart, shoppingCart} from '@/lib/atom';
 import {InputNumber} from '@/ui/input';
 import {useEffect, useState} from 'react';
 import {useRecoilState} from 'recoil';
-
 export function TemplateProduct({
   Images,
   Name,
@@ -173,6 +172,76 @@ export function TemplateCategory({
   isCategoria,
   valueDefault,
   type,
+  categoriaAllUser,
+}: {
+  valueDefault: boolean;
+  type: string;
+  name: string;
+  categoriaAllUser: string[];
+  isCategoria: (categoria: string) => void;
+}) {
+  const [isActiveClick, setIsActiveClick] = useState(valueDefault);
+  const [isOpenCategoryAll, setIsOpenCategoryAll] = useState(false);
+
+  useEffect(() => {
+    return setIsActiveClick(valueDefault);
+  }, [valueDefault]);
+
+  useEffect(() => {
+    Array.isArray(type)
+      ? type.map(
+          (item) =>
+            categoriaAllUser.includes(item.type as string) &&
+            setIsOpenCategoryAll(true)
+        )
+      : null;
+  }, []);
+  return (
+    <>
+      <button
+        key={name}
+        className={`flex items-center gap-[0.2rem] hover:opacity-60 transition-[border] duration-100 ease-linear ${
+          isActiveClick && !Array.isArray(type)
+            ? 'font-bold border-b-2 border-b-[#000] max-md:border-b-[#ffefa9] max-md:text-[#ffefa9]'
+            : 'font-normal border-none  max-md:text-white'
+        }	`}
+        id={type}
+        onClick={(e: React.MouseEvent) => {
+          if (Array.isArray(type)) {
+            setIsOpenCategoryAll(!isOpenCategoryAll);
+            return;
+          }
+          isCategoria(e.currentTarget.id);
+          setIsActiveClick(!isActiveClick);
+        }}>
+        {Array.isArray(type) ? (
+          <img
+            src='/addition.svg'
+            width={'12px'}
+            className='border border-solid border-[#8e8e8e]'
+          />
+        ) : null}
+        {name}
+      </button>
+      {Array.isArray(type) && isOpenCategoryAll
+        ? type.map((item) => (
+            <TemplateCategorySecond
+              name={item.id}
+              isCategoria={isCategoria}
+              valueDefault={categoriaAllUser.includes(item.type as string)}
+              type={item.type}
+              key={item.type}
+            />
+          ))
+        : null}
+    </>
+  );
+}
+export function TemplateCategorySecond({
+  name,
+  isCategoria,
+  valueDefault,
+  type,
 }: {
   valueDefault: boolean;
   type: string;
@@ -180,6 +249,7 @@ export function TemplateCategory({
   isCategoria: (categoria: string) => void;
 }) {
   const [isActiveClick, setIsActiveClick] = useState(valueDefault);
+
   useEffect(() => {
     return setIsActiveClick(valueDefault);
   }, [valueDefault]);
@@ -187,10 +257,10 @@ export function TemplateCategory({
   return (
     <button
       key={name}
-      className={`hover:opacity-60 transition-[border] duration-100 ease-linear ${
+      className={`ml-4 flex items-center gap-[0.2rem] hover:opacity-60 transition-[border] duration-100 ease-linear text-black  ${
         isActiveClick
-          ? 'text-[#ffefa9] font-bold border-b-2 border-b-[#ffefa9]'
-          : 'font-normal border-none text-black max-md:text-white'
+          ? 'font-bold border-b-2 border-b-[#000] max-md:border-b-[#ffefa9] max-md:text-[#ffefa9]'
+          : 'font-normal border-none  max-md:text-white'
       }	`}
       id={type}
       onClick={(e: React.MouseEvent) => {
@@ -201,7 +271,6 @@ export function TemplateCategory({
     </button>
   );
 }
-
 export function TemplateShopppingCartProduct({
   id,
   title,

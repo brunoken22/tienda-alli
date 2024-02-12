@@ -116,10 +116,10 @@ export function ProductosComponent() {
           </FiltroSearch>
         </div>
         <div ref={seccionDestinoRef} className=''>
-          {data?.results.length ? (
+          {data?.results?.length ? (
             <p className='flex justify-center mb-8 font-medium'>
-              {data.results.length + data.pagination.offset} de{' '}
-              {data.pagination.total}
+              {data?.results?.length + data.pagination.offset} de{' '}
+              {data?.pagination?.total}
             </p>
           ) : null}
           <div className='flex justify-center flex-wrap gap-8  max-md:m-2   '>
