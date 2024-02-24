@@ -8,7 +8,7 @@ export default function Home() {
         <CarouselHeader />
       </div>
       <div className=''>
-        <div className={`text-center pt-[8vw] mb-[8vw]  `}>
+        <div className={`text-center p-2 pt-[3rem] mb-[3rem]  `}>
           <h2 className={`font-bold	text-2xl	`}>
             HACÉ TU PEDIDO Y RECIBILO RÁPIDAMENTE EN NUESTRO PUNTO DE ENCUENTRO
           </h2>
