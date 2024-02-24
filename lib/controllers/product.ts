@@ -66,3 +66,6 @@ export function getOffsetAndLimitFom(
   const finalOffset = offset < maxOffset ? offset : 0;
   return {finalLimit, finalOffset};
 }
+export function suma(num1: number, num2: number): number {
+  return num1 + num2;
+}

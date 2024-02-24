@@ -4,7 +4,6 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 const categoriesAll: any[] = [
-  {id: 'Utiles escolares ', type: 'utiles'},
   {
     id: 'Cartucheras',
     type: [

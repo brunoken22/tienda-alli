@@ -4,11 +4,10 @@ export default function Nosotros() {
       className={`flex gap-4 flex-col p-4 max-w-[50vw] max-md:w-[100%] max-md:max-w-[none] m-auto mt-[8rem] max-md:mt-[10rem] `}>
       <span>
         En el corazón de{' '}
-        <strong className={`text-[#ffefa9]`}>Tienda Escolar</strong>, nos
-        dedicamos a ofrecer una amplia gama de útiles escolares, cartucheras,
-        mochilas y más. Nuestra historia está impulsada por la pasión de
-        proporcionar a estudiantes y educadores las herramientas adecuadas para
-        el éxito académico.
+        <strong className={`text-[#ffefa9]`}>Tienda Alli</strong>, nos dedicamos
+        a ofrecer una amplia gama de cartucheras, mochilas y más. Nuestra
+        historia está impulsada por la pasión de proporcionar a estudiantes y
+        educadores las herramientas adecuadas para el éxito académico.
       </span>
       <br />
       <span>
@@ -39,17 +38,6 @@ export default function Nosotros() {
         mejorar continuamente.
       </span>
       <br />
-      <span>
-        {' '}
-        <strong className={`font-bold mt-8`}>
-          {' '}
-          Compromiso con la Educación{' '}
-        </strong>{' '}
-        <br /> No solo somos vendedores de artículos escolares, sino defensores
-        activos de la educación. Colaboramos con escuelas locales y
-        organizaciones educativas para apoyar iniciativas que fomenten el
-        aprendizaje y el desarrollo de los estudiantes.
-      </span>
     </div>
   );
 }
