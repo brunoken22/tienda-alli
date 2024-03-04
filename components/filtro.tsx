@@ -5,11 +5,12 @@ import 'rc-slider/assets/index.css';
 
 const categoriesAll: any[] = [
   {
-    id: 'Cartucheras',
+    id: 'Moda',
     type: [
-      {id: 'Todas las cartucheras', type: 'cartucheras'},
-      {id: 'Cartucheras de Nene', type: 'cartucheras_nene'},
-      {id: 'Cartucheras de Nena', type: 'cartucheras_nena'},
+      {id: 'Todas las Camperas', type: 'camperas'},
+      {id: 'Camperas Hombre', type: 'camperas_hombre'},
+      {id: 'Camperas Mujer', type: 'camperas_mujer'},
+      {id: 'Camperas Niños', type: 'camperas_niños'},
     ],
   },
   {
@@ -19,14 +20,6 @@ const categoriesAll: any[] = [
       {id: 'Mochilas de Nene', type: 'mochilas_nene'},
       {id: 'Mochilas de Nena', type: 'mochilas_nena'},
       {id: 'Mochilas juveniles', type: 'mochilas_juveniles'},
-    ],
-  },
-  {
-    id: 'Loncheras',
-    type: [
-      {id: 'Todas las loncheras', type: 'loncheras'},
-      {id: 'Loncheras de Nene', type: 'loncheras_nene'},
-      {id: 'Loncheras de Nena', type: 'loncheras_nena'},
     ],
   },
   {id: 'Carteras/Bandoleras ', type: 'carteras'},

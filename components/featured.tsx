@@ -1,11 +1,10 @@
 'use client';
 import {TemplateProduct} from '@/components/template';
 import {GetProductFeatured} from '@/lib/hook';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {EsqueletonProduct} from './esqueleton';
 export function ProductsFeatured() {
   const [openLinkProduct, setOpenLinkProduct] = useState('');
-
   const {data} = GetProductFeatured();
   return (
     <>
