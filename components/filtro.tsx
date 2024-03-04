@@ -5,11 +5,12 @@ import 'rc-slider/assets/index.css';
 
 const categoriesAll: any[] = [
   {
-    id: 'Cartucheras',
+    id: 'Moda',
     type: [
-      {id: 'Todas las cartucheras', type: 'cartucheras'},
-      {id: 'Cartucheras de Nene', type: 'cartucheras_nene'},
-      {id: 'Cartucheras de Nena', type: 'cartucheras_nena'},
+      {id: 'Todas las Camperas', type: 'camperas'},
+      {id: 'Camperas Hombre', type: 'camperas_hombre'},
+      {id: 'Camperas Mujer', type: 'camperas_mujer'},
+      {id: 'Camperas Niños', type: 'camperas_niños'},
     ],
   },
   {
@@ -19,14 +20,6 @@ const categoriesAll: any[] = [
       {id: 'Mochilas de Nene', type: 'mochilas_nene'},
       {id: 'Mochilas de Nena', type: 'mochilas_nena'},
       {id: 'Mochilas juveniles', type: 'mochilas_juveniles'},
-    ],
-  },
-  {
-    id: 'Loncheras',
-    type: [
-      {id: 'Todas las loncheras', type: 'loncheras'},
-      {id: 'Loncheras de Nene', type: 'loncheras_nene'},
-      {id: 'Loncheras de Nena', type: 'loncheras_nena'},
     ],
   },
   {id: 'Carteras/Bandoleras ', type: 'carteras'},
@@ -83,7 +76,7 @@ export function FiltroSearch({
     <div
       className={
         isMobile
-          ? ' fixed inset-0 bg-[#262626] z-10	p-8 flex flex-col gap-8 text-white'
+          ? ' fixed inset-0 bg-primary z-10	p-8 flex flex-col gap-8 text-white'
           : 'flex flex-col gap-8 max-md:hidden fixed w-[230px]'
       }>
       <div className='flex flex-col gap-6'>
@@ -158,18 +151,4 @@ export function FiltroSearch({
       </div>
     </div>
   );
-}
-
-function filterCategoryExist(categorySearch: {}[], category: string[]) {
-  let buscarProductoPorTipo = categorySearch.find((item: any) => {
-    console.log(item);
-    item.type.some((subType: any) => category.includes(subType.type));
-    return;
-  });
-
-  if (buscarProductoPorTipo) {
-    return true;
-  } else {
-    return false;
-  }
 }

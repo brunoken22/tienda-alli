@@ -50,7 +50,7 @@ export function InputNumber({cantidad, id}: {cantidad: number; id: string}) {
     setCantidadState(cantidadState + 1);
   };
   return (
-    <div className='flex gap-2  bg-white w-fit'>
+    <div className='flex gap-2  bg-white w-fit text-primary'>
       {cantidadState >= 2 && (
         <button
           className='font-bold text-2xl pr-2 pl-2'

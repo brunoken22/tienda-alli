@@ -54,13 +54,13 @@ export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
               </button>
             </div>
             <div className='relative p-6 flex-auto'>
-              <div className='my-4 text-blueGray-500 text-lg leading-relaxed'>
+              <div className='my-4 text-black Gray-500 text-lg leading-relaxed'>
                 <h3 className='mb-4'>Mi pedido:</h3>
                 <div className='max-h-[350px] overflow-auto'>
                   {shoppingCartUserData.length
                     ? shoppingCartUserData.map((item) => (
                         <div key={item.id}>
-                          <span className='text-white bg-[#6aa7ff] p-[0.2rem] pl-[0.5rem] pr-[0.5rem] rounded-full'>
+                          <span className=' bg-[#6aa7ff] p-[0.2rem] pl-[0.5rem] pr-[0.5rem] rounded-full'>
                             {item.cantidad}
                           </span>{' '}
                           {item.title}{' '}
@@ -109,12 +109,12 @@ export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
                 fileName='tiendaAlli.pdf'>
                 {({loading, error}) =>
                   loading ? (
-                    <button className='bg-[#8585ff] text-white active:bg-[#8585ff]font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 max-sm:text-center'>
+                    <button className='bg-primary text-white active:bg-primary font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 max-sm:text-center'>
                       Loading...
                     </button>
                   ) : (
                     <button
-                      className='bg-[#8585ff] text-white active:bg-[#8585ff]font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 max-sm:text-center'
+                      className='bg-primary text-white active:bg-primary font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 max-sm:text-center'
                       type='button'>
                       Descargar Compra
                     </button>

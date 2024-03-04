@@ -32,12 +32,12 @@ export function ShoppingCart() {
 
   return (
     <>
-      <div className='fixed right-0  top-[8.5rem] bottom-0 z-10 bg-[#ffefa9] w-[400px]    max-md:inset-0 max-md:w-auto rounded-tl-lg max-md:rounded-none transition-all ease-linear duration-1000	'>
+      <div className='fixed right-0  top-[8.5rem] bottom-0 z-10 bg-primary w-[400px]  text-secundary  max-md:inset-0 max-md:w-auto rounded-tl-lg max-md:rounded-none transition-all ease-linear duration-1000	'>
         <div className='p-4 h-full flex justify-between flex-col'>
           <div className='flex justify-between'>
             <h2 className='font-bold text-2xl'>Carrito de compras</h2>
             <button onClick={() => setOpenShoppingCartValue(false)}>
-              <img src='/closeBlack.svg' alt='close' width={20} />
+              <img src='/closeWhite.svg' alt='close' width={20} />
             </button>
           </div>
           <div className='flex flex-col gap-6 overflow-auto h-[75%] mt-8 '>
@@ -83,8 +83,10 @@ export function ShoppingCart() {
               <button
                 disabled={shoppingCartValue.length ? false : true}
                 onClick={() => setOpenIsCompraLink(true)}
-                className={`p-4 pt-2 text-[#ffefa9]  pb-2 rounded-lg ${
-                  shoppingCartValue.length ? 'bg-black' : 'bg-gray-400'
+                className={`p-4 pt-2 text-primary  pb-2 rounded-lg ${
+                  shoppingCartValue.length
+                    ? 'bg-secundary font-semibold hover:opacity-80'
+                    : 'bg-gray-400'
                 }`}>
                 INICIAR COMPRA
               </button>

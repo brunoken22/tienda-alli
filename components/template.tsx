@@ -81,18 +81,17 @@ export function TemplateProduct({
   };
   return (
     <div
-      className={` grid-cols-[repeat(1,120px_1fr)] gap-4  items-center  bg-[#ffefa9] rounded-lg ${
-        inicio
-          ? 'flex flex-col h-auto w-[200px] p-2'
-          : 'grid w-[370px] h-[150px]'
-      }`}>
-      <button onClick={handleClickOpenImg} className='h-[150px] relative'>
+      className={` grid-cols-[repeat(1,120px_1fr)] gap-4  items-center   rounded-lg 
+      flex flex-col h-auto w-[200px] p-2 text-center shadow-[0_0_15px_5px_#ddd] max-lg:shadow-[0_0_10px_2px_#ddd] max-lg:p-[0.3rem]`}>
+      <button
+        onClick={handleClickOpenImg}
+        className='w-full h-[200px] relative '>
         <img
           src={Images}
           alt={Name}
           width={120}
           height={100}
-          className=' w-[120px] h-full object-cover rounded-b-lg rounded-l-lg'
+          className=' w-full h-full object-cover rounded-b-lg rounded-l-lg'
           loading='lazy'
         />
         {oferta ? (
@@ -123,7 +122,7 @@ export function TemplateProduct({
           </div>
           {oferta ? (
             <div
-              className={`flex justify-start gap-4 ${
+              className={`flex justify-center gap-4  ${
                 inicio && 'items-center justify-center'
               }`}>
               <p className='text-gray-500 line-through	'>
@@ -158,7 +157,7 @@ export function TemplateProduct({
           <button
             id={id}
             onClick={handleClick}
-            className=' bg-black p-4 pt-2 pb-2 text-[#ffefa9] rounded-lg'>
+            className=' bg-primary p-4 pt-2 pb-2 text-white rounded-lg hover:opacity-80'>
             Añadir al carrito
           </button>
         </div>
@@ -166,7 +165,6 @@ export function TemplateProduct({
     </div>
   );
 }
-
 export function TemplateCategory({
   name,
   isCategoria,
@@ -202,8 +200,8 @@ export function TemplateCategory({
         key={name}
         className={`flex items-center gap-[0.2rem] hover:opacity-60 transition-[border] duration-100 ease-linear ${
           isActiveClick && !Array.isArray(type)
-            ? 'font-bold border-b-2 border-b-[#000] max-md:border-b-[#ffefa9] max-md:text-[#ffefa9]'
-            : 'font-normal border-none  max-md:text-white'
+            ? 'font-bold border-b-2 border-b-[#3c006c] max-md:border-b-white text-[#3c006c] max-md:text-white'
+            : 'font-light border-none  max-md:text-white'
         }	`}
         id={type}
         onClick={(e: React.MouseEvent) => {
@@ -259,8 +257,8 @@ export function TemplateCategorySecond({
       key={name}
       className={`ml-4 flex items-center gap-[0.2rem] hover:opacity-60 transition-[border] duration-100 ease-linear text-black  ${
         isActiveClick
-          ? 'font-bold border-b-2 border-b-[#000] max-md:border-b-[#ffefa9] max-md:text-[#ffefa9]'
-          : 'font-normal border-none  max-md:text-white'
+          ? 'font-bold border-b-2 border-b-[#3c006c] max-md:border-b-white text-[#3c006c] max-md:text-white'
+          : 'font-light border-none  max-md:text-white'
       }	`}
       id={type}
       onClick={(e: React.MouseEvent) => {
@@ -334,8 +332,8 @@ export function TemplateShopppingCartProduct({
       <button
         onClick={handleDelete}
         id={id}
-        className='fill-white hover:fill-red-400'>
-        <img src='/delete.svg' alt='delete' width={14} />
+        className='fill-white hover:fill-red-400 hover:scale-125'>
+        <img src='/delete.svg' alt='delete' width={14} className='' />
       </button>
     </div>
   );

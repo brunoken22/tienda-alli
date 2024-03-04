@@ -24,7 +24,7 @@ export function Header() {
   }, [dataCartShopping]);
   return (
     <>
-      <div className='bg-[#272727] pt-4 pb-4 flex flex-col gap-4 fixed top-0 left-0 right-0 z-10'>
+      <div className='bg-primary pt-4 pb-4 flex flex-col gap-4 fixed top-0 left-0 right-0 z-10'>
         <div className='relative flex justify-between pl-4 pr-4 max-md:flex-col max-md:gap-4'>
           <Link
             href={'/'}
@@ -42,7 +42,7 @@ export function Header() {
                 href={'/'}
                 className={` ${
                   pathname == '/'
-                    ? '	 text-[#ffefa9] border-b-[1px] border-solid	 border-[#ffefa9] '
+                    ? '	 text-secundary border-b-[1px] border-solid	 border-secundary '
                     : 'text-white'
                 }`}>
                 Inicio
@@ -51,7 +51,7 @@ export function Header() {
                 href={'/nosotros'}
                 className={` ${
                   pathname == '/nosotros'
-                    ? ' text-[#ffefa9] border-b-[1px] border-solid	 border-[#ffefa9] '
+                    ? ' text-secundary border-b-[1px] border-solid	 border-secundary '
                     : 'text-white'
                 }`}>
                 Nosotros
@@ -60,7 +60,7 @@ export function Header() {
                 href={'/productos'}
                 className={`${
                   pathname == '/productos'
-                    ? ' text-[#ffefa9] border-b-[1px] border-solid	 border-[#ffefa9] '
+                    ? ' text-secundary border-b-[1px] border-solid	 border-secundary '
                     : 'text-white'
                 }`}>
                 Productos
@@ -72,7 +72,7 @@ export function Header() {
                 onClick={() => setOpenShoppingCartValue(true)}>
                 <img src='/cart-shopping.svg' alt='cart-shopping' width={20} />
                 {shoppingCartUserData.length ? (
-                  <span className='absolute bottom-[60%] left-[60%] bg-[#ffefa9] text-[0.8rem] pr-[0.4rem] pl-[0.4rem] rounded-full'>
+                  <span className='absolute bottom-[60%] left-[60%] bg-secundary text-[0.8rem] pr-[0.4rem] pl-[0.4rem] rounded-full'>
                     {shoppingCartUserData.length}
                   </span>
                 ) : null}

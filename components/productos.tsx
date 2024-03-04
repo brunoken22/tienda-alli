@@ -82,7 +82,7 @@ export function ProductosComponent() {
 
   return (
     <>
-      <div className='max-md:block hidden  bg-[#272727] fixed top-[6rem] right-0 left-0 z-[9] '>
+      <div className='max-md:block hidden  bg-primary fixed top-[6rem] right-0 left-0 z-[9] '>
         {pathname == '/productos' ? (
           <div className='  justify-center gap-4 flex mr-4 ml-4 p-2'>
             <FormSearch value={search} modValue={handleModValueFormSearch} />
@@ -104,8 +104,8 @@ export function ProductosComponent() {
           </div>
         ) : null}
       </div>
-      <div className='grid grid-cols-[repeat(1,230px_1fr);] gap-6 max-md:grid-cols-none   mt-[5rem] max-w-[1250px] mr-auto ml-auto p-2 max-md:mt-[10rem]'>
-        <div className='w-full flex flex-col gap-8 max-md:hidden '>
+      <div className='grid grid-cols-[repeat(1,230px_1fr);] gap-6 max-md:grid-cols-none   mt-[5rem] max-w-[1450px] mr-auto ml-auto p-2 max-md:mt-[10rem] max-md:p-0'>
+        <div className='w-full flex flex-col gap-8 max-md:hidden mt-16'>
           <FiltroSearch
             valueDefault={handleDefaultParams}
             typeCategoriaPrice={handleTypeCategoryPrice}
@@ -122,7 +122,7 @@ export function ProductosComponent() {
               {data?.pagination?.total}
             </p>
           ) : null}
-          <div className='flex justify-center flex-wrap gap-8  max-md:m-2   '>
+          <div className='flex justify-center flex-wrap gap-8 max-lg:gap-x-[0.1rem] max-lg:m-0'>
             {dataModi?.length
               ? dataModi.map((item: any) => (
                   <TemplateProduct
@@ -163,7 +163,7 @@ export function ProductosComponent() {
             data.results.length + data.pagination.offset <=
               data.pagination.total ? (
               <button
-                className='bg-[#ffefa9] p-4 pt-2 pb-2 text-black rounded-lg font-semibold'
+                className='bg-primary p-4 pt-2 pb-2 text-secundary rounded-lg font-semibold'
                 onClick={() => setOffset(Number(offset) - 15)}>
                 Volver
               </button>
@@ -172,7 +172,7 @@ export function ProductosComponent() {
             data.results.length + data.pagination.offset <
               data.pagination.total ? (
               <button
-                className='bg-[#ffefa9] p-4 pt-2 pb-2 text-black rounded-lg font-semibold'
+                className='bg-primary p-4 pt-2 pb-2 text-secundary rounded-lg font-semibold'
                 onClick={() => setOffset(Number(offset) + 15)}>
                 Ver más
               </button>

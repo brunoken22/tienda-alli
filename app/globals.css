@@ -6,6 +6,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --primary: #3c006c;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -31,25 +32,25 @@ body::-webkit-scrollbar-track {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #ffefa9; /* color of the scroll thumb */
+  background-color: var(--primary); /* color of the scroll thumb */
   border-radius: 20px; /* roundness of the scroll thumb */
   border: 1px solid white; /*creates padding around scroll thumb*/
 }
 .rc-slider-track {
-  background-color: #ffefa9 !important;
+  background-color: var(--primary) !important;
 }
 .rc-slider-track-1 {
-  background-color: #ffefa9 !important;
+  background-color: var(--primary) !important;
 }
 .rc-slider-handle {
-  border-color: #ffefa9 !important;
+  border-color: var(--primary) !important;
 }
 .rc-slider-handle:hover {
-  border-color: #ffefa9 !important;
+  border-color: var(--primary) !important;
 }
 .rc-slider-handle-dragging {
-  border-color: #ffefa9 !important;
-  box-shadow: 0 0 5px 5px #ffefa9 !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 5px 5px var(--primary) !important;
 }
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;

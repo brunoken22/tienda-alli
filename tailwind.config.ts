@@ -14,8 +14,17 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+
       animation: {
         navegation: 'color 1s ease-in-out normal',
+      },
+      backgroundColor: {
+        primary: '#3c006c',
+        secundary: '#fff',
+      },
+      colors: {
+        primary: '#3c006c',
+        secundary: '#fff',
       },
     },
   },
