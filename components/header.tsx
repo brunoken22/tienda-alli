@@ -93,9 +93,8 @@ export function Header() {
             </div>
           </div>
         </div>
-
-        {openShoppingCartValue ? <ShoppingCart /> : null}
       </div>
+      {openShoppingCartValue ? <ShoppingCart /> : null}
 
       {openInput && pathname !== '/productos' ? (
         <div className='fixed inset-0 backdrop-blur-[2px] z-10'>
