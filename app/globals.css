@@ -42,6 +42,14 @@ body::-webkit-scrollbar-track {
 .rc-slider-track-1 {
   background-color: var(--primary) !important;
 }
+@media (max-width: 767px) {
+  .rc-slider-track {
+    background-color: white !important;
+  }
+  .rc-slider-track-1 {
+    background-color: white !important;
+  }
+}
 .rc-slider-handle {
   border-color: var(--primary) !important;
 }

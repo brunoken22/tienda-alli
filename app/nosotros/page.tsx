@@ -1,7 +1,7 @@
 export default function Nosotros() {
   return (
     <div
-      className={`flex gap-4 flex-col p-4 max-w-[50vw] max-md:w-[100%] max-md:max-w-[none] m-auto mt-[8rem] max-md:mt-[10rem] `}>
+      className={`flex gap-4 flex-col p-4 max-w-[50vw] max-md:w-[100%] max-md:max-w-[none] m-auto mt-[8rem] max-md:mt-[8rem] `}>
       <span>
         En el corazón de <strong className={`text-primary`}>Tienda Alli</strong>
         , nos dedicamos a ofrecer una amplia gama de cartucheras, mochilas y

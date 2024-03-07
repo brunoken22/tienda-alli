@@ -6,9 +6,10 @@ import {useRecoilState} from 'recoil';
 import {ShoppingCart} from './shoppingCart';
 import {usePathname} from 'next/navigation';
 import {GetDataCartShopping} from '@/lib/hook';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 
 export function Header() {
+  const [openInput, setOpenInput] = useState(false);
   const [openShoppingCartValue, setOpenShoppingCartValue] =
     useRecoilState(openShoppingCart);
   const pathname = usePathname();
@@ -66,6 +67,18 @@ export function Header() {
                 Productos
               </Link>
             </div>
+            {!openInput && pathname !== '/productos' ? (
+              <div className='hidden max-md:block'>
+                <button onClick={() => setOpenInput(true)}>
+                  <img
+                    src='/searchWhite.svg'
+                    alt='search'
+                    width={20}
+                    height={20}
+                  />
+                </button>
+              </div>
+            ) : null}
             <div className='max-md:absolute max-md:left-[85%] max-md:top-[10%]'>
               <button
                 className='relative '
@@ -80,13 +93,22 @@ export function Header() {
             </div>
           </div>
         </div>
-        {pathname !== '/productos' ? (
-          <div className=' hidden justify-center gap-4 max-md:flex mr-4 ml-4'>
-            <FormSearchHome />
-          </div>
-        ) : null}
+
         {openShoppingCartValue ? <ShoppingCart /> : null}
       </div>
+
+      {openInput && pathname !== '/productos' ? (
+        <div className='fixed inset-0 backdrop-blur-[2px] z-10'>
+          <div className='relative top-[5%] hidden justify-center gap-4 max-md:flex mr-4 ml-4'>
+            <div className='flex bg-gray-200 pr-2'>
+              <FormSearchHome />
+              <button onClick={() => setOpenInput(false)}>
+                <img src='/closeBlack.svg' alt='close' className='w-[20px]' />
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
       <div className='fixed bottom-5 right-5 z-[9] bg-[#40ea41] rounded-full p-2 shadow-[0_0_10px_0.5px] hover:opacity-80'>
         <Link href='https://api.whatsapp.com/send?phone=+541159102865&text=Hola%20te%20hablo%20desde%20la%20p%C3%A1gina'>
           <svg

@@ -12,6 +12,7 @@ export function ProductosComponent() {
   const {replace} = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [openInput, setOpenInput] = useState(false);
   const [search, setSearch] = useState(searchParams.get('q') || '');
   const [typeSearch, setTypeSearch] = useState<string[]>(
     JSON.parse(searchParams.get('type')!) || []
@@ -82,29 +83,51 @@ export function ProductosComponent() {
 
   return (
     <>
-      <div className='max-md:block hidden  bg-primary fixed top-[6rem] right-0 left-0 z-[9] '>
-        {pathname == '/productos' ? (
-          <div className='  justify-center gap-4 flex mr-4 ml-4 p-2'>
-            <FormSearch value={search} modValue={handleModValueFormSearch} />
+      {openInput ? (
+        <div className='fixed inset-0 z-10 backdrop-blur-[2px]'>
+          <div className='max-md:block hidden  bg-primary fixed top-[3rem] right-0 left-0 z-[9] '>
             {pathname == '/productos' ? (
-              <button
-                onClick={() => {
-                  document.body.style.overflow = 'hidden';
-                  setIsOpenFilter(true);
-                }}
-                className='hidden gap-[0.5rem] items-center text-white ml-4 max-lg:flex '>
-                Filtrar
-                <div className='flex flex-col gap-[0.2rem] items-center'>
-                  <div className='w-[20px] h-[2px]  bg-white'></div>
-                  <div className='w-[16px] h-[2px] bg-white'></div>
-                  <div className='w-[10px] h-[2px] bg-white'></div>
+              <div className='  justify-center gap-4 flex mr-4 ml-4 p-2'>
+                <div className='flex bg-gray-200 pr-2'>
+                  <FormSearch
+                    value={search}
+                    modValue={handleModValueFormSearch}
+                  />
+                  <button onClick={() => setOpenInput(false)}>
+                    <img
+                      src='/closeBlack.svg'
+                      alt='close'
+                      className='w-[20px]'
+                    />
+                  </button>
                 </div>
-              </button>
+                {pathname == '/productos' ? (
+                  <button
+                    onClick={() => {
+                      document.body.style.overflow = 'hidden';
+                      setIsOpenFilter(true);
+                    }}
+                    className='hidden gap-[0.5rem] items-center text-white ml-4 max-lg:flex '>
+                    Filtrar
+                    <div className='flex flex-col gap-[0.2rem] items-center'>
+                      <div className='w-[20px] h-[2px]  bg-white'></div>
+                      <div className='w-[16px] h-[2px] bg-white'></div>
+                      <div className='w-[10px] h-[2px] bg-white'></div>
+                    </div>
+                  </button>
+                ) : null}
+              </div>
             ) : null}
           </div>
-        ) : null}
-      </div>
-      <div className='grid grid-cols-[repeat(1,230px_1fr);] gap-6 max-md:grid-cols-none   mt-[5rem] max-w-[1450px] mr-auto ml-auto p-2 max-md:mt-[10rem] max-md:p-0'>
+        </div>
+      ) : (
+        <div className='hidden max-md:block fixed top-16 z-10 right-[12%]'>
+          <button onClick={() => setOpenInput(true)}>
+            <img src='/searchWhite.svg' alt='search' width={20} height={20} />
+          </button>
+        </div>
+      )}
+      <div className='grid grid-cols-[repeat(1,230px_1fr);] gap-6 max-md:grid-cols-none   mt-[5rem] max-w-[1450px] mr-auto ml-auto p-2 max-md:mt-[7rem] max-md:p-0'>
         <div className='w-full flex flex-col gap-8 max-md:hidden mt-16'>
           <FiltroSearch
             valueDefault={handleDefaultParams}
@@ -209,7 +232,9 @@ export function ProductosComponent() {
           search={search}
           valueDefault={handleDefaultParams}
           typeCategoriaPrice={handleTypeCategoryPrice}
-          closeFilter={() => setIsOpenFilter(false)}
+          closeFilter={() => {
+            setIsOpenFilter(false), setOpenInput(false);
+          }}
           isMobile={true}
         />
       ) : null}

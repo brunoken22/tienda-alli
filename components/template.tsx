@@ -255,7 +255,7 @@ export function TemplateCategorySecond({
   return (
     <button
       key={name}
-      className={`ml-4 flex items-center gap-[0.2rem] hover:opacity-60 transition-[border] duration-100 ease-linear text-black  ${
+      className={`ml-4 flex items-center gap-[0.2rem] hover:opacity-60 transition-[border] duration-100 ease-linear  ${
         isActiveClick
           ? 'font-bold border-b-2 border-b-[#3c006c] max-md:border-b-white text-[#3c006c] max-md:text-white'
           : 'font-light border-none  max-md:text-white'
