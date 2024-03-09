@@ -1,7 +1,7 @@
 'use client';
 import {TemplateProduct} from '@/components/template';
 import {GetProductFeatured} from '@/lib/hook';
-import {useEffect, useState} from 'react';
+import { useState} from 'react';
 import {EsqueletonProduct} from './esqueleton';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

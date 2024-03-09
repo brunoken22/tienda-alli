@@ -7,7 +7,8 @@ import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import {TemplateProduct} from './template';
 import {FiltroSearch} from './filtro';
 import {FormSearch} from '@/ui/form';
-
+import {ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export function ProductosComponent() {
   const {replace} = useRouter();
   const pathname = usePathname();
@@ -159,6 +160,9 @@ export function ProductosComponent() {
                     inicio={false}
                     type={item.type}
                     size={item.talla}
+                    addItem={(isAddItem) => {
+                      toast.success('Se agregó al carrito!');
+                    }}
                   />
                 ))
               : dataModi?.length == 0 && !isLoading
@@ -250,6 +254,7 @@ export function ProductosComponent() {
           VISÍTANOS <br></br>EN NUESTRO<br></br> MARKETPLACE
         </h2>
       </Link>
+      <ToastContainer />
     </>
   );
 }
