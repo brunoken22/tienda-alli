@@ -80,7 +80,6 @@ export function ProductosComponent() {
     typeSearch,
     typePrice,
   };
-
   return (
     <>
       {openInput ? (
@@ -158,6 +157,8 @@ export function ProductosComponent() {
                     oferta={item.oferta}
                     id={item.objectID}
                     inicio={false}
+                    type={item.type}
+                    size={item.talla}
                   />
                 ))
               : dataModi?.length == 0 && !isLoading

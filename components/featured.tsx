@@ -3,8 +3,11 @@ import {TemplateProduct} from '@/components/template';
 import {GetProductFeatured} from '@/lib/hook';
 import {useEffect, useState} from 'react';
 import {EsqueletonProduct} from './esqueleton';
+import {ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export function ProductsFeatured() {
   const [openLinkProduct, setOpenLinkProduct] = useState('');
+  const [additem, setAddItem] = useState(false);
   const {data} = GetProductFeatured();
   return (
     <>
@@ -21,6 +24,12 @@ export function ProductsFeatured() {
                 oferta={item.oferta}
                 id={item.objectID}
                 inicio={true}
+                type={item.type}
+                size={item.talla}
+                addItem={(isAddItem) => {
+                  setAddItem(isAddItem);
+                  toast.success('Se agregó al carrito!');
+                }}
               />
             );
           })
@@ -50,6 +59,7 @@ export function ProductsFeatured() {
           </div>
         </>
       ) : null}
+      <ToastContainer />
     </>
   );
 }

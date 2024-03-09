@@ -59,11 +59,16 @@ export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
                 <div className='max-h-[350px] overflow-auto'>
                   {shoppingCartUserData.length
                     ? shoppingCartUserData.map((item) => (
-                        <div key={item.id}>
-                          <span className=' bg-[#6aa7ff] p-[0.2rem] pl-[0.5rem] pr-[0.5rem] rounded-full'>
-                            {item.cantidad}
-                          </span>{' '}
-                          {item.title}{' '}
+                        <div key={item.id} className='flex justify-between'>
+                          <div>
+                            <span className=' bg-[#6aa7ff] p-[0.2rem] pl-[0.5rem] pr-[0.5rem] rounded-full'>
+                              {item.cantidad}
+                            </span>{' '}
+                            {item.title}{' '}
+                          </div>
+                          <div>
+                            <p>Talla: {item.talla}</p>
+                          </div>
                         </div>
                       ))
                     : null}

@@ -1,4 +1,5 @@
 import {index} from '@/lib/algolia';
+import {TypeCompra} from '../atom';
 export async function searchProduct(req: Request) {
   try {
     const {searchParams} = new URL(req.url);
@@ -36,18 +37,19 @@ export async function searchProduct(req: Request) {
   }
 }
 export async function getCartShopping(dataParans: any[]) {
-  const ids = dataParans.map((item) => item.id);
-  const data = await index.getObjects(ids);
+  const newDataFinalPromises = dataParans.map(async (item) => {
+    const img = await imageAlgolia(item.id);
+    return {
+      cantidad: item.cantidad,
+      id: item?.id,
+      title: item.title,
+      price: item.price,
+      talla: item.talla,
+      img: img,
+    };
+  });
 
-  const newDataFinal = data.results.map((item: any) => ({
-    cantidad:
-      dataParans.find((itemParams) => itemParams.id == item.objectID)
-        .cantidad || 0,
-    id: item?.objectID,
-    title: item['Name'],
-    img: item?.Images[0].url,
-    price: item.priceOfert || item['Unit cost'],
-  }));
+  const newDataFinal = await Promise.all(newDataFinalPromises);
   return newDataFinal;
 }
 export function getOffsetAndLimitFom(
@@ -65,6 +67,10 @@ export function getOffsetAndLimitFom(
 
   const finalOffset = offset < maxOffset ? offset : 0;
   return {finalLimit, finalOffset};
+}
+async function imageAlgolia(id: string) {
+  const data: any = await index.getObject(id);
+  return data.Images[0].url;
 }
 export function suma(num1: number, num2: number): number {
   return num1 + num2;

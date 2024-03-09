@@ -5,7 +5,7 @@ import Link from 'next/link';
 import {useRecoilState} from 'recoil';
 import {ShoppingCart} from './shoppingCart';
 import {usePathname} from 'next/navigation';
-import {GetDataCartShopping} from '@/lib/hook';
+import {getDataCartShopping} from '@/lib/hook';
 import {useEffect, useState} from 'react';
 
 export function Header() {
@@ -13,20 +13,23 @@ export function Header() {
   const [openShoppingCartValue, setOpenShoppingCartValue] =
     useRecoilState(openShoppingCart);
   const pathname = usePathname();
-  const {dataCartShopping} = GetDataCartShopping(
-    typeof window !== 'undefined' ? localStorage.getItem('category') : null
-  );
+
   const [shoppingCartUserData, setShoppingCartUserData] =
     useRecoilState(shoppingCart);
   useEffect(() => {
-    if (dataCartShopping) {
-      setShoppingCartUserData(dataCartShopping);
-    }
-  }, [dataCartShopping]);
+    (async () => {
+      const data = await getDataCartShopping(
+        typeof window !== 'undefined' ? localStorage.getItem('category') : null
+      );
+      if (data) {
+        setShoppingCartUserData(data);
+      }
+    })();
+  }, []);
   return (
     <>
       <div className='bg-primary pt-4 pb-4 flex flex-col gap-4 fixed top-0 left-0 right-0 z-10'>
-        <div className='relative flex justify-between pl-4 pr-4 max-md:flex-col max-md:gap-4'>
+        <div className='relative flex justify-between pl-4 pr-4 max-md:flex-col max-md:gap-4 items-center'>
           <Link
             href={'/'}
             className='text-center font-bold text-2xl text-white '>

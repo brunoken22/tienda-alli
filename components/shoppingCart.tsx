@@ -42,14 +42,15 @@ export function ShoppingCart() {
           </div>
           <div className='flex flex-col gap-6 overflow-auto h-[75%] mt-8 '>
             {shoppingCartValue.length ? (
-              shoppingCartValue.map((item) => (
+              shoppingCartValue.map((item, position) => (
                 <TemplateShopppingCartProduct
-                  key={item.id}
+                  key={position}
                   id={item.id}
                   price={item.price}
                   title={item.title}
                   cantidad={item.cantidad}
-                  img={item.img}></TemplateShopppingCartProduct>
+                  img={item.img}
+                  talla={item.talla}></TemplateShopppingCartProduct>
               ))
             ) : (
               <div className='text-center'>

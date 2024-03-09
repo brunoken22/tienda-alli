@@ -6,6 +6,7 @@ export type TypeCompra = {
   title: string;
   price: number;
   img: string;
+  talla: string;
 };
 export const shoppingCart = atom({
   key: 'shoppingCart',

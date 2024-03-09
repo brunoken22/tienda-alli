@@ -25,7 +25,7 @@ export function GetDataProduct(
   );
   return {data, isLoading};
 }
-export function GetDataCartShopping(ids: string | null) {
+export async function getDataCartShopping(ids: string | null) {
   const option = {
     method: 'POST',
     headers: {
@@ -33,15 +33,8 @@ export function GetDataCartShopping(ids: string | null) {
     },
     body: JSON.stringify({ids}),
   };
-  const {data, isLoading} = useSWR(
-    ids ? [`/api/product/cartShopping`, option] : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      refreshInterval: 3600000,
-    }
-  );
-  return {dataCartShopping: data};
+  const data = await fetcher([`/api/product/cartShopping`, option]);
+  return data;
 }
 export function GetProductFeatured() {
   const {data} = useSWR([`/api/product/featured`], fetcher, {

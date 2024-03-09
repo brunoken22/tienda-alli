@@ -2,26 +2,42 @@ import {shoppingCart} from '@/lib/atom';
 import {useEffect, useState} from 'react';
 import {useRecoilState} from 'recoil';
 
-export function InputNumber({cantidad, id}: {cantidad: number; id: string}) {
+export function InputNumber({
+  cantidad,
+  id,
+  talla,
+}: {
+  cantidad: number;
+  id: string;
+  talla?: string;
+}) {
   const [cantidadState, setCantidadState] = useState(cantidad || 1);
   const [shoppingCartValue, setShoppingCartValue] =
     useRecoilState(shoppingCart);
   useEffect(() => {
     setCantidadState(cantidad);
   }, [cantidad]);
+
   useEffect(() => {
     setShoppingCartValue((prev) => {
       return prev.map((item) => {
         if (item.id == id) {
+          if (talla && item.talla !== talla) {
+            return item;
+          }
           return {...item, cantidad: cantidadState};
         }
+
         return item;
       });
     });
   }, [cantidadState]);
   useEffect(() => {
     if (shoppingCartValue.length) {
-      localStorage.setItem('category', JSON.stringify(shoppingCartValue));
+      return localStorage.setItem(
+        'category',
+        JSON.stringify(shoppingCartValue)
+      );
     }
   }, [shoppingCartValue]);
   const handleCantidadChange = (e: React.ChangeEvent) => {
@@ -29,14 +45,6 @@ export function InputNumber({cantidad, id}: {cantidad: number; id: string}) {
     const target = e.target as HTMLInputElement;
     if (Number(target.value) <= 0 || Number(target.value) >= 15) return;
     setCantidadState(Number(target.value));
-    setShoppingCartValue((prev) => {
-      return prev.map((item) => {
-        if (item.id == id) {
-          return {...item, cantidad: Number(target.value)};
-        }
-        return item;
-      });
-    });
   };
   const handleCountCantidad = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -50,7 +58,7 @@ export function InputNumber({cantidad, id}: {cantidad: number; id: string}) {
     setCantidadState(cantidadState + 1);
   };
   return (
-    <div className='flex gap-2  bg-white w-fit text-primary'>
+    <div className='flex gap-2 text-primary  bg-white w-fit'>
       {cantidadState >= 2 && (
         <button
           className='font-bold text-2xl pr-2 pl-2'

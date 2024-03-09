@@ -11,6 +11,9 @@ export function TemplateProduct({
   price,
   id,
   inicio,
+  type,
+  size,
+  addItem,
 }: {
   id: string;
   Images: any;
@@ -20,8 +23,12 @@ export function TemplateProduct({
   priceOfert: number;
   openImg: (data: any) => any;
   inicio: boolean;
+  type: string[];
+  size: string[];
+  addItem: (data: boolean) => void;
 }) {
   const [openFocusName, setOpenFocusName] = useState(false);
+  const [talla, setTalla] = useState(type?.includes('camperas') ? size[0] : '');
   const [shoppingCartUserData, setShoppingCartUserData] =
     useRecoilState(shoppingCart);
   const [openShoppingCartValue, setOpenShoppingCartValue] =
@@ -34,6 +41,7 @@ export function TemplateProduct({
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     const windowWidth = window.innerWidth;
+    addItem(true);
 
     if (windowWidth > 1024) {
       setOpenShoppingCartValue(true);
@@ -42,17 +50,36 @@ export function TemplateProduct({
       let newShoppingCart = [];
       if (prev.length) {
         if (prev.find((item) => item.id === e.currentTarget.id)) {
-          newShoppingCart = prev.map((item) => {
-            if (item.id == e.currentTarget.id) {
-              let count = item.cantidad || 1;
-              count += 1;
-              return {...item, cantidad: count};
+          if (talla) {
+            if (
+              prev.find(
+                (item) => item.id === e.currentTarget.id && item.talla == talla
+              )
+            ) {
+              return prev;
+            } else {
+              newShoppingCart = [
+                {
+                  talla,
+                  cantidad: 1,
+                  id: id,
+                  title: Name,
+                  img: Images,
+                  price: priceOfert || price,
+                },
+                ...prev,
+              ];
+              localStorage.setItem('category', JSON.stringify(newShoppingCart));
+
+              return newShoppingCart;
             }
-            return item;
-          });
+          } else {
+            return prev;
+          }
         } else {
-          const newShoppingCart = [
+          newShoppingCart = [
             {
+              talla,
               cantidad: 1,
               id: id,
               title: Name,
@@ -67,6 +94,7 @@ export function TemplateProduct({
         }
       } else {
         newShoppingCart.push({
+          talla,
           cantidad: 1,
           id: id,
           title: Name,
@@ -79,6 +107,7 @@ export function TemplateProduct({
       return newShoppingCart as any[];
     });
   };
+
   return (
     <div
       className={` grid-cols-[repeat(1,120px_1fr)] gap-4  items-center   rounded-lg 
@@ -120,6 +149,22 @@ export function TemplateProduct({
               </span>
             ) : null}
           </div>
+          {type?.includes('camperas') ? (
+            <div>
+              <select
+                id='talla'
+                value={talla}
+                onChange={(e) => setTalla(e.target.value)}
+                className='w-full bg-white border text-center border-gray-300 p-2 rounded-md focus:outline-none focus:border-[#3c006c]'>
+                {size?.length &&
+                  size.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          ) : null}
           {oferta ? (
             <div
               className={`flex justify-center gap-4  ${
@@ -153,11 +198,11 @@ export function TemplateProduct({
             </p>
           )}
         </div>
-        <div>
+        <div className='w-full'>
           <button
             id={id}
             onClick={handleClick}
-            className=' bg-primary p-4 pt-2 pb-2 text-white rounded-lg hover:opacity-80'>
+            className=' bg-primary p-4 pt-2 pb-2 text-white rounded-lg hover:opacity-80 w-full'>
             Añadir al carrito
           </button>
         </div>
@@ -275,12 +320,14 @@ export function TemplateShopppingCartProduct({
   price,
   cantidad,
   img,
+  talla,
 }: {
   id: string;
   title: string;
   price: number;
   cantidad: number;
   img: string;
+  talla: string;
 }) {
   const [openFocusName, setOpenFocusName] = useState(false);
   const [shoppingCartValue, setShoppingCartValue] =
@@ -289,7 +336,7 @@ export function TemplateShopppingCartProduct({
     e.preventDefault();
 
     const newShoppingCart = shoppingCartValue.filter(
-      (item: any) => item.id !== e.currentTarget.id
+      (item: any) => item.id !== e.currentTarget.id || item.talla !== talla
     );
     if (window !== undefined) {
       localStorage.setItem('category', JSON.stringify(newShoppingCart));
@@ -326,7 +373,10 @@ export function TemplateShopppingCartProduct({
               maximumFractionDigits: 0,
             })}
           </h3>
-          <InputNumber cantidad={cantidad || 1} id={id} />
+          <div className='flex justify-between items-center'>
+            <InputNumber cantidad={cantidad || 1} id={id} talla={talla} />
+            {talla ? <p className='font-semibold'>Talle: {talla}</p> : null}
+          </div>
         </div>
       </div>
       <button
