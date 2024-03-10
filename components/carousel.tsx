@@ -1,6 +1,6 @@
 'use client';
 import {Swiper, SwiperSlide} from 'swiper/react';
-import {Autoplay, Pagination, Navigation} from 'swiper/modules';
+import {Autoplay, Pagination, EffectCoverflow} from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
@@ -58,5 +58,31 @@ export function CarouselHeader() {
         </div>
       </Swiper>
     </>
+  );
+}
+
+export function CarouselProduct({imgs}: {imgs: string[]}) {
+  return (
+    <Swiper
+      effect={'coverflow'}
+      grabCursor={true}
+      centeredSlides={true}
+      slidesPerView={'auto'}
+      coverflowEffect={{
+        rotate: 50,
+        stretch: 0,
+        depth: 100,
+        modifier: 1,
+        slideShadows: true,
+      }}
+      pagination={true}
+      modules={[EffectCoverflow, Pagination]}
+      className='mySwiper'>
+      {imgs.map((item) => (
+        <SwiperSlide key={item}>
+          <img src={item} className='itemProduct' />
+        </SwiperSlide>
+      ))}
+    </Swiper>
   );
 }

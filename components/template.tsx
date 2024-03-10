@@ -16,7 +16,7 @@ export function TemplateProduct({
   addItem,
 }: {
   id: string;
-  Images: any;
+  Images: string[];
   Name: string;
   oferta: string;
   price: number;
@@ -64,7 +64,7 @@ export function TemplateProduct({
                   cantidad: 1,
                   id: id,
                   title: Name,
-                  img: Images,
+                  img: Images[0],
                   price: priceOfert || price,
                 },
                 ...prev,
@@ -83,7 +83,7 @@ export function TemplateProduct({
               cantidad: 1,
               id: id,
               title: Name,
-              img: Images,
+              img: Images[0],
               price: priceOfert || price,
             },
             ...prev,
@@ -98,7 +98,7 @@ export function TemplateProduct({
           cantidad: 1,
           id: id,
           title: Name,
-          img: Images,
+          img: Images[0],
           price: priceOfert || price,
         });
       }
@@ -116,7 +116,7 @@ export function TemplateProduct({
         onClick={handleClickOpenImg}
         className='w-full h-[200px] relative '>
         <img
-          src={Images}
+          src={Images[0]}
           alt={Name}
           width={120}
           height={100}

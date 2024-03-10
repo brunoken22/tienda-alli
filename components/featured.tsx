@@ -1,13 +1,13 @@
 'use client';
 import {TemplateProduct} from '@/components/template';
 import {GetProductFeatured} from '@/lib/hook';
-import { useState} from 'react';
+import {useState} from 'react';
 import {EsqueletonProduct} from './esqueleton';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {CarouselProduct} from './carousel';
 export function ProductsFeatured() {
-  const [openLinkProduct, setOpenLinkProduct] = useState('');
-  const [additem, setAddItem] = useState(false);
+  const [openLinkProduct, setOpenLinkProduct] = useState<string[]>([]);
   const {data} = GetProductFeatured();
   return (
     <>
@@ -16,9 +16,11 @@ export function ProductsFeatured() {
             return (
               <TemplateProduct
                 key={item.objectID}
-                openImg={(data: string) => setOpenLinkProduct(data)}
+                openImg={(data: string[]) => setOpenLinkProduct(data)}
                 Name={item.Name}
-                Images={item.Images[0].thumbnails.full.url}
+                Images={item.Images.map(
+                  (itemImages: any) => itemImages.thumbnails.full.url
+                )}
                 priceOfert={item.priceOfert}
                 price={item['Unit cost']}
                 oferta={item.oferta}
@@ -26,19 +28,38 @@ export function ProductsFeatured() {
                 inicio={true}
                 type={item.type}
                 size={item.talla}
-                addItem={(isAddItem) => {
-                  setAddItem(isAddItem);
-                  toast.success('Se agregó al carrito!');
-                }}
+                addItem={() => toast.success('Se agregó al carrito!')}
               />
             );
           })
         : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item: number) => (
             <EsqueletonProduct key={item} />
           ))}
-      {openLinkProduct ? (
+      {openLinkProduct.length ? (
         <>
           <div className='flex flex-col fixed inset-0 backdrop-brightness-50	justify-center items-center z-10'>
+            <div className='fixed top-8 right-8 z-10 max-sm:top-[0.5rem] max-sm:right-[0.5rem] '>
+              <button
+                onClick={() => {
+                  setOpenLinkProduct([]);
+                  document.body.style.overflow = 'auto';
+                }}>
+                {' '}
+                <img src='/closeWhite.svg' width={30} height={30} alt='close' />
+              </button>
+            </div>
+            <div className='h-3/4'>
+              <CarouselProduct imgs={openLinkProduct} />
+            </div>
+          </div>
+        </>
+      ) : null}
+      <ToastContainer />
+    </>
+  );
+}
+{
+  /* <div className='flex flex-col fixed inset-0 backdrop-brightness-50	justify-center items-center z-10'>
             <div className='fixed top-8 right-8 z-10 max-sm:top-[0.5rem] max-sm:right-[0.5rem] '>
               <button
                 onClick={() => {
@@ -56,10 +77,5 @@ export function ProductsFeatured() {
               alt='product'
               className='w-[60%] max-md:w-[80%] h-[90%] object-contain'
             />
-          </div>
-        </>
-      ) : null}
-      <ToastContainer />
-    </>
-  );
+   */
 }

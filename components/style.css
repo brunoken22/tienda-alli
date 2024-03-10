@@ -23,3 +23,21 @@ body {
 .swiper-backface-hidden .swiper-slide {
   background-color: #3c006c;
 }
+.swiper-slide
+  .swiper-slide-visible
+  .swiper-slide-fully-visible
+  .swiper-slide-active {
+  background-color: transparent !important;
+}
+.itemProduct {
+  width: 100%;
+  object-fit: cover;
+}
+.swiper-slide:has(.itemProduct) {
+  background-color: transparent !important;
+}
+@media (min-width: 770px) {
+  .itemProduct {
+    width: 50%;
+  }
+}

@@ -124,12 +124,24 @@ export function GeneratePdf({data}: {data: TypeCompra[]}) {
                   {producto.title + 'TALLE ' + producto.talla}
                 </Text>
                 <Text style={styles.tableCell}>{producto.cantidad}</Text>
-                <Text style={styles.tableCell}>{`$${producto.price.toFixed(
-                  2
+                <Text
+                  style={styles.tableCell}>{`${producto.price.toLocaleString(
+                  'es-AR',
+                  {
+                    style: 'currency',
+                    currency: 'ARS',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  }
                 )}`}</Text>
-                <Text style={styles.tableCell}>{`$${(
+                <Text style={styles.tableCell}>{`${(
                   producto.cantidad * producto.price
-                ).toFixed(2)}`}</Text>
+                ).toLocaleString('es-AR', {
+                  style: 'currency',
+                  currency: 'ARS',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}`}</Text>
               </View>
             ))}
           </View>
