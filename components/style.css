@@ -29,15 +29,21 @@ body {
   .swiper-slide-active {
   background-color: transparent !important;
 }
-.itemProduct {
-  width: 100%;
-  object-fit: cover;
-}
+
 .swiper-slide:has(.itemProduct) {
   background-color: transparent !important;
 }
+
 @media (min-width: 770px) {
   .itemProduct {
+    object-fit: contain;
+
     width: 50%;
+  }
+}
+@media (max-width: 770px) {
+  .itemProduct {
+    object-fit: contain !important;
+    width: 100% !important;
   }
 }
