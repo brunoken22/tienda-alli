@@ -4,7 +4,7 @@ import {ProductsFeatured} from '@/components/featured';
 export default function Home() {
   return (
     <div className='m-auto max-md:mt-[6.5rem] mt-[4rem] max-w-[1200px] shadow-[0_0_100px_10px_#3c006c]'>
-      <div className={`h-[300px]  `}>
+      <div className={`h-[400px]  `}>
         <CarouselHeader />
       </div>
       <div className=''>
