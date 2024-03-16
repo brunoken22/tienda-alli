@@ -44,7 +44,7 @@ export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
         <div className='relative  my-6 mx-auto max-w-3xl w-[95%]'>
           <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
             <div className='flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t'>
-              <h3 className='text-3xl font-semibold'>
+              <h3 className='text-3xl font-semibold text-black'>
                 Descargar la compra y envía al Whatsaap
               </h3>
               <button
