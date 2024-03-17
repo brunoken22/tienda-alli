@@ -17,6 +17,7 @@ const config: Config = {
 
       animation: {
         navegation: 'color 1s ease-in-out normal',
+        arrow: 'arrow 1s ease-in-out infinite',
       },
       backgroundColor: {
         primary: '#3c006c',
@@ -25,6 +26,16 @@ const config: Config = {
       colors: {
         primary: '#3c006c',
         secundary: '#fff',
+      },
+      keyframes: {
+        arrow: {
+          '0%': {
+            transform: 'translateX(0)',
+          },
+          '100%': {
+            transform: 'translateX(10px)',
+          },
+        },
       },
     },
   },

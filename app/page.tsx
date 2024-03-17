@@ -1,6 +1,6 @@
 import {CarouselHeader} from '@/components/carousel';
 import {ProductsFeatured} from '@/components/featured';
-
+import Link from 'next/link';
 export default function Home() {
   return (
     <div className='m-auto max-md:mt-[6.5rem] mt-[4rem] max-w-[1200px] shadow-[0_0_100px_10px_#3c006c]'>
@@ -20,12 +20,38 @@ export default function Home() {
           </span>
         </div>
         <div className=' '>
-          <h2 className='text-center text-[1.5rem] font-bold  mb-8'>
-            Destacados
-          </h2>
+          <div className='mb-8 flex items-center justify-center relative'>
+            <h2 className='text-center text-[1.5rem] font-bold '>Destacados</h2>
+            <div className='block max-md:hidden'>
+              <Link
+                href='/productos'
+                className='absolute right-[10%] text-primary top-[20%] hover:opacity-70 flex items-center '>
+                Ver más
+                <img
+                  src='/arrow.svg'
+                  height={20}
+                  alt='arrow'
+                  className='flex animate-arrow'
+                />
+              </Link>
+            </div>
+          </div>
           <div
             className={`flex justify-evenly items-center gap-x-[0.4rem]  gap-y-4 flex-wrap	 pb-6`}>
             <ProductsFeatured />
+          </div>
+          <div className='max-md:block flex justify-center items-center p-4'>
+            <Link
+              href='/productos'
+              className=' text-primary hover:opacity-70 flex items-center '>
+              Ver más
+              <img
+                src='/arrow.svg'
+                height={20}
+                alt='arrow'
+                className='flex animate-arrow'
+              />
+            </Link>
           </div>
         </div>
       </div>
