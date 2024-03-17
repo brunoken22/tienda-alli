@@ -40,7 +40,7 @@ export default function Home() {
             className={`flex justify-evenly items-center gap-x-[0.4rem]  gap-y-4 flex-wrap	 pb-6`}>
             <ProductsFeatured />
           </div>
-          <div className='max-md:block flex justify-center items-center p-4'>
+          <div className='max-md:flex hidden justify-center items-center p-4'>
             <Link
               href='/productos'
               className=' text-primary hover:opacity-70 flex items-center '>
