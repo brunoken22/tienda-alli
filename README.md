@@ -15,4 +15,4 @@ Este proyecto es una tienda en línea desarrollada con tecnologías como React, 
 
 ## Visitar la Página
 
-Puedes visitar Pet Finder en línea [aquí](https://tienda-alli.vercel.app/).
+Puedes visitar Tienda Alli en línea [aquí](https://tienda-alli.vercel.app/).
