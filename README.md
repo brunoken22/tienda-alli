@@ -13,4 +13,6 @@ Este proyecto es una tienda en línea desarrollada con tecnologías como React, 
 - **SWR:** Uso de SWR para gestionar y mejorar la carga de datos.
 - **Uso de Debounce:** Implementación de la función de debounce para mejorar la eficiencia en búsquedas y filtrado.
 
-https://tienda-alli.vercel.app/
+## Visitar la Página
+
+Puedes visitar Pet Finder en línea [aquí](https://tienda-alli.vercel.app/).
