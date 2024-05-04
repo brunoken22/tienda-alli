@@ -5,7 +5,7 @@ export const base = new Airtable({apiKey: process.env.AIRTABLE}).base(
 );
 export async function getDataAirtable() {
   const newBase = base('Furniture').select({
-    pageSize: 100,
+    view: 'All furniture',
   });
   const response = await newBase.all();
   const object = response.map((r) => ({
