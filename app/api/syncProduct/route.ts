@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import {getDataAirtable} from '@/lib/airtable';
 import {NextResponse} from 'next/server';
 
