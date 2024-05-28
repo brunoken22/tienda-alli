@@ -1,18 +1,16 @@
 'use client';
 import {TemplateProduct} from '@/components/template';
-import {GetProductFeatured} from '@/lib/hook';
 import {useState} from 'react';
 import {EsqueletonProduct} from './esqueleton';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {CarouselProduct} from './carousel';
-export function ProductsFeatured() {
+export function ProductsFeatured({featured}: {featured: any}) {
   const [openLinkProduct, setOpenLinkProduct] = useState<string[]>([]);
-  const {data} = GetProductFeatured();
   return (
     <>
-      {data
-        ? data.map((item: any) => {
+      {featured
+        ? featured.map((item: any) => {
             return (
               <TemplateProduct
                 key={item.objectID}

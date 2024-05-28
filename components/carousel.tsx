@@ -6,13 +6,11 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import './style.css';
 import {useRef} from 'react';
-import {GetFrontPage} from '@/lib/hook';
 import Link from 'next/link';
 
-export function CarouselHeader() {
+export function CarouselHeader({data}: {data: any}) {
   const progressCircle: any = useRef(null);
   const progressContent: any = useRef(null);
-  const {data} = GetFrontPage();
 
   const onAutoplayTimeLeft = (s: any, time: any, progress: any) => {
     progressCircle.current.style.setProperty('--progress', 1 - progress);
@@ -43,7 +41,7 @@ export function CarouselHeader() {
                   <img
                     src={product.Images[1].url}
                     alt={product.Name}
-                    loading='lazy'
+                    className='w-full'
                   />
                 </Link>
               </SwiperSlide>

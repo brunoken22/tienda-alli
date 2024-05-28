@@ -124,7 +124,7 @@ export function TemplateProduct({
           loading='lazy'
         />
         {oferta ? (
-          <div className='absolute top-[-0.5rem] left-[-2rem] rotate-[-40deg]  bg-red-500 text-white p-1 pr-4 pl-4'>
+          <div className='absolute top-[-0.5rem] left-[-2rem] rotate-[-40deg]  bg-red-600 text-white p-1 pr-4 pl-4'>
             <h2 className='font-bold'>OFERTA</h2>
           </div>
         ) : (
@@ -151,14 +151,18 @@ export function TemplateProduct({
           </div>
           {type?.includes('camperas') ? (
             <div>
+              <label htmlFor='talla' className='text-gray-800'>
+                Selecciona tu talla:
+              </label>
+
               <select
                 id='talla'
                 value={talla}
                 onChange={(e) => setTalla(e.target.value)}
-                className='w-full bg-white border text-center border-gray-300 p-2 rounded-md focus:outline-none focus:border-[#3c006c]'>
+                className='w-full bg-white border text-center border-gray-300 p-1 rounded-md focus:outline-none focus:border-[#3c006c]'>
                 {size?.length &&
                   size.map((item) => (
-                    <option key={item} value={item}>
+                    <option key={item} value={item} id={item}>
                       {item}
                     </option>
                   ))}

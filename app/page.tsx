@@ -1,11 +1,15 @@
 import {CarouselHeader} from '@/components/carousel';
 import {ProductsFeatured} from '@/components/featured';
+import {getFrontPage, getProductFeatured} from '@/lib/hook';
 import Link from 'next/link';
-export default function Home() {
+export default async function Home() {
+  const data = await getFrontPage();
+  const featured = await getProductFeatured();
+
   return (
     <div className='m-auto max-md:mt-[6.5rem] mt-[4rem] max-w-[1200px] shadow-[0_0_100px_10px_#3c006c]'>
       <div className={`h-[400px]  `}>
-        <CarouselHeader />
+        <CarouselHeader data={data} />
       </div>
       <div className=''>
         <div className={`text-center p-2 pt-[3rem] mb-[3rem]  `}>
@@ -29,16 +33,18 @@ export default function Home() {
                 Ver más
                 <img
                   src='/arrow.svg'
-                  height={20}
+                  height={17}
+                  width={20}
                   alt='arrow'
                   className='flex animate-arrow'
+                  loading='lazy'
                 />
               </Link>
             </div>
           </div>
           <div
             className={`flex justify-evenly items-center gap-x-[0.4rem]  gap-y-4 flex-wrap	 pb-6`}>
-            <ProductsFeatured />
+            <ProductsFeatured featured={featured} />
           </div>
           <div className='max-md:flex hidden justify-center items-center p-4'>
             <Link
@@ -47,9 +53,11 @@ export default function Home() {
               Ver más
               <img
                 src='/arrow.svg'
-                height={20}
+                height={17}
+                width={20}
                 alt='arrow'
                 className='flex animate-arrow'
+                loading='lazy'
               />
             </Link>
           </div>

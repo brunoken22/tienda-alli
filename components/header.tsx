@@ -86,7 +86,12 @@ export function Header() {
               <button
                 className='relative '
                 onClick={() => setOpenShoppingCartValue(true)}>
-                <img src='/cart-shopping.svg' alt='cart-shopping' width={20} />
+                <img
+                  src='/cart-shopping.svg'
+                  alt='cart-shopping'
+                  width={20}
+                  height={17}
+                />
                 {shoppingCartUserData.length ? (
                   <span className='absolute bottom-[60%] left-[60%] bg-secundary text-[0.8rem] pr-[0.4rem] pl-[0.4rem] rounded-full'>
                     {shoppingCartUserData.length}
@@ -112,7 +117,9 @@ export function Header() {
         </div>
       ) : null}
       <div className='fixed bottom-5 right-5 z-[9] bg-[#40ea41] rounded-full p-2 shadow-[0_0_10px_0.5px] hover:opacity-80'>
-        <Link href='https://api.whatsapp.com/send?phone=+541159102865&text=Hola%20te%20hablo%20desde%20la%20p%C3%A1gina'>
+        <Link
+          href='https://api.whatsapp.com/send?phone=+541159102865&text=Hola%20te%20hablo%20desde%20la%20p%C3%A1gina'
+          aria-label='whatsapp'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             viewBox='0 0 480 512'
