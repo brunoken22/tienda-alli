@@ -1,10 +1,11 @@
 import {getDataAirtable} from '@/lib/airtable';
+import {NextResponse} from 'next/server';
 
 export async function GET() {
   try {
     const data = await getDataAirtable();
-    return Response.json(data.length);
+    return NextResponse.json(data.length);
   } catch (e: any) {
-    return Response.json(e.message);
+    return NextResponse.json(e.message);
   }
 }
