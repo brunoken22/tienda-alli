@@ -31,7 +31,7 @@ export function CarouselHeader({data}: {data: any}) {
         }}
         modules={[Autoplay, Pagination]}
         onAutoplayTimeLeft={onAutoplayTimeLeft}
-        className='mySwiper'>
+        className='mySwiper '>
         {data &&
           data.map((product: any) => {
             return (

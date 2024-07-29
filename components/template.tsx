@@ -110,17 +110,17 @@ export function TemplateProduct({
 
   return (
     <div
-      className={` grid-cols-[repeat(1,120px_1fr)] gap-4  items-center   rounded-lg 
-      flex flex-col h-auto w-[200px] p-2 text-center shadow-[0_0_15px_5px_#ddd] max-lg:shadow-[0_0_10px_2px_#ddd] max-lg:p-[0.3rem]`}>
+      className={` grid-cols-[repeat(1,120px_1fr)] gap-4  items-center h-max  rounded-lg 
+      flex flex-col  w-[250px] max-md:w-[200px] text-center shadow-[0_0_15px_5px_#ddd] max-lg:shadow-[0_0_10px_2px_#ddd]  `}>
       <button
         onClick={handleClickOpenImg}
-        className='w-full h-[200px] relative '>
+        className='w-full h-[250px] relative '>
         <img
           src={Images[0]}
           alt={Name}
           width={120}
           height={100}
-          className=' w-full h-full object-cover rounded-b-lg rounded-l-lg'
+          className=' w-full h-full object-cover hover:opacity-70'
           loading='lazy'
         />
         {oferta ? (
@@ -132,27 +132,27 @@ export function TemplateProduct({
         )}
       </button>
       <div
-        className={`flex flex-col gap-2 ${
+        className={`flex flex-col gap-2 w-full h-full justify-between p-2 max-lg:p-[0.3rem] ${
           inicio && 'items-center text-center'
         }`}>
-        <div className='flex flex-col gap-4'>
+        <div className='flex flex-col gap-4 w-full'>
           <div className='relative'>
-            <h2
-              className='h-[48px] overflow-hidden font-medium	'
+            <p
+              className=' overflow-hidden font-medium	truncate'
               onMouseEnter={() => setOpenFocusName(true)}
               onMouseLeave={() => setOpenFocusName(false)}>
               {Name}{' '}
-            </h2>
+            </p>
             {openFocusName ? (
-              <span className='w-full max-md:w-auto absolute botton-0 left-[20%] bg-gray-900 text-white p-[2px] pr-4 pl-4 text-[0.7rem] z-10 '>
+              <span className='w-full max-md:w-auto absolute botton-0 left-[20%] bg-gray-900 text-white p-[2px] pr-4 pl-4 text-[0.7rem] z-10  '>
                 {Name}
               </span>
             ) : null}
           </div>
           {type?.includes('camperas') ? (
-            <div>
+            <div className='flex gap-2 items-center'>
               <label htmlFor='talla' className='text-gray-800'>
-                Selecciona tu talla:
+                Talla:
               </label>
 
               <select

@@ -10,6 +10,8 @@ import {FormSearch} from '@/ui/form';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {CarouselProduct} from './carousel';
+import {useDebouncedCallback} from 'use-debounce';
+
 export function ProductosComponent() {
   const {replace} = useRouter();
   const pathname = usePathname();
@@ -26,6 +28,13 @@ export function ProductosComponent() {
   const [openLinkProduct, setOpenLinkProduct] = useState<string[]>([]);
   const [offset, setOffset] = useState(Number(searchParams.get('offset')) || 0);
   const [dataModi, setDataModi] = useState<any>();
+  const useDebouncePrice = useDebouncedCallback(
+    (category: string[], price: number[]) => {
+      setTypePrice(price);
+      setTypeSearch(category);
+    },
+    1000
+  );
 
   const {data, isLoading} = GetDataProduct(
     search,
@@ -70,10 +79,7 @@ export function ProductosComponent() {
 
     replace(`?${params.toString()}`);
   }, [typeSearch, typePrice, search, offset]);
-  const handleTypeCategoryPrice = (category: string[], price: number[]) => {
-    setTypePrice(price);
-    setTypeSearch(category);
-  };
+
   const handleModValueFormSearch = (inputSearchFrom: string) => {
     setSearch(inputSearchFrom);
     setTypeSearch([]);
@@ -132,7 +138,7 @@ export function ProductosComponent() {
         <div className='w-full flex flex-col gap-8 max-md:hidden mt-16'>
           <FiltroSearch
             valueDefault={handleDefaultParams}
-            typeCategoriaPrice={handleTypeCategoryPrice}
+            typeCategoriaPrice={useDebouncePrice}
             closeFilter={() => setIsOpenFilter(false)}
             search={search}
             isMobile={false}>
@@ -232,7 +238,7 @@ export function ProductosComponent() {
         <FiltroSearch
           search={search}
           valueDefault={handleDefaultParams}
-          typeCategoriaPrice={handleTypeCategoryPrice}
+          typeCategoriaPrice={useDebouncePrice}
           closeFilter={() => {
             setIsOpenFilter(false), setOpenInput(false);
           }}
