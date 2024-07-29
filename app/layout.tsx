@@ -26,6 +26,10 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
           as='fetch'
           crossOrigin='anonymous'
         />
+        <meta
+          name='google-site-verification'
+          content='CnmK8AWJQTO2MYQ5J7dOu9_dhCFy-ttErrYHDEWbOyw'
+        />
       </head>
       <body className={inter.className}>
         <LayoutRecoilRoot>{children}</LayoutRecoilRoot>
