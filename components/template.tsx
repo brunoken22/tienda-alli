@@ -1,7 +1,8 @@
 import {openShoppingCart, shoppingCart} from '@/lib/atom';
 import {InputNumber} from '@/ui/input';
 import {useEffect, useState} from 'react';
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useSetRecoilState} from 'recoil';
+
 export function TemplateProduct({
   Images,
   Name,
@@ -29,10 +30,8 @@ export function TemplateProduct({
 }) {
   const [openFocusName, setOpenFocusName] = useState(false);
   const [talla, setTalla] = useState(type?.includes('camperas') ? size[0] : '');
-  const [shoppingCartUserData, setShoppingCartUserData] =
-    useRecoilState(shoppingCart);
-  const [openShoppingCartValue, setOpenShoppingCartValue] =
-    useRecoilState(openShoppingCart);
+  const setShoppingCartUserData = useSetRecoilState(shoppingCart);
+  const setOpenShoppingCartValue = useSetRecoilState(openShoppingCart);
   const handleClickOpenImg = (e: React.MouseEvent) => {
     e.preventDefault();
     openImg(Images);
@@ -151,10 +150,11 @@ export function TemplateProduct({
           </div>
           {type?.includes('camperas') ? (
             <div className='flex gap-2 items-center'>
-              <label htmlFor='talla' className='text-gray-800'>
+              <label htmlFor={`talla-${id}`} className='text-gray-800'>
                 Talla:
               </label>
               <select
+                id={`talla-${id}`}
                 name='talla'
                 value={talla}
                 onChange={(e) => setTalla(e.target.value)}
