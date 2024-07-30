@@ -2,10 +2,10 @@ import Link from 'next/link';
 
 export default function Error() {
   return (
-    <div className='flex flex-col justify-center items-center gap-8'>
+    <div className='flex flex-col justify-center items-center gap-8 mt-20'>
       <svg
         xmlns='http://www.w3.org/2000/svg'
-        className='dark:stroke-white stroke-black'
+        className=' stroke-black'
         width='300'
         height='300'
         viewBox='0 0 24 24'
@@ -28,14 +28,9 @@ export default function Error() {
       </div>
       <div className='text-center flex flex-col gap-4'>
         <Link
-          href='/inicio'
+          href='/'
           className='hover:opacity-60 bg-secundary text-primary dark:text-secundary dark:bg-primary p-4 pb-2 pt-2'>
-          Ir a casa
-        </Link>
-        <Link
-          href='/iniciarSesion'
-          className='hover:opacity-60 bg-secundary text-primary dark:text-secundary dark:bg-primary p-4 pb-2 pt-2'>
-          Inicia sesión
+          Ir a Inicio
         </Link>
       </div>
     </div>
