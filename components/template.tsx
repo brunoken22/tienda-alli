@@ -155,9 +155,8 @@ export function TemplateProduct({
               <label htmlFor='talla' className='text-gray-800'>
                 Talla:
               </label>
-
               <select
-                id='talla'
+                name='talla'
                 value={talla}
                 onChange={(e) => setTalla(e.target.value)}
                 className='w-full bg-white border text-center border-gray-300 p-1 rounded-md focus:outline-none focus:border-[#3c006c]'>
