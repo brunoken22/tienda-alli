@@ -44,6 +44,7 @@ export async function getFrontPage() {
   const data = fetcher([`/api/product/frontPage`]);
   return data;
 }
+
 async function fetcher(dataParams: any[]) {
   const option = dataParams[1] || {};
   const response = await fetch(
