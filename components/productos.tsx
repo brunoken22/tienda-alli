@@ -218,7 +218,7 @@ export default function ProductosComponent() {
       </div>
       {openLinkProduct.length ? (
         <>
-          <div className='flex flex-col fixed inset-0 backdrop-brightness-50	justify-center items-center z-10'>
+          <div className='flex flex-col fixed inset-0 backdrop-brightness-[0.2]	justify-center items-center z-10'>
             <div className='fixed top-8 right-8 z-10 max-sm:top-[0.5rem] max-sm:right-[0.5rem] '>
               <button
                 onClick={() => {
@@ -229,7 +229,7 @@ export default function ProductosComponent() {
                 <img src='/closeWhite.svg' width={30} height={30} alt='close' />
               </button>
             </div>
-            <div className='h-[90%] w--[95%]'>
+            <div className='h-[90%] w-[95%]'>
               <CarouselProduct imgs={openLinkProduct} />
             </div>
           </div>

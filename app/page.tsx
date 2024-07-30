@@ -44,7 +44,7 @@ export default async function Home() {
             </div>
           </div>
           <div
-            className={`flex justify-evenly items-center gap-x-[0.4rem]  gap-y-4 flex-wrap	 pb-6`}>
+            className={`flex justify-center items-center gap-x-[0.4rem]  gap-y-4 flex-wrap	 pb-6`}>
             <ProductsFeatured featured={featured} />
           </div>
           <div className='max-md:flex hidden justify-center items-center p-4'>
