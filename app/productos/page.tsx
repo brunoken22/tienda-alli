@@ -1,5 +1,5 @@
 import type {Metadata} from 'next';
-import ProductosComponent from '@/components/Productos';
+import ProductosComponent from '@/components/productos';
 
 export const metadata: Metadata = {
   title: 'Productos | Tienda Alli',

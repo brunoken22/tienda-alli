@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import {TemplateCategory} from './template';
 import Slider from 'rc-slider';
-import {useDebouncedCallback} from 'use-debounce';
 import 'rc-slider/assets/index.css';
 
 const categoriesAll: any[] = [
