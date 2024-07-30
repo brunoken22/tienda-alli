@@ -152,7 +152,7 @@ export function ProductosComponent() {
               {data?.pagination?.total}
             </p>
           ) : null}
-          <div className='flex justify-center flex-wrap gap-8 max-lg:gap-x-[0.1rem] max-lg:m-0'>
+          <div className='flex justify-center flex-wrap gap-4 max-lg:m-0 p-2'>
             {dataModi?.length
               ? dataModi.map((item: any) => (
                   <TemplateProduct
@@ -228,7 +228,7 @@ export function ProductosComponent() {
                 <img src='/closeWhite.svg' width={30} height={30} alt='close' />
               </button>
             </div>
-            <div className='h-3/4'>
+            <div className='h-[90%] w--[95%]'>
               <CarouselProduct imgs={openLinkProduct} />
             </div>
           </div>

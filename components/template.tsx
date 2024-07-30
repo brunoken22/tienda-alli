@@ -111,11 +111,12 @@ export function TemplateProduct({
   return (
     <div
       className={` grid-cols-[repeat(1,120px_1fr)] gap-4  items-center h-max  rounded-lg 
-      flex flex-col  w-[250px] max-md:w-[200px] text-center shadow-[0_0_15px_5px_#ddd] max-lg:shadow-[0_0_10px_2px_#ddd]  `}>
+      flex flex-col  w-[250px] max-sm:w-full text-center shadow-[0_0_15px_5px_#ddd] max-lg:shadow-[0_0_10px_2px_#ddd]  `}>
       <button
         onClick={handleClickOpenImg}
         className='w-full h-[250px] relative '>
         <img
+          //
           src={Images[0]}
           alt={Name}
           width={120}
@@ -124,7 +125,7 @@ export function TemplateProduct({
           loading='lazy'
         />
         {oferta ? (
-          <div className='absolute top-[-0.5rem] left-[-2rem] rotate-[-40deg]  bg-red-600 text-white p-1 pr-4 pl-4'>
+          <div className='absolute top-0 left-0 m-1 text-xs  bg-primary text-white p-1 pr-2 pl-2'>
             <h2 className='font-bold'>OFERTA</h2>
           </div>
         ) : (
@@ -136,9 +137,9 @@ export function TemplateProduct({
           inicio && 'items-center text-center'
         }`}>
         <div className='flex flex-col gap-4 w-full'>
-          <div className='relative'>
+          <div className='relative overflow-hidden w-full flex items-center justify-center'>
             <p
-              className=' overflow-hidden font-medium	truncate'
+              className='w-[250px] font-medium	truncate'
               onMouseEnter={() => setOpenFocusName(true)}
               onMouseLeave={() => setOpenFocusName(false)}>
               {Name}{' '}
