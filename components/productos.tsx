@@ -12,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {CarouselProduct} from './carousel';
 import {useDebouncedCallback} from 'use-debounce';
 
-export function ProductosComponent() {
+export default function ProductosComponent() {
   const {replace} = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -43,6 +43,7 @@ export function ProductosComponent() {
     15,
     offset
   );
+
   const seccionDestinoRef: any = useRef(null);
 
   useEffect(() => {
@@ -64,21 +65,21 @@ export function ProductosComponent() {
     }
   }, [typeSearch]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    if (!typeSearch.length) {
-      params.set('q', search);
-    } else {
-      params.delete('q');
-      setSearch('');
-    }
-    params.set('price', JSON.stringify(typePrice));
-    params.set('type', JSON.stringify(typeSearch));
-    params.set('limit', JSON.stringify(15));
-    params.set('offset', JSON.stringify(offset));
+  // useEffect(() => {
+  //   const params = new URLSearchParams(searchParams);
+  //   if (!typeSearch.length) {
+  //     params.set('q', search);
+  //   } else {
+  //     params.delete('q');
+  //     setSearch('');
+  //   }
+  //   params.set('price', JSON.stringify(typePrice));
+  //   params.set('type', JSON.stringify(typeSearch));
+  //   params.set('limit', JSON.stringify(15));
+  //   params.set('offset', JSON.stringify(offset));
 
-    replace(`?${params.toString()}`);
-  }, [typeSearch, typePrice, search, offset]);
+  //   replace(`?${params.toString()}`);
+  // }, [typeSearch, typePrice, search, offset]);
 
   const handleModValueFormSearch = (inputSearchFrom: string) => {
     setSearch(inputSearchFrom);
