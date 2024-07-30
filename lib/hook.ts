@@ -1,3 +1,4 @@
+import {Console} from 'console';
 import useSWR from 'swr';
 
 export function GetDataProduct(
@@ -37,11 +38,16 @@ export async function getDataCartShopping(ids: string | null) {
   return data;
 }
 export async function getProductFeatured() {
-  const data = fetcher([`/api/product/featured`]);
+  const data = await fetcher([`/api/product/featured`]);
   return data;
 }
 export async function getFrontPage() {
-  const data = fetcher([`/api/product/frontPage`]);
+  const response = await fetch(
+    (process.env.NEXT_PUBLIC_API || 'http://localhost:3000') +
+      '/api/product/frontPage',
+    {cache: 'no-cache'}
+  );
+  const data = await response.json();
   return data;
 }
 
