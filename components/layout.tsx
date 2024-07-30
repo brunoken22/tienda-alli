@@ -1,6 +1,7 @@
 'use client';
 import {RecoilRoot} from 'recoil';
 import {Header} from '@/components/header';
+import {Suspense} from 'react';
 
 export default function LayoutRecoilRoot({
   children,
@@ -9,8 +10,10 @@ export default function LayoutRecoilRoot({
 }) {
   return (
     <RecoilRoot>
-      <Header />
-      {children}
+      <Suspense>
+        <Header />
+        {children}
+      </Suspense>
     </RecoilRoot>
   );
 }
