@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import {GetDataProduct} from '@/lib/hook';
 import {EsqueletonProduct} from './esqueleton';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {Suspense, useEffect, useRef, useState} from 'react';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import {TemplateProduct} from './template';
 import {FiltroSearch} from './filtro';
@@ -90,7 +90,7 @@ export default function ProductosComponent() {
     typePrice,
   };
   return (
-    <>
+    <Suspense>
       {openInput ? (
         <div className='fixed inset-0 z-10 backdrop-blur-[2px]'>
           <div className='max-md:block hidden  bg-primary fixed top-[3rem] right-0 left-0 z-[9] '>
@@ -258,6 +258,6 @@ export default function ProductosComponent() {
         </h2>
       </Link>
       <ToastContainer />
-    </>
+    </Suspense>
   );
 }
