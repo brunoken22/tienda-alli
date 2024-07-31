@@ -29,7 +29,7 @@ const feautredFilter = [
 
 export default function FeaturedFilter() {
   return (
-    <div className='flex justify-center items-center gap-4 max-md:flex-col'>
+    <div className='flex justify-center items-center gap-4 max-sm:flex-wrap'>
       {feautredFilter.map((item) => (
         <TemplateFeaturedFilter
           name={item.name}

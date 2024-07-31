@@ -1,5 +1,5 @@
 'use client';
-import {TemplateProduct} from '@/components/template';
+import {TemplateProduct} from '@/components/templateProduct';
 import {useState} from 'react';
 import {EsqueletonProduct} from './esqueleton';
 import {ToastContainer, toast} from 'react-toastify';

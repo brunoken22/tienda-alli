@@ -110,7 +110,7 @@ export function TemplateProduct({
   return (
     <div
       className={` grid-cols-[repeat(1,120px_1fr)] gap-4  items-center h-max  rounded-lg 
-      flex flex-col  w-[250px] max-sm:w-full text-center shadow-[0_0_15px_5px_#ddd] max-lg:shadow-[0_0_10px_2px_#ddd]  `}>
+      flex flex-col  w-[250px] max-sm:w-full text-center shadow-[0_0_15px_5px_#ddd] max-lg:shadow-[0_0_10px_2px_#ddd]  bg-secundary`}>
       <button
         onClick={handleClickOpenImg}
         className='w-full h-[300px] relative '>
@@ -131,7 +131,7 @@ export function TemplateProduct({
         )}
       </button>
       <div
-        className={`flex flex-col gap-2 max-md:gap-2 w-full h-full justify-between p-2 max-lg:p-[0.3rem] ${
+        className={`flex flex-col gap-2 max-md:gap-2 w-full h-full justify-between p-2 max-lg:p-[0.3rem]  ${
           inicio && 'items-center text-center'
         }`}>
         <div className='flex flex-col gap-4 w-full'>

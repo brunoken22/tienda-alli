@@ -3,7 +3,7 @@ import {openShoppingCart, shoppingCart} from '@/lib/atom';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import React, {useEffect, useState} from 'react';
 import {Modal} from './modal';
-import {TemplateShopppingCartProduct} from './template';
+import {TemplateShopppingCartProduct} from './templateProduct';
 
 export function ShoppingCart() {
   const [openShoppingCartValue, setOpenShoppingCartValue] =

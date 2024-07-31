@@ -4,7 +4,7 @@ import {GetDataProduct} from '@/lib/hook';
 import {EsqueletonProduct} from './esqueleton';
 import React, {useEffect, useRef, useState} from 'react';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
-import {TemplateProduct} from './template';
+import {TemplateProduct} from './templateProduct';
 import {FiltroSearch} from './filtro';
 import {FormSearch} from '@/ui/form';
 import {ToastContainer, toast} from 'react-toastify';

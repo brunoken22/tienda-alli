@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {TemplateCategory} from './template';
+import {TemplateCategory} from './templateProduct';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
