@@ -17,6 +17,7 @@ export default function ProductosComponent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [openInput, setOpenInput] = useState(false);
+  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [search, setSearch] = useState(searchParams.get('q') || '');
   const [typeSearch, setTypeSearch] = useState<string[]>(
     JSON.parse(searchParams.get('type')!) || []
@@ -41,7 +42,8 @@ export default function ProductosComponent() {
     typeSearch,
     typePrice,
     15,
-    offset
+    offset,
+    order
   );
 
   const seccionDestinoRef: any = useRef(null);
@@ -89,6 +91,7 @@ export default function ProductosComponent() {
     typeSearch,
     typePrice,
   };
+
   return (
     <>
       {openInput ? (
@@ -148,10 +151,27 @@ export default function ProductosComponent() {
         </div>
         <div ref={seccionDestinoRef} className=''>
           {data?.results?.length ? (
-            <p className='flex justify-center mb-8 font-medium'>
-              {data?.results?.length + data.pagination.offset} de{' '}
-              {data?.pagination?.total}
-            </p>
+            <div className='flex justify-between items-center p-2 mb-4'>
+              <p className='flex justify-center  font-medium flex-grow max-md:flex-grow-0'>
+                {data?.results?.length + data.pagination.offset} de{' '}
+                {data?.pagination?.total}
+              </p>
+              <div>
+                <label htmlFor='order' className='text-gray-500 max-md:text-xs'>
+                  ORDENAR POR :
+                </label>
+                <select
+                  name='order'
+                  id='order'
+                  defaultValue={order}
+                  onChange={(e) =>
+                    setOrder(e.currentTarget.value as 'asc' | 'desc')
+                  }>
+                  <option value='asc'>Precio más alto</option>
+                  <option value='desc'>Precio más bajo</option>
+                </select>
+              </div>
+            </div>
           ) : null}
           <div className='flex justify-center flex-wrap gap-4 max-lg:m-0 p-2'>
             {dataModi?.length

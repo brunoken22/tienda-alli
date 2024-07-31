@@ -134,16 +134,16 @@ export function TemplateProduct({
         className={`flex flex-col gap-2 max-md:gap-2 w-full h-full justify-between p-2 max-lg:p-[0.3rem]  ${
           inicio && 'items-center text-center'
         }`}>
-        <div className='flex flex-col gap-4 w-full'>
-          <div className='relative overflow-hidden w-full flex items-center justify-center'>
+        <div className='flex flex-col gap-4 w-full relative'>
+          <div className=' overflow-hidden w-full flex items-center justify-center'>
             <p
               className='w-[250px] font-medium	truncate'
-              onMouseEnter={() => setOpenFocusName(true)}
-              onMouseLeave={() => setOpenFocusName(false)}>
-              {Name}{' '}
+              onMouseOver={() => setOpenFocusName(true)}
+              onMouseOut={() => setOpenFocusName(false)}>
+              {Name}
             </p>
             {openFocusName ? (
-              <span className='w-full max-md:w-auto absolute botton-0 left-[20%] bg-gray-900 text-white p-[2px] pr-4 pl-4 text-[0.7rem] z-10  '>
+              <span className='w-full max-md:w-auto absolute botton-0 top-[25%] left-[20%] bg-gray-900 text-white p-[2px] pr-4 pl-4 text-[0.7rem]   '>
                 {Name}
               </span>
             ) : null}

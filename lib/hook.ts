@@ -1,4 +1,3 @@
-import {Console} from 'console';
 import useSWR from 'swr';
 
 export function GetDataProduct(
@@ -6,7 +5,8 @@ export function GetDataProduct(
   typeSearch?: string[] | '',
   typePrice?: number[] | '',
   limit?: number,
-  offset?: number
+  offset?: number,
+  order?: 'asc' | 'desc'
 ) {
   const {data, isLoading} = useSWR(
     [
@@ -16,7 +16,7 @@ export function GetDataProduct(
           : '?price=' + JSON.stringify(typePrice)
       }${
         typeSearch?.length ? '&type=' + JSON.stringify(typeSearch) : '&type=[]'
-      }&limit=${limit}&offset=${offset}`,
+      }&limit=${limit}&offset=${offset}&order=${order}`,
     ],
     fetcher,
     {
