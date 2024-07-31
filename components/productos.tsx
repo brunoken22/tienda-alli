@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import {GetDataProduct} from '@/lib/hook';
 import {EsqueletonProduct} from './esqueleton';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import {TemplateProduct} from './templateProduct';
 import {FiltroSearch} from './filtro';
@@ -17,7 +17,7 @@ export default function ProductosComponent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [openInput, setOpenInput] = useState(false);
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
   const [search, setSearch] = useState(searchParams.get('q') || '');
   const [typeSearch, setTypeSearch] = useState<string[]>(
     JSON.parse(searchParams.get('type')!) || []
@@ -28,7 +28,6 @@ export default function ProductosComponent() {
   const [isOpenFilter, setIsOpenFilter] = useState(false);
   const [openLinkProduct, setOpenLinkProduct] = useState<string[]>([]);
   const [offset, setOffset] = useState(Number(searchParams.get('offset')) || 0);
-  const [dataModi, setDataModi] = useState<any>();
   const useDebouncePrice = useDebouncedCallback(
     (category: string[], price: number[]) => {
       setTypePrice(price);
@@ -46,21 +45,6 @@ export default function ProductosComponent() {
     order
   );
 
-  const seccionDestinoRef: any = useRef(null);
-
-  useEffect(() => {
-    if (data?.results?.length) {
-      seccionDestinoRef.current.scrollIntoView({
-        behavior: 'smooth',
-      });
-      const ordenados = data.results.sort((a: any, b: any) => {
-        return a.oferta === b.oferta ? 0 : a.oferta ? -1 : 1;
-      });
-      setDataModi(ordenados);
-      return;
-    }
-    setDataModi([]);
-  }, [data]);
   useEffect(() => {
     if (typeSearch) {
       setOffset(0);
@@ -149,7 +133,7 @@ export default function ProductosComponent() {
             <FormSearch value={search} modValue={handleModValueFormSearch} />
           </FiltroSearch>
         </div>
-        <div ref={seccionDestinoRef} className=''>
+        <div className=''>
           {data?.results?.length ? (
             <div className='flex justify-between items-center p-2 mb-4'>
               <p className='flex justify-center  font-medium flex-grow max-md:flex-grow-0'>
@@ -167,15 +151,15 @@ export default function ProductosComponent() {
                   onChange={(e) =>
                     setOrder(e.currentTarget.value as 'asc' | 'desc')
                   }>
-                  <option value='asc'>Precio más alto</option>
-                  <option value='desc'>Precio más bajo</option>
+                  <option value='desc'>Precio más alto</option>
+                  <option value='asc'>Precio más bajo</option>
                 </select>
               </div>
             </div>
           ) : null}
           <div className='flex justify-center flex-wrap gap-4 max-lg:m-0 p-2'>
-            {dataModi?.length
-              ? dataModi.map((item: any) => (
+            {data?.results.length
+              ? data.results.map((item: any) => (
                   <TemplateProduct
                     key={item.objectID}
                     openImg={(data: string[]) => setOpenLinkProduct(data)}
@@ -193,7 +177,7 @@ export default function ProductosComponent() {
                     addItem={() => toast.success('Se agregó al carrito!')}
                   />
                 ))
-              : dataModi?.length == 0 && !isLoading
+              : data?.results.length == 0 && !isLoading
               ? 'No hay producto'
               : ''}
             {isLoading

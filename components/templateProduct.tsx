@@ -113,13 +113,13 @@ export function TemplateProduct({
       flex flex-col  w-[250px] max-sm:w-full text-center shadow-[0_0_15px_5px_#ddd] max-lg:shadow-[0_0_10px_2px_#ddd]  bg-secundary`}>
       <button
         onClick={handleClickOpenImg}
-        className='w-full h-[300px] relative '>
+        className='w-full h-[300px] relative overflow-hidden'>
         <img
           src={Images[0]}
           alt={Name}
           width={120}
           height={100}
-          className=' w-full h-full object-cover hover:opacity-70'
+          className=' w-full h-full object-cover hover:opacity-80 hover:scale-110 transition-all'
           loading='lazy'
         />
         {oferta ? (

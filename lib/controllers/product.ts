@@ -8,7 +8,6 @@ export async function searchProduct(req: Request) {
     const limit = Number(searchParams.get('limit') || 15);
     const offset = Number(searchParams.get('offset') || 0);
     const order = searchParams.get('order') || 'desc';
-
     const {finalLimit, finalOffset} = getOffsetAndLimitFom(limit, offset);
     const cadenaDeBusquedaCategory = JSON.parse(typeCategory)
       .map((item: string) => `type:${item}`)
@@ -19,6 +18,7 @@ export async function searchProduct(req: Request) {
     await index.setSettings({
       customRanking: [`${order}(Unit cost)`],
     });
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const data = await index.search(search, {
       hitsPerPage: finalLimit,
@@ -35,6 +35,7 @@ export async function searchProduct(req: Request) {
         limit: finalLimit,
         offset: finalOffset,
         total: data.nbHits,
+        order,
       },
     };
   } catch (e) {
