@@ -18,6 +18,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
           name='google-site-verification'
           content='CnmK8AWJQTO2MYQ5J7dOu9_dhCFy-ttErrYHDEWbOyw'
         />
+        <meta name='color-scheme' content='only light' />
       </head>
       <body className={inter.className}>
         <LayoutRecoilRoot>{children}</LayoutRecoilRoot>
