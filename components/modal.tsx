@@ -1,12 +1,12 @@
-import {shoppingCart} from '@/lib/atom';
-import {IconCopy} from '@/ui/icons';
+import { shoppingCart } from '@/lib/atom';
+import { IconCopy } from '@/components/ui/icons';
 import Link from 'next/link';
-import {useEffect, useState} from 'react';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
-import {useRecoilState} from 'recoil';
-import {GeneratePdf} from './generatePdf';
-import {PDFDownloadLink} from '@react-pdf/renderer';
-export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
+import { useEffect, useState } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useRecoilState } from 'recoil';
+import { GeneratePdf } from './generatePdf';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+export function Modal({ closeModal }: { closeModal: (data: boolean) => any }) {
   const [shoppingCartUserData] = useRecoilState(shoppingCart);
   const [textShoppingCopy, setTextShoppingCopy] = useState('');
   const [mostrarDiv, setMostrarDiv] = useState(false);
@@ -15,13 +15,10 @@ export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
     if (shoppingCartUserData) {
       setTextShoppingCopy(
         `Mi pedido:
-        ${shoppingCartUserData
-          .map((item) => `🖌 ${item.cantidad} ${item.title}`)
-          .join('\n')}
+        ${shoppingCartUserData.map((item) => `🖌 ${item.cantidad} ${item.title}`).join('\n')}
         🛒 *Total:  $${
           shoppingCartUserData.reduce(
-            (acumalador, objeto) =>
-              acumalador + objeto.price * (objeto.cantidad || 1),
+            (acumalador, objeto) => acumalador + objeto.price * (objeto.cantidad || 1),
             0
           ) || 0
         }*
@@ -40,7 +37,7 @@ export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
 
   return (
     <>
-      <div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-[9] outline-none focus:outline-none backdrop-brightness-50	'>
+      <div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-[60] outline-none focus:outline-none backdrop-brightness-50	'>
         <div className='relative  my-6 mx-auto max-w-3xl w-[95%]'>
           <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
             <div className='flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t'>
@@ -112,7 +109,7 @@ export function Modal({closeModal}: {closeModal: (data: boolean) => any}) {
               <PDFDownloadLink
                 document={<GeneratePdf data={shoppingCartUserData} />}
                 fileName='tiendaAlli.pdf'>
-                {({loading, error}) =>
+                {({ loading, error }) =>
                   loading ? (
                     <button className='bg-primary text-white active:bg-primary font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 max-sm:text-center'>
                       Loading...

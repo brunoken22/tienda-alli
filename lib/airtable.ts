@@ -1,8 +1,6 @@
 import Airtable from 'airtable';
-import {index} from './algolia';
-export const base = new Airtable({apiKey: process.env.AIRTABLE}).base(
-  'appXu0aYFo1OsZRi0'
-);
+import { index } from './algolia';
+export const base = new Airtable({ apiKey: process.env.AIRTABLE }).base('appXu0aYFo1OsZRi0');
 export async function getDataAirtable() {
   const newBase = base('Furniture').select({
     view: 'All furniture',
@@ -13,6 +11,5 @@ export async function getDataAirtable() {
     ...r.fields,
   }));
   const res = await index.replaceAllObjects(object);
-  console.log('res', res.objectIDs);
   return res.objectIDs;
 }

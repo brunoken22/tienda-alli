@@ -1,21 +1,24 @@
 'use client';
-import {openShoppingCart, shoppingCart} from '@/lib/atom';
-import {FormSearchHome} from '@/ui/form';
+
+import { openShoppingCart, shoppingCart } from '@/lib/atom';
+import { FormSearchHome } from '@/components/ui/form';
 import Link from 'next/link';
-import {useRecoilState} from 'recoil';
-import {ShoppingCart} from './shoppingCart';
-import {usePathname} from 'next/navigation';
-import {getDataCartShopping} from '@/lib/hook';
-import {useEffect, useState} from 'react';
+import { useRecoilState } from 'recoil';
+import { ShoppingCart } from './shoppingCart';
+import { usePathname } from 'next/navigation';
+import { getDataCartShopping } from '@/lib/hook';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Search, ShoppingCartIcon as CartIcon, Menu, X, MessageCircle } from 'lucide-react';
 
 export function Header() {
   const [openInput, setOpenInput] = useState(false);
-  const [openShoppingCartValue, setOpenShoppingCartValue] =
-    useRecoilState(openShoppingCart);
+  const [openMobileMenu, setOpenMobileMenu] = useState(false);
+  const [openShoppingCartValue, setOpenShoppingCartValue] = useRecoilState(openShoppingCart);
   const pathname = usePathname();
+  const [shoppingCartUserData, setShoppingCartUserData] = useRecoilState(shoppingCart);
 
-  const [shoppingCartUserData, setShoppingCartUserData] =
-    useRecoilState(shoppingCart);
   useEffect(() => {
     (async () => {
       const data = await getDataCartShopping(
@@ -25,109 +28,148 @@ export function Header() {
         setShoppingCartUserData(data);
       }
     })();
-  }, []);
+  }, [setShoppingCartUserData]);
+
+  const navigationItems = [
+    { href: '/', label: 'Inicio' },
+    { href: '/nosotros', label: 'Nosotros' },
+    { href: '/productos', label: 'Productos' },
+  ];
+
+  const isActivePath = (path: string) => pathname === path;
+
   return (
     <>
-      <div className='bg-primary pt-4 pb-4 flex flex-col gap-4 fixed top-0 left-0 right-0 z-10'>
-        <div className='relative flex justify-between pl-4 pr-4 max-md:flex-col max-md:gap-4 items-center'>
-          <Link
-            href={'/'}
-            className='text-center font-bold text-2xl text-white '>
-            Tienda de ALLI
-          </Link>
-          {pathname !== '/productos' ? (
-            <div className=' flex justify-center gap-4 max-md:hidden mr-4 ml-4'>
-              <FormSearchHome />
-            </div>
-          ) : null}
-          <div className='flex justify-between gap-6 items-center max-md:justify-center'>
-            <div className=' flex gap-4'>
-              <Link
-                href={'/'}
-                className={` ${
-                  pathname == '/'
-                    ? '	 text-secundary border-b-[1px] border-solid	 border-secundary '
-                    : 'text-white'
-                }`}>
-                Inicio
-              </Link>
-              <Link
-                href={'/nosotros'}
-                className={` ${
-                  pathname == '/nosotros'
-                    ? ' text-secundary border-b-[1px] border-solid	 border-secundary '
-                    : 'text-white'
-                }`}>
-                Nosotros
-              </Link>
-              <Link
-                href={'/productos'}
-                className={`${
-                  pathname == '/productos'
-                    ? ' text-secundary border-b-[1px] border-solid	 border-secundary '
-                    : 'text-white'
-                }`}>
-                Productos
-              </Link>
-            </div>
-            {!openInput && pathname !== '/productos' ? (
-              <div className='hidden max-md:block'>
-                <button onClick={() => setOpenInput(true)}>
-                  <img
-                    src='/searchWhite.svg'
-                    alt='search'
-                    width={20}
-                    height={20}
-                  />
-                </button>
+      {/* Header Principal */}
+      <header className='bg-gradient-to-r from-purple-600 to-purple-700 shadow-lg fixed top-0 left-0 right-0 z-50 backdrop-blur-sm'>
+        <div className='container mx-auto px-4'>
+          <div className='flex items-center justify-between h-16 md:h-20'>
+            {/* Logo */}
+            <Link href='/' className='flex items-center space-x-2 group'>
+              <div className='w-8 h-8 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform'>
+                <span className='text-purple-600 font-bold text-lg'>A</span>
               </div>
-            ) : null}
-            <div className='max-md:absolute max-md:left-[85%] max-md:top-[10%]'>
-              <button
-                className='relative '
-                onClick={() => setOpenShoppingCartValue(true)}>
-                <img
-                  src='/cart-shopping.svg'
-                  alt='cart-shopping'
-                  width={20}
-                  height={17}
-                />
-                {shoppingCartUserData.length ? (
-                  <span className='absolute bottom-[60%] left-[60%] bg-secundary text-[0.8rem] pr-[0.4rem] pl-[0.4rem] rounded-full'>
-                    {shoppingCartUserData.length}
-                  </span>
-                ) : null}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      {openShoppingCartValue ? <ShoppingCart /> : null}
+              <span className='text-white font-bold text-xl md:text-2xl group-hover:text-purple-200 transition-colors'>
+                Tienda de ALLI
+              </span>
+            </Link>
 
-      {openInput && pathname !== '/productos' ? (
-        <div className='fixed inset-0 backdrop-blur-[2px] z-10'>
-          <div className='relative top-[5%] hidden justify-center gap-4 max-md:flex mr-4 ml-4'>
-            <div className='flex bg-gray-200 pr-2'>
-              <FormSearchHome />
-              <button onClick={() => setOpenInput(false)}>
-                <img src='/closeBlack.svg' alt='close' className='w-[20px]' />
-              </button>
+            {/* Búsqueda Desktop */}
+            {pathname !== '/productos' && (
+              <div className='hidden md:flex flex-1 max-w-md mx-8'>
+                <FormSearchHome />
+              </div>
+            )}
+
+            {/* Navegación Desktop */}
+            <nav className='hidden md:flex items-center space-x-6'>
+              {navigationItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`relative px-3 py-2 text-sm font-medium transition-colors ${
+                    isActivePath(item.href) ? 'text-yellow-300' : 'text-white hover:text-purple-200'
+                  }`}>
+                  {item.label}
+                  {isActivePath(item.href) && (
+                    <div className='absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-300 rounded-full' />
+                  )}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Acciones Desktop */}
+            <div className='flex items-center space-x-4'>
+              {/* Búsqueda Mobile */}
+              {!openInput && pathname !== '/productos' && (
+                <Button
+                  variant='ghost'
+                  size='icon'
+                  onClick={() => setOpenInput(true)}
+                  className='md:hidden text-white hover:bg-white/20'>
+                  <Search className='w-5 h-5' />
+                </Button>
+              )}
+
+              {/* Carrito */}
+              <Button
+                variant='ghost'
+                size='icon'
+                onClick={() => setOpenShoppingCartValue(true)}
+                className='relative text-white hover:bg-white/20'>
+                <CartIcon className='w-5 h-5' />
+                {shoppingCartUserData.length > 0 && (
+                  <Badge
+                    variant='destructive'
+                    size='sm'
+                    className='absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-sm'>
+                    {shoppingCartUserData.length}
+                  </Badge>
+                )}
+              </Button>
+
+              {/* Menu Mobile */}
+              <Button
+                variant='ghost'
+                size='icon'
+                onClick={() => setOpenMobileMenu(!openMobileMenu)}
+                className='md:hidden text-white hover:bg-white/20'>
+                {openMobileMenu ? <X className='w-5 h-5' /> : <Menu className='w-5 h-5' />}
+              </Button>
+            </div>
+          </div>
+
+          {/* Navegación Mobile */}
+          {openMobileMenu && (
+            <div className='md:hidden border-t border-purple-500/30 py-4'>
+              <nav className='flex flex-col space-y-2'>
+                {navigationItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setOpenMobileMenu(false)}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                      isActivePath(item.href)
+                        ? 'bg-white/20 text-yellow-300'
+                        : 'text-white hover:bg-white/10'
+                    }`}>
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* Overlay de búsqueda mobile */}
+      {openInput && pathname !== '/productos' && (
+        <div className='fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden'>
+          <div className='bg-white m-4 mt-20 rounded-lg p-4 shadow-xl'>
+            <div className='flex items-center space-x-2'>
+              <div className='flex-1'>
+                <FormSearchHome />
+              </div>
+              <Button variant='ghost' size='icon' onClick={() => setOpenInput(false)}>
+                <X className='w-5 h-5' />
+              </Button>
             </div>
           </div>
         </div>
-      ) : null}
-      <div className='fixed bottom-5 right-5 z-[9] bg-[#40ea41] rounded-full p-2 shadow-[0_0_10px_0.5px] hover:opacity-80'>
+      )}
+
+      {/* Carrito lateral */}
+      {openShoppingCartValue && <ShoppingCart />}
+
+      {/* Botón WhatsApp flotante */}
+      <div className='fixed bottom-6 right-6 z-40'>
         <Link
           href='https://api.whatsapp.com/send?phone=+541159102865&text=Hola%20te%20hablo%20desde%20la%20p%C3%A1gina'
-          aria-label='whatsapp'>
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            viewBox='0 0 480 512'
-            width='30px'
-            height='30px'
-            fill='#fff'>
-            <path d='M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z' />
-          </svg>
+          aria-label='Contactar por WhatsApp'
+          className='group'>
+          <div className='bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-110'>
+            <MessageCircle className='w-6 h-6' />
+          </div>
         </Link>
       </div>
     </>

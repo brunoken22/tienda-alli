@@ -1,155 +1,261 @@
-import {useEffect, useState} from 'react';
-import {TemplateCategory} from './templateProduct';
-import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
+'use client';
 
-const categoriesAll: any[] = [
-  {
-    id: 'Moda',
-    type: [
-      {id: 'Todas las Camperas', type: 'camperas'},
-      {id: 'Camperas Hombre', type: 'camperas_hombre'},
-      {id: 'Camperas Mujer', type: 'camperas_mujer'},
-      {id: 'Camperas Niños', type: 'camperas_niños'},
-    ],
-  },
-  {
-    id: 'Mochilas ',
-    type: [
-      {id: 'Todas las mochilas', type: 'mochilas'},
-      {id: 'Mochilas de Nene', type: 'mochilas_nene'},
-      {id: 'Mochilas de Nena', type: 'mochilas_nena'},
-      {id: 'Mochilas juveniles', type: 'mochilas_juveniles'},
-    ],
-  },
-  {id: 'Carteras/Bandoleras ', type: 'carteras'},
-  {id: 'Riñoneras ', type: 'riñoneras'},
-  {id: 'Billeteras', type: 'billeteras'},
-  ,
-];
+import type React from 'react';
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { X, Filter, ChevronDown, ChevronUp } from 'lucide-react';
+
+interface FiltroSearchProps {
+  valueDefault: {
+    typeSearch: string[];
+    typePrice: number[];
+  };
+  typeCategoriaPrice: (category: string[], price: number[]) => void;
+  closeFilter: () => void;
+  search: string;
+  isMobile: boolean;
+  children?: React.ReactNode;
+}
+
 export function FiltroSearch({
-  children,
-  closeFilter,
-  isMobile,
-  search,
   valueDefault,
   typeCategoriaPrice,
-}: {
-  valueDefault: {typeSearch: string[]; typePrice: number[]};
-  search: string;
-  children?: React.ReactNode;
-  closeFilter: (data: boolean) => any;
-  typeCategoriaPrice: (category: string[], price: number[]) => any;
+  closeFilter,
+  search,
+  isMobile,
+  children,
+}: FiltroSearchProps) {
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(valueDefault.typeSearch);
+  const [priceRange, setPriceRange] = useState<number[]>(valueDefault.typePrice);
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    categories: true,
+    price: true,
+  });
 
-  isMobile: boolean;
-}) {
-  const [minPrice, setMinPrice] = useState(valueDefault.typePrice[0]);
-  const [maxPrice, setMaxPrice] = useState(valueDefault.typePrice[1]);
-  const [categoria, setCategoria] = useState<string[]>(valueDefault.typeSearch);
+  const categories = [
+    { id: 'camperas_mujer', name: 'Camperas Mujer', count: 45 },
+    { id: 'camperas_hombre', name: 'Camperas Hombre', count: 32 },
+    { id: 'mochilas', name: 'Mochilas', count: 28 },
+    { id: 'billeteras', name: 'Billeteras', count: 15 },
+    { id: 'carteras', name: 'Carteras', count: 22 },
+    { id: 'riñoneras', name: 'Riñoneras', count: 18 },
+  ];
 
   useEffect(() => {
-    typeCategoriaPrice(categoria, [minPrice, maxPrice]);
-  }, [categoria, maxPrice, minPrice]);
-  useEffect(() => {
-    if (search) return setCategoria([]);
-  }, [search]);
-  useEffect(() => {
-    if (!search) {
-      setCategoria(valueDefault.typeSearch);
-    }
-  }, [valueDefault.typeSearch]);
+    typeCategoriaPrice(selectedCategories, priceRange);
+  }, [selectedCategories, priceRange, typeCategoriaPrice]);
 
-  const handleIsCategoria = (data: string) => {
-    if (categoria.length) {
-      if (!categoria.includes(data)) {
-        setCategoria((prev: string[]) => [...prev, data]);
-        return;
-      } else {
-        const newCategoria = categoria.filter((item: string) => item !== data);
-        setCategoria(newCategoria);
-      }
-      return;
-    }
-    setCategoria([data]);
+  const handleCategoryToggle = (categoryId: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(categoryId) ? prev.filter((id) => id !== categoryId) : [...prev, categoryId]
+    );
   };
 
+  const handlePriceChange = (index: number, value: number) => {
+    const newRange = [...priceRange];
+    newRange[index] = value;
+    setPriceRange(newRange);
+  };
+
+  const clearAllFilters = () => {
+    setSelectedCategories([]);
+    setPriceRange([0, 70000]);
+  };
+
+  const toggleSection = (section: string) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
+  const activeFiltersCount =
+    selectedCategories.length + (priceRange[0] > 0 || priceRange[1] < 70000 ? 1 : 0);
+
   return (
-    <div
-      className={
-        isMobile
-          ? ' fixed inset-0 bg-primary z-10	p-8 flex flex-col gap-8 text-white'
-          : 'flex flex-col gap-8 max-md:hidden fixed w-[230px]'
-      }>
-      <div className='flex flex-col gap-6'>
-        <div className='flex justify-end'>
-          {isMobile ? (
-            <button
-              onClick={() => {
-                document.body.style.overflow = 'auto';
-                closeFilter(true);
-              }}>
-              <img
-                src='/closeWhite.svg'
-                color={'white'}
-                width='25px'
-                height='25px'
-              />
-            </button>
-          ) : (
-            children
+    <div className={`${isMobile ? 'h-full flex flex-col text-white' : 'text-foreground'}`}>
+      {isMobile && (
+        <div className='flex items-center justify-between p-4 border-b bg-card'>
+          <div className='flex items-center gap-2'>
+            <Filter className='w-5 h-5' />
+            <h2 className='font-semibold'>Filtros</h2>
+            {activeFiltersCount > 0 && (
+              <Badge variant={isMobile ? 'default' : 'secondary'} size='sm'>
+                {activeFiltersCount}
+              </Badge>
+            )}
+          </div>
+          <Button variant={isMobile ? 'default' : 'secondary'} size='icon' onClick={closeFilter}>
+            <X className='w-5 h-5' />
+          </Button>
+        </div>
+      )}
+
+      <div className={`${isMobile ? 'flex-1 overflow-y-auto p-4' : ''} space-y-6`}>
+        {children && (
+          <div className='space-y-2'>
+            <h3 className='font-medium text-sm text-muted-foreground'>Búsqueda</h3>
+            {children}
+          </div>
+        )}
+
+        {activeFiltersCount > 0 && (
+          <div className='space-y-2'>
+            <div className='flex items-center justify-between'>
+              <h3 className='font-medium text-sm text-muted-foreground'>Filtros activos</h3>
+              <Button
+                variant={isMobile ? 'default' : 'secondary'}
+                size='sm'
+                onClick={clearAllFilters}
+                className='text-sm'>
+                Limpiar todo
+              </Button>
+            </div>
+            <div className='flex flex-wrap gap-2'>
+              {selectedCategories.map((categoryId) => {
+                const category = categories.find((c) => c.id === categoryId);
+                return (
+                  <Badge
+                    key={categoryId}
+                    variant={isMobile ? 'default' : 'secondary'}
+                    className='text-sm'>
+                    {category?.name}
+                    <Button
+                      variant='ghost'
+                      size='icon'
+                      className='h-4 w-4 ml-1 hover:bg-destructive hover:text-destructive-foreground'
+                      onClick={() => handleCategoryToggle(categoryId)}>
+                      <X className='w-3 h-3' />
+                    </Button>
+                  </Badge>
+                );
+              })}
+              {(priceRange[0] > 0 || priceRange[1] < 70000) && (
+                <Badge variant={isMobile ? 'default' : 'secondary'} className='text-sm'>
+                  ${priceRange[0].toLocaleString()} - ${priceRange[1].toLocaleString()}
+                  <Button
+                    variant='ghost'
+                    size='icon'
+                    className='h-4 w-4 ml-1 hover:bg-destructive hover:text-destructive-foreground'
+                    onClick={() => setPriceRange([0, 70000])}>
+                    <X className='w-3 h-3' />
+                  </Button>
+                </Badge>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Categorías */}
+        <div className='space-y-3'>
+          <Button
+            variant='primary'
+            onClick={() => toggleSection('categories')}
+            className='w-full justify-between p-0 h-auto font-medium text-sm'>
+            Categorías
+            {expandedSections.categories ? (
+              <ChevronUp className='w-4 h-4' />
+            ) : (
+              <ChevronDown className='w-4 h-4' />
+            )}
+          </Button>
+          {expandedSections.categories && (
+            <div className='space-y-2'>
+              {categories.map((category) => (
+                <label
+                  key={category.id}
+                  className='flex items-center space-x-2 cursor-pointer group'>
+                  <input
+                    type='checkbox'
+                    checked={selectedCategories.includes(category.id)}
+                    onChange={() => handleCategoryToggle(category.id)}
+                    className='rounded border-gray-300 text-primary focus:ring-primary'
+                  />
+                  <span className='text-sm group-hover:opacity-70 transition-colors flex-1'>
+                    {category.name}
+                  </span>
+                  <span className='text-sm text-muted-foreground'>({category.count})</span>
+                </label>
+              ))}
+            </div>
           )}
         </div>
-        <div>
-          <h2 className='font-bold text-[1.5rem]'>Categorías</h2>
-          <div className='flex flex-col gap-2 text-start mt-5 items-start'>
-            {categoriesAll.map((item) => (
-              <TemplateCategory
-                valueDefault={
-                  !Array.isArray(item.type)
-                    ? categoria.includes(item.type as string)
-                    : false
-                }
-                categoriaAllUser={categoria}
-                key={item.id}
-                type={item.type}
-                isCategoria={handleIsCategoria}
-                name={item.id}
-              />
-            ))}
-          </div>
-        </div>
-        <div>
-          <h2 className='font-bold text-[1.5rem] mb-5'>Precio</h2>
-          <Slider
-            min={0}
-            max={70000}
-            range
-            value={[minPrice, maxPrice]}
-            onChange={(e: any) => {
-              setMinPrice(e[0]);
-              setMaxPrice(e[1]);
-            }}
-          />
-          <div className='flex justify-between'>
-            <p>
-              {minPrice.toLocaleString('es-AR', {
-                style: 'currency',
-                currency: 'ARS', // Cambiado a pesos argentinos
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              })}
-            </p>
-            <p>
-              {maxPrice.toLocaleString('es-AR', {
-                style: 'currency',
-                currency: 'ARS', // Cambiado a pesos argentinos
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              })}
-            </p>
-          </div>
+
+        {/* Precio */}
+        <div className='space-y-3'>
+          <Button
+            variant='primary'
+            onClick={() => toggleSection('price')}
+            className='w-full justify-between p-0 h-auto font-medium text-sm'>
+            Precio
+            {expandedSections.price ? (
+              <ChevronUp className='w-4 h-4' />
+            ) : (
+              <ChevronDown className='w-4 h-4' />
+            )}
+          </Button>
+          {expandedSections.price && (
+            <div className='space-y-4'>
+              <div className='grid grid-cols-2 gap-2'>
+                <div>
+                  <label className='text-sm text-muted-foreground'>Mínimo</label>
+                  <input
+                    type='number'
+                    value={priceRange[0]}
+                    onChange={(e) => handlePriceChange(0, Number(e.target.value))}
+                    className='w-full text-black px-3 py-1 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-primary'
+                    min='0'
+                    max={priceRange[1]}
+                  />
+                </div>
+                <div>
+                  <label className='text-sm text-muted-foreground'>Máximo</label>
+                  <input
+                    type='number'
+                    value={priceRange[1]}
+                    onChange={(e) => handlePriceChange(1, Number(e.target.value))}
+                    className='w-full text-black px-3 py-1 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-primary'
+                    min={priceRange[0]}
+                    max='100000'
+                  />
+                </div>
+              </div>
+              <div className='space-y-2'>
+                <input
+                  type='range'
+                  min='0'
+                  max='70000'
+                  value={priceRange[0]}
+                  onChange={(e) => handlePriceChange(0, Number(e.target.value))}
+                  className='w-full'
+                />
+                <input
+                  type='range'
+                  min='0'
+                  max='70000'
+                  value={priceRange[1]}
+                  onChange={(e) => handlePriceChange(1, Number(e.target.value))}
+                  className='w-full'
+                />
+              </div>
+              <div className='text-center text-sm text-muted-foreground'>
+                ${priceRange[0].toLocaleString()} - ${priceRange[1].toLocaleString()}
+              </div>
+            </div>
+          )}
         </div>
       </div>
+
+      {isMobile && (
+        <div className='border-t p-4 bg-card'>
+          <Button
+            className='w-full text-white bg-purple-600 hover:bg-purple-700'
+            onClick={closeFilter}>
+            Aplicar filtros
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

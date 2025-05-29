@@ -1,14 +1,14 @@
-import {index} from '@/lib/algolia';
+import { index } from '@/lib/algolia';
 export async function searchProduct(req: Request) {
   try {
-    const {searchParams} = new URL(req.url);
+    const { searchParams } = new URL(req.url);
     const search = searchParams.get('q') || '';
     const typeCategory = searchParams.get('type') || '';
     const typePrice = JSON.parse(searchParams.get('price') || '');
-    const limit = Number(searchParams.get('limit') || 15);
+    const limit = Number(searchParams.get('limit') || 16);
     const offset = Number(searchParams.get('offset') || 0);
     const order = searchParams.get('order') || 'desc';
-    const {finalLimit, finalOffset} = getOffsetAndLimitFom(limit, offset);
+    const { finalLimit, finalOffset } = getOffsetAndLimitFom(limit, offset);
     const cadenaDeBusquedaCategory = JSON.parse(typeCategory)
       .map((item: string) => `type:${item}`)
       .join(' OR ');
@@ -72,7 +72,7 @@ export function getOffsetAndLimitFom(
   }
 
   const finalOffset = offset < maxOffset ? offset : 0;
-  return {finalLimit, finalOffset};
+  return { finalLimit, finalOffset };
 }
 export function suma(num1: number, num2: number): number {
   return num1 + num2;

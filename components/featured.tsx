@@ -1,58 +1,88 @@
 'use client';
-import {TemplateProduct} from '@/components/templateProduct';
-import {useState} from 'react';
-import {EsqueletonProduct} from './esqueleton';
-import {ToastContainer, toast} from 'react-toastify';
+import { TemplateProduct } from '@/components/templateProduct';
+import { useState } from 'react';
+import { EsqueletonProduct } from './esqueleton';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {CarouselProduct} from './carousel';
-export function ProductsFeatured({featured}: {featured: any}) {
+import { CarouselProduct } from './carousel';
+import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { shoppingCart } from '@/lib/atom';
+import { useSetRecoilState } from 'recoil';
+
+export function ProductsFeatured({ featured }: { featured: any }) {
   const [openLinkProduct, setOpenLinkProduct] = useState<string[]>([]);
+  const setShoppingCartUserData = useSetRecoilState(shoppingCart);
+  const closeModal = () => {
+    setOpenLinkProduct([]);
+    document.body.style.overflow = 'auto';
+  };
+
   return (
     <>
       {featured
-        ? featured.map((item: any) => {
-            return (
-              <TemplateProduct
-                key={item.objectID}
-                openImg={(data: string[]) => setOpenLinkProduct(data)}
-                Name={item.Name}
-                Images={item.Images.map(
-                  (itemImages: any) => itemImages.thumbnails.full.url
-                )}
-                priceOfert={item.priceOfert}
-                price={item['Unit cost']}
-                oferta={item.oferta}
-                id={item.objectID}
-                inicio={true}
-                type={item.type}
-                size={item.talla}
-                addItem={() => toast.success('Se agregó al carrito!')}
-              />
-            );
-          })
-        : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item: number) => (
-            <EsqueletonProduct key={item} />
-          ))}
-      {openLinkProduct.length ? (
-        <>
-          <div className='flex flex-col fixed inset-0 backdrop-brightness-50	justify-center items-center z-10'>
-            <div className='fixed top-8 right-8 z-10 max-sm:top-[0.5rem] max-sm:right-[0.5rem] '>
-              <button
-                onClick={() => {
-                  setOpenLinkProduct([]);
-                  document.body.style.overflow = 'auto';
-                }}>
-                {' '}
-                <img src='/closeWhite.svg' width={30} height={30} alt='close' />
-              </button>
+        ? featured.map((item: any) => (
+            <TemplateProduct
+              key={item.objectID}
+              openImg={(data: string[]) => {
+                setOpenLinkProduct(data);
+                document.body.style.overflow = 'hidden';
+              }}
+              Name={item.Name}
+              Images={item.Images.map((itemImages: any) => itemImages.thumbnails.full.url)}
+              priceOfert={item.priceOfert}
+              price={item['Unit cost']}
+              oferta={item.oferta}
+              id={item.objectID}
+              inicio={true}
+              type={item.type}
+              size={item.talla}
+              addItem={() =>
+                toast.success('¡Se agregó al carrito!', {
+                  position: 'top-right',
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                })
+              }
+              setShoppingCartUserData={setShoppingCartUserData}
+            />
+          ))
+        : Array.from({ length: 8 }, (_, i) => <EsqueletonProduct key={i} />)}
+
+      {openLinkProduct.length > 0 && (
+        <div className='fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4'>
+          <div className='relative w-full max-w-4xl h-full max-h-[90vh] flex flex-col'>
+            <div className='flex justify-end mb-4'>
+              <Button
+                variant='ghost'
+                size='icon'
+                onClick={closeModal}
+                className='text-white hover:bg-white/20 rounded-full'>
+                <X className='w-6 h-6' />
+              </Button>
             </div>
-            <div className='h-3/4'>
+            <div className='flex-1 flex items-center justify-center'>
               <CarouselProduct imgs={openLinkProduct} />
             </div>
           </div>
-        </>
-      ) : null}
-      <ToastContainer />
+        </div>
+      )}
+
+      <ToastContainer
+        position='top-right'
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='light'
+      />
     </>
   );
 }

@@ -1,65 +1,63 @@
-import {openShoppingCart, shoppingCart} from '@/lib/atom';
-import {InputNumber} from '@/ui/input';
-import {useEffect, useState} from 'react';
-import {useRecoilState, useSetRecoilState} from 'recoil';
+import { openShoppingCart, shoppingCart } from '@/lib/atom';
+import { InputNumber } from '@/components/ui/input';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import Image from 'next/image';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { Eye, ShoppingCart } from 'lucide-react';
+
+interface TemplateProductProps {
+  openImg: (data: string[]) => void;
+  Name: string;
+  Images: string[];
+  priceOfert?: number;
+  price: number;
+  oferta?: boolean;
+  id: string;
+  inicio?: boolean;
+  type: string[];
+  size?: string[];
+  addItem: () => void;
+  setShoppingCartUserData: React.Dispatch<React.SetStateAction<any[]>>;
+}
 
 export function TemplateProduct({
-  Images,
-  Name,
-  oferta,
-  priceOfert,
   openImg,
+  Name,
+  Images,
+  priceOfert,
   price,
+  oferta,
   id,
   inicio,
   type,
   size,
   addItem,
-}: {
-  id: string;
-  Images: string[];
-  Name: string;
-  oferta: string;
-  price: number;
-  priceOfert: number;
-  openImg: (data: any) => any;
-  inicio: boolean;
-  type: string[];
-  size: string[];
-  addItem: (data: boolean) => void;
-}) {
-  const [openFocusName, setOpenFocusName] = useState(false);
-  const [talla, setTalla] = useState(type?.includes('camperas') ? size[0] : '');
-  const setShoppingCartUserData = useSetRecoilState(shoppingCart);
-  const setOpenShoppingCartValue = useSetRecoilState(openShoppingCart);
-  const handleClickOpenImg = (e: React.MouseEvent) => {
-    e.preventDefault();
+  setShoppingCartUserData,
+}: TemplateProductProps) {
+  const handleImageClick = () => {
     openImg(Images);
-    document.body.style.overflow = 'hidden';
   };
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     const windowWidth = window.innerWidth;
-    addItem(true);
+    addItem();
 
     if (windowWidth > 1024) {
-      setOpenShoppingCartValue(true);
+      // setOpenShoppingCartValue(true);
     }
     setShoppingCartUserData((prev) => {
       let newShoppingCart = [];
       if (prev.length) {
         if (prev.find((item) => item.id === e.currentTarget.id)) {
-          if (talla) {
-            if (
-              prev.find(
-                (item) => item.id === e.currentTarget.id && item.talla == talla
-              )
-            ) {
+          if (size?.length) {
+            if (prev.find((item) => item.id === e.currentTarget.id && item.size == size)) {
               return prev;
             } else {
               newShoppingCart = [
                 {
-                  talla,
+                  size,
                   cantidad: 1,
                   id: id,
                   title: Name,
@@ -78,7 +76,7 @@ export function TemplateProduct({
         } else {
           newShoppingCart = [
             {
-              talla,
+              size,
               cantidad: 1,
               id: id,
               title: Name,
@@ -93,7 +91,7 @@ export function TemplateProduct({
         }
       } else {
         newShoppingCart.push({
-          talla,
+          size,
           cantidad: 1,
           id: id,
           title: Name,
@@ -108,111 +106,71 @@ export function TemplateProduct({
   };
 
   return (
-    <div
-      className={` grid-cols-[repeat(1,120px_1fr)] gap-4  items-center h-max  rounded-lg 
-      flex flex-col  w-[250px] max-sm:w-full text-center shadow-[0_0_15px_5px_#ddd] max-lg:shadow-[0_0_10px_2px_#ddd]  bg-secundary`}>
-      <button
-        onClick={handleClickOpenImg}
-        className='w-full h-[300px] relative overflow-hidden'>
-        <img
-          src={Images[0]}
-          alt={Name}
-          width={120}
-          height={100}
-          className=' w-full h-full object-cover hover:opacity-80 hover:scale-110 transition-all'
-          loading='lazy'
-        />
-        {oferta ? (
-          <div className='absolute top-0 left-0 m-1 text-xs  bg-primary text-white p-1 pr-2 pl-2'>
-            <h2 className='font-bold'>OFERTA</h2>
-          </div>
-        ) : (
-          ''
+    <div className='bg-card border rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group'>
+      <div className='relative aspect-square overflow-hidden'>
+        {oferta && (
+          <Badge className='absolute top-2 left-2 z-10 bg-red-500 hover:bg-red-600'>Oferta</Badge>
         )}
-      </button>
-      <div
-        className={`flex flex-col gap-2 max-md:gap-2 w-full h-full justify-between p-2 max-lg:p-[0.3rem]  ${
-          inicio && 'items-center text-center'
-        }`}>
-        <div className='flex flex-col gap-4 w-full relative'>
-          <div className=' overflow-hidden w-full flex items-center justify-center'>
-            <p
-              className='w-[250px] font-medium	truncate'
-              onMouseOver={() => setOpenFocusName(true)}
-              onMouseOut={() => setOpenFocusName(false)}>
-              {Name}
-            </p>
-            {openFocusName ? (
-              <span className='w-full max-md:w-auto absolute botton-0 top-[25%] left-[20%] bg-gray-900 text-white p-[2px] pr-4 pl-4 text-[0.7rem]   '>
-                {Name}
+        <Image
+          src={Images[0] || '/placeholder.svg'}
+          alt={Name}
+          fill
+          className='object-cover group-hover:scale-105 transition-transform duration-300'
+        />
+        <div className='absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300' />
+        <div className='absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+          <Button
+            size='icon'
+            variant='secondary'
+            onClick={handleImageClick}
+            className='rounded-full'>
+            <Eye className='w-4 h-4' />
+          </Button>
+        </div>
+      </div>
+
+      <div className='p-4 space-y-3'>
+        <div>
+          <h3 className='font-semibold text-sm line-clamp-2 mb-1'>{Name}</h3>
+          <p className='text-sm text-muted-foreground '>
+            {type.map((s, i) => (
+              <span key={i} className='capitalize'>
+                {' '}
+                {s + (type.length - 1 === i ? '' : ', ')}
               </span>
-            ) : null}
-          </div>
-          {type?.includes('camperas') ? (
-            <div className='flex gap-2 items-center'>
-              <label htmlFor={`talla-${id}`} className='text-gray-800'>
-                Talla:
-              </label>
-              <select
-                id={`talla-${id}`}
-                name='talla'
-                value={talla}
-                onChange={(e) => setTalla(e.target.value)}
-                className='w-full bg-white border text-center border-gray-300 p-1 rounded-md focus:outline-none focus:border-[#3c006c]'>
-                {size?.length &&
-                  size.map((item) => (
-                    <option key={item} value={item} id={item}>
-                      {item}
-                    </option>
-                  ))}
-              </select>
-            </div>
-          ) : null}
-          {oferta ? (
-            <div
-              className={`flex justify-center gap-4  ${
-                inicio && 'items-center justify-center'
-              }`}>
-              <p className='text-gray-500 line-through	'>
-                {price.toLocaleString('es-AR', {
-                  style: 'currency',
-                  currency: 'ARS',
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0,
-                })}
-              </p>
-              <p className='font-bold text-[1.2rem]'>
-                {priceOfert.toLocaleString('es-AR', {
-                  style: 'currency',
-                  currency: 'ARS',
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0,
-                })}
-              </p>
-            </div>
-          ) : (
-            <p className='font-bold text-[1.2rem]'>
-              {price.toLocaleString('es-AR', {
-                style: 'currency',
-                currency: 'ARS',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              })}
+            ))}
+          </p>
+          {size?.length && (
+            <p className='text-sm text-muted-foreground'>
+              size: {size.map((s, i) => s + (size.length - 1 === i ? '' : ', '))}
             </p>
           )}
         </div>
-        <div className='w-full'>
-          <button
-            id={id}
-            onClick={handleClick}
-            className=' bg-primary p-4 pt-2 pb-2 text-white rounded-lg hover:opacity-80 w-full'>
-            Añadir al carrito
-          </button>
+
+        <div className='flex items-center justify-between'>
+          <div className='space-y-1'>
+            {oferta && priceOfert ? (
+              <div className='flex items-center gap-2'>
+                <span className='font-bold text-green-600'>${priceOfert.toLocaleString()}</span>
+                <span className='text-sm text-muted-foreground line-through'>
+                  ${price.toLocaleString()}
+                </span>
+              </div>
+            ) : (
+              <span className='font-bold'>${price.toLocaleString()}</span>
+            )}
+          </div>
+
+          <Button size='sm' onClick={handleClick} className='bg-purple-600 hover:bg-purple-700'>
+            <ShoppingCart className='w-4 h-4 mr-1' />
+            Agregar
+          </Button>
         </div>
       </div>
     </div>
   );
 }
+
 export function TemplateCategory({
   name,
   isCategoria,
@@ -236,9 +194,7 @@ export function TemplateCategory({
   useEffect(() => {
     Array.isArray(type)
       ? type.map(
-          (item) =>
-            categoriaAllUser.includes(item.type as string) &&
-            setIsOpenCategoryAll(true)
+          (item) => categoriaAllUser.includes(item.type as string) && setIsOpenCategoryAll(true)
         )
       : null;
   }, []);
@@ -323,23 +279,22 @@ export function TemplateShopppingCartProduct({
   price,
   cantidad,
   img,
-  talla,
+  size,
 }: {
   id: string;
   title: string;
   price: number;
   cantidad: number;
   img: string;
-  talla: string;
+  size: string;
 }) {
   const [openFocusName, setOpenFocusName] = useState(false);
-  const [shoppingCartValue, setShoppingCartValue] =
-    useRecoilState(shoppingCart);
+  const [shoppingCartValue, setShoppingCartValue] = useRecoilState(shoppingCart);
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
 
     const newShoppingCart = shoppingCartValue.filter(
-      (item: any) => item.id !== e.currentTarget.id || item.talla !== talla
+      (item: any) => item.id !== e.currentTarget.id || item.size !== size
     );
     if (window !== undefined) {
       localStorage.setItem('category', JSON.stringify(newShoppingCart));
@@ -349,12 +304,7 @@ export function TemplateShopppingCartProduct({
   return (
     <div className='flex justify-between border-b-2 border-b-white  pb-6 last:border-none pr-2 pl-2 h-[106px]'>
       <div className='flex gap-4'>
-        <img
-          src={img}
-          alt={title}
-          loading='lazy'
-          className='h-full w-[80px] object-cover'
-        />
+        <img src={img} alt={title} loading='lazy' className='h-full w-[80px] object-cover' />
         <div>
           <p
             onMouseEnter={() => setOpenFocusName(true)}
@@ -377,8 +327,8 @@ export function TemplateShopppingCartProduct({
             })}
           </h3>
           <div className='flex justify-between items-center'>
-            <InputNumber cantidad={cantidad || 1} id={id} talla={talla} />
-            {talla ? <p className='font-semibold'>Talle: {talla}</p> : null}
+            <InputNumber cantidad={cantidad || 1} id={id} talla={size} />
+            {size ? <p className='font-semibold'>Talle: {size}</p> : null}
           </div>
         </div>
       </div>
