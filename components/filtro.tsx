@@ -34,12 +34,12 @@ export function FiltroSearch({
   });
 
   const categories = [
-    { id: 'camperas_mujer', name: 'Camperas Mujer', count: 45 },
-    { id: 'camperas_hombre', name: 'Camperas Hombre', count: 32 },
-    { id: 'mochilas', name: 'Mochilas', count: 28 },
-    { id: 'billeteras', name: 'Billeteras', count: 15 },
-    { id: 'carteras', name: 'Carteras', count: 22 },
-    { id: 'riñoneras', name: 'Riñoneras', count: 18 },
+    { id: 'camperas_mujer', name: 'Camperas Mujer' },
+    { id: 'camperas_hombre', name: 'Camperas Hombre' },
+    { id: 'mochilas', name: 'Mochilas' },
+    { id: 'billeteras', name: 'Billeteras' },
+    { id: 'carteras', name: 'Carteras' },
+    { id: 'riñoneras', name: 'Riñoneras' },
   ];
 
   useEffect(() => {
@@ -175,7 +175,6 @@ export function FiltroSearch({
                   <span className='text-sm group-hover:opacity-70 transition-colors flex-1'>
                     {category.name}
                   </span>
-                  <span className='text-sm text-muted-foreground'>({category.count})</span>
                 </label>
               ))}
             </div>
