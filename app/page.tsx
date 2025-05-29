@@ -15,12 +15,9 @@ export default async function Home() {
     <div className='min-h-screen bg-gradient-to-b from-background to-muted/20 '>
       {/* Hero Section */}
       <section className='relative overflow-hidden mt-20'>
-        <div className='absolute inset-0 bg-gradient-to-r from-purple-900/20 to-pink-900/20 z-10' />
-        <div className='container mx-auto px-4  max-w-7xl'>
-          <div className='relative rounded-2xl overflow-hidden shadow-2xl  mt-9 mb-9'>
-            <div className='h-[300px] md:h-[500px]'>
-              <CarouselHeader data={data} />
-            </div>
+        <div className='relative rounded-2xl overflow-hidden shadow-2xl  mt-9 mb-9'>
+          <div className='h-[300px] md:h-[500px]'>
+            <CarouselHeader data={data} />
           </div>
         </div>
       </section>
@@ -34,7 +31,7 @@ export default async function Home() {
                 <Truck className='w-6 h-6 text-purple-600' />
               </div>
               <h3 className='font-semibold text-lg mb-2'>Puntos de Encuentro</h3>
-              <p className='text-muted-foreground text-sm'>
+              <p className='text-muted-foreground'>
                 Retirá tu compra de manera cómoda en nuestros puntos de encuentro acordados
               </p>
             </div>
@@ -44,7 +41,7 @@ export default async function Home() {
                 <Shield className='w-6 h-6 text-green-600' />
               </div>
               <h3 className='font-semibold text-lg mb-2'>Calidad Garantizada</h3>
-              <p className='text-muted-foreground text-sm'>
+              <p className='text-muted-foreground '>
                 Productos originales e importados de la mejor calidad
               </p>
             </div>
@@ -54,7 +51,7 @@ export default async function Home() {
                 <Clock className='w-6 h-6 text-blue-600' />
               </div>
               <h3 className='font-semibold text-lg mb-2'>Atención Eficiente</h3>
-              <p className='text-muted-foreground text-sm'>
+              <p className='text-muted-foreground '>
                 Coordinamos rápido y de forma clara para que tengas tu compra sin demoras
               </p>
             </div>
@@ -73,10 +70,12 @@ export default async function Home() {
             calidad. Coordinamos con vos el punto de encuentro para que tengas tu compra de forma
             rápida y segura.
           </p>
-          <Button size='lg' variant='secondary' className='text-purple-600 hover:text-purple-700'>
+          <Link
+            href={'/productos'}
+            className='flex items-center m-auto w-max bg-secundary p-3 text-nowrap rounded-md text-primary hover:bg-primary hover:text-white transition-colors '>
             Explorar Productos
-            <ArrowRight className='w-5 h-5 ml-2' />
-          </Button>
+            <ArrowRight className='ml-2  text-inherit' size={16} />
+          </Link>
         </div>
       </section>
 
