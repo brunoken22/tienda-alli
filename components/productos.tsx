@@ -120,7 +120,11 @@ export default function ProductosPage() {
       {/* Botón de búsqueda móvil flotante */}
       {!openInput && (
         <div className='md:hidden fixed top-24 right-4 z-30'>
-          <Button size='icon' onClick={() => setOpenInput(true)} className='rounded-full shadow-lg'>
+          <Button
+            aria-label='Buscar producto'
+            size='icon'
+            onClick={() => setOpenInput(true)}
+            className='rounded-full shadow-lg'>
             <Search className='w-5 h-5' />
           </Button>
         </div>
@@ -192,6 +196,10 @@ export default function ProductosPage() {
                     {/* Ordenamiento */}
                     <div className='flex items-center gap-2'>
                       <ArrowUpDown className='w-4 h-4 text-muted-foreground' />
+                      <label htmlFor='size-select' className='sr-only'>
+                        Seleccionar precio
+                      </label>
+
                       <select
                         value={order}
                         onChange={(e) => setOrder(e.target.value as 'asc' | 'desc')}

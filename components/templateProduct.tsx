@@ -68,7 +68,7 @@ export function TemplateProduct({
     <div className='bg-card border rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group'>
       <div className='relative aspect-square overflow-hidden'>
         {oferta && (
-          <Badge className='absolute top-2 left-2 z-10 bg-red-500 hover:bg-red-600'>Oferta</Badge>
+          <Badge className='absolute top-2 left-2 z-10 bg-red-600 hover:bg-red-700'>Oferta</Badge>
         )}
         <Image
           src={Images[0] || '/tienda-alli.webp'}
@@ -125,7 +125,7 @@ export function TemplateProduct({
           <div className='space-y-1'>
             {oferta && priceOfert ? (
               <div className='flex items-center gap-2'>
-                <span className='font-bold text-green-600'>${priceOfert.toLocaleString()}</span>
+                <span className='font-bold text-green-800'>${priceOfert.toLocaleString()}</span>
                 <span className='text-sm text-muted-foreground line-through'>
                   ${price.toLocaleString()}
                 </span>
