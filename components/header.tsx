@@ -161,12 +161,21 @@ export function Header() {
       {/* Carrito lateral */}
       {openShoppingCartValue && <ShoppingCart />}
 
-      {/* Botón WhatsApp flotante */}
-      <div className='fixed bottom-6 right-6 z-40'>
+      {/* Botón WhatsApp flotante con tooltip horizontal a la izquierda */}
+      <div className='fixed bottom-6 right-6 z-40 group'>
         <Link
           href='https://api.whatsapp.com/send?phone=+541159102865&text=Hola%20te%20hablo%20desde%20la%20p%C3%A1gina'
           aria-label='Contactar por WhatsApp'
-          className='group'>
+          className='relative flex items-center'>
+          {/* Tooltip en línea a la izquierda */}
+          <div className='absolute right-14 hidden group-hover:flex items-center space-x-1'>
+            <div className='bg-primary text-white  px-3 py-1 rounded-lg shadow-md whitespace-nowrap'>
+              Enviar un mensaje
+            </div>
+            <div className='w-2 h-2 bg-primary rotate-45'></div>
+          </div>
+
+          {/* Botón */}
           <div className='bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-110'>
             <MessageCircle className='w-6 h-6' />
           </div>
