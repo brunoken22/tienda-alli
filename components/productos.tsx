@@ -90,7 +90,7 @@ export default function ProductosPage() {
   const totalPages = Math.ceil(totalResults / 15);
 
   return (
-    <div className='min-h-screen bg-background pt-24'>
+    <div className='min-h-screen bg-background max-md:p-3 !pt-24 '>
       {/* Header de búsqueda móvil */}
       {openInput && (
         <div className='fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden'>
@@ -207,7 +207,7 @@ export default function ProductosPage() {
 
             {/* Grid de productos */}
             <div
-              className={`grid gap-6 ${
+              className={`grid  gap-6 ${
                 viewMode === 'grid'
                   ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 '
                   : 'grid-cols-1 gap-4'
