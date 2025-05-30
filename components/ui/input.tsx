@@ -1,6 +1,6 @@
-import {shoppingCart} from '@/lib/atom';
-import {useEffect, useState} from 'react';
-import {useRecoilState} from 'recoil';
+import { shoppingCart } from '@/lib/atom';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 export function InputNumber({
   cantidad,
@@ -12,8 +12,7 @@ export function InputNumber({
   talla?: string;
 }) {
   const [cantidadState, setCantidadState] = useState(cantidad || 1);
-  const [shoppingCartValue, setShoppingCartValue] =
-    useRecoilState(shoppingCart);
+  const [shoppingCartValue, setShoppingCartValue] = useRecoilState(shoppingCart);
   useEffect(() => {
     setCantidadState(cantidad);
   }, [cantidad]);
@@ -22,10 +21,10 @@ export function InputNumber({
     setShoppingCartValue((prev) => {
       return prev.map((item) => {
         if (item.id == id) {
-          if (talla && item.talla !== talla) {
+          if (talla && item.size !== talla) {
             return item;
           }
-          return {...item, cantidad: cantidadState};
+          return { ...item, cantidad: cantidadState };
         }
 
         return item;
@@ -34,10 +33,7 @@ export function InputNumber({
   }, [cantidadState]);
   useEffect(() => {
     if (shoppingCartValue.length) {
-      return localStorage.setItem(
-        'category',
-        JSON.stringify(shoppingCartValue)
-      );
+      return localStorage.setItem('category', JSON.stringify(shoppingCartValue));
     }
   }, [shoppingCartValue]);
   const handleCantidadChange = (e: React.ChangeEvent) => {
@@ -60,10 +56,7 @@ export function InputNumber({
   return (
     <div className='flex gap-2 text-primary  bg-white w-fit'>
       {cantidadState >= 2 && (
-        <button
-          className='font-bold text-2xl pr-2 pl-2'
-          id='min'
-          onClick={handleCountCantidad}>
+        <button className='font-bold text-2xl pr-2 pl-2' id='min' onClick={handleCountCantidad}>
           -
         </button>
       )}
@@ -79,10 +72,7 @@ export function InputNumber({
         className='w-[40px] focus-visible:outline-none text-center'
       />
       {cantidadState <= 15 && (
-        <button
-          className='font-bold text-2xl pr-2 pl-2'
-          id='max'
-          onClick={handleCountCantidad}>
+        <button className='font-bold text-2xl pr-2 pl-2' id='max' onClick={handleCountCantidad}>
           +
         </button>
       )}
