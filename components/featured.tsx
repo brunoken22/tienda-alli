@@ -34,7 +34,6 @@ export function ProductsFeatured({ featured }: { featured: any }) {
               price={item['Unit cost']}
               oferta={item.oferta}
               id={item.objectID}
-              inicio={true}
               type={item.type}
               size={item.talla}
               addItem={() =>
