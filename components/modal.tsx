@@ -64,7 +64,7 @@ export function Modal({ closeModal }: { closeModal: (data: boolean) => any }) {
                             {item.title}{' '}
                           </div>
                           <div>
-                            <p>Talla: {item.talla}</p>
+                            <p>Talla: {item.size}</p>
                           </div>
                         </div>
                       ))
