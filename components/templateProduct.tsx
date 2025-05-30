@@ -79,6 +79,7 @@ export function TemplateProduct({
         <div className='absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300' />
         <div className='absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
           <Button
+            aria-label='Ver imagen'
             size='icon'
             variant='secondary'
             onClick={handleImageClick}
@@ -101,17 +102,22 @@ export function TemplateProduct({
           </p>
 
           {size && (
-            <select
-              value={selectedSize}
-              onChange={(e) => setSelectedSize(e.target.value)}
-              className='mt-2 block w-full border px-2 py-1 rounded-md text-sm'>
-              <option value=''>Seleccionar talla</option>
-              {size.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
+            <div className='mt-2 '>
+              <label htmlFor='size-select' className='sr-only'>
+                Seleccionar talla
+              </label>
+              <select
+                value={selectedSize}
+                onChange={(e) => setSelectedSize(e.target.value)}
+                className='block w-full  px-2 py-1 border rounded-md text-sm'>
+                <option value=''>Seleccionar talla</option>
+                {size.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
           )}
         </div>
 
@@ -130,6 +136,7 @@ export function TemplateProduct({
           </div>
           <Button
             size='sm'
+            aria-label='Agregar al carrito'
             onClick={handleClick}
             disabled={!selectedSize && size ? true : false}
             className='bg-purple-600 hover:bg-purple-700'>

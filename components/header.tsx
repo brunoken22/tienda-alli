@@ -85,6 +85,7 @@ export function Header() {
                 <Button
                   variant='ghost'
                   size='icon'
+                  aria-label='Buscar producto'
                   onClick={() => setOpenInput(true)}
                   className='md:hidden text-white hover:bg-white/20'>
                   <Search className='w-5 h-5' />
@@ -95,6 +96,7 @@ export function Header() {
               <Button
                 variant='ghost'
                 size='icon'
+                aria-label='Carrito de compras'
                 onClick={() => setOpenShoppingCartValue(true)}
                 className='relative text-white hover:bg-white/20'>
                 <CartIcon className='w-5 h-5' />
@@ -111,6 +113,7 @@ export function Header() {
               {/* Menu Mobile */}
               <Button
                 variant='ghost'
+                aria-label='Menu Mobile'
                 size='icon'
                 onClick={() => setOpenMobileMenu(!openMobileMenu)}
                 className='md:hidden text-white hover:bg-white/20'>
