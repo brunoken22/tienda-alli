@@ -1,11 +1,11 @@
-import { openShoppingCart, shoppingCart } from '@/lib/atom';
-import { InputNumber } from '@/components/ui/input';
-import { useEffect, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import Image from 'next/image';
+import { useState } from 'react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-import { Eye, ShoppingCart } from 'lucide-react';
+import { Eye, ShoppingCart as ShoppingCartIcon, Trash } from 'lucide-react';
+import Image from 'next/image';
+import { useRecoilState } from 'recoil';
+import { shoppingCart } from '@/lib/atom';
+import { InputNumber } from './ui/input';
 
 interface TemplateProductProps {
   openImg: (data: string[]) => void;
@@ -15,7 +15,6 @@ interface TemplateProductProps {
   price: number;
   oferta?: boolean;
   id: string;
-  inicio?: boolean;
   type: string[];
   size?: string[];
   addItem: () => void;
@@ -30,79 +29,39 @@ export function TemplateProduct({
   price,
   oferta,
   id,
-  inicio,
   type,
   size,
   addItem,
   setShoppingCartUserData,
 }: TemplateProductProps) {
-  const handleImageClick = () => {
-    openImg(Images);
-  };
+  const [selectedSize, setSelectedSize] = useState<string>('');
+
+  const handleImageClick = () => openImg(Images);
+
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    const windowWidth = window.innerWidth;
-    addItem();
 
-    if (windowWidth > 1024) {
-      // setOpenShoppingCartValue(true);
-    }
+    if (!selectedSize && size) return;
+
+    const newItem = {
+      size: selectedSize,
+      cantidad: 1,
+      id,
+      title: Name,
+      img: Images[0],
+      price: priceOfert || price,
+    };
+
     setShoppingCartUserData((prev) => {
-      let newShoppingCart = [];
-      if (prev.length) {
-        if (prev.find((item) => item.id === e.currentTarget.id)) {
-          if (size?.length) {
-            if (prev.find((item) => item.id === e.currentTarget.id && item.size == size)) {
-              return prev;
-            } else {
-              newShoppingCart = [
-                {
-                  size,
-                  cantidad: 1,
-                  id: id,
-                  title: Name,
-                  img: Images[0],
-                  price: priceOfert || price,
-                },
-                ...prev,
-              ];
-              localStorage.setItem('category', JSON.stringify(newShoppingCart));
+      const exists = prev.find((item) => item.id === id && item.size === selectedSize);
+      if (exists) return prev;
 
-              return newShoppingCart;
-            }
-          } else {
-            return prev;
-          }
-        } else {
-          newShoppingCart = [
-            {
-              size,
-              cantidad: 1,
-              id: id,
-              title: Name,
-              img: Images[0],
-              price: priceOfert || price,
-            },
-            ...prev,
-          ];
-          localStorage.setItem('category', JSON.stringify(newShoppingCart));
-
-          return newShoppingCart;
-        }
-      } else {
-        newShoppingCart.push({
-          size,
-          cantidad: 1,
-          id: id,
-          title: Name,
-          img: Images[0],
-          price: priceOfert || price,
-        });
-      }
-
-      localStorage.setItem('category', JSON.stringify(newShoppingCart));
-      return newShoppingCart as any[];
+      const updated = [newItem, ...prev];
+      localStorage.setItem('category', JSON.stringify(updated));
+      return updated;
     });
+
+    addItem();
   };
 
   return (
@@ -112,7 +71,7 @@ export function TemplateProduct({
           <Badge className='absolute top-2 left-2 z-10 bg-red-500 hover:bg-red-600'>Oferta</Badge>
         )}
         <Image
-          src={Images[0] || '/placeholder.svg'}
+          src={Images[0] || '/tienda-alli.webp'}
           alt={Name}
           fill
           className='object-cover group-hover:scale-105 transition-transform duration-300'
@@ -132,18 +91,27 @@ export function TemplateProduct({
       <div className='p-4 space-y-3'>
         <div>
           <h3 className='font-semibold text-sm line-clamp-2 mb-1'>{Name}</h3>
-          <p className='text-sm text-muted-foreground '>
+          <p className='text-sm text-muted-foreground'>
             {type.map((s, i) => (
               <span key={i} className='capitalize'>
-                {' '}
-                {s + (type.length - 1 === i ? '' : ', ')}
+                {s}
+                {i !== type.length - 1 ? ', ' : ''}
               </span>
             ))}
           </p>
-          {size?.length && (
-            <p className='text-sm text-muted-foreground'>
-              size: {size.map((s, i) => s + (size.length - 1 === i ? '' : ', '))}
-            </p>
+
+          {size && (
+            <select
+              value={selectedSize}
+              onChange={(e) => setSelectedSize(e.target.value)}
+              className='mt-2 block w-full border px-2 py-1 rounded-md text-sm'>
+              <option value=''>Seleccionar talla</option>
+              {size.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
           )}
         </div>
 
@@ -160,9 +128,12 @@ export function TemplateProduct({
               <span className='font-bold'>${price.toLocaleString()}</span>
             )}
           </div>
-
-          <Button size='sm' onClick={handleClick} className='bg-purple-600 hover:bg-purple-700'>
-            <ShoppingCart className='w-4 h-4 mr-1' />
+          <Button
+            size='sm'
+            onClick={handleClick}
+            disabled={!selectedSize && size ? true : false}
+            className='bg-purple-600 hover:bg-purple-700'>
+            <ShoppingCartIcon className='w-4 h-4 mr-1' />
             Agregar
           </Button>
         </div>
@@ -171,108 +142,6 @@ export function TemplateProduct({
   );
 }
 
-export function TemplateCategory({
-  name,
-  isCategoria,
-  valueDefault,
-  type,
-  categoriaAllUser,
-}: {
-  valueDefault: boolean;
-  type: string;
-  name: string;
-  categoriaAllUser: string[];
-  isCategoria: (categoria: string) => void;
-}) {
-  const [isActiveClick, setIsActiveClick] = useState(valueDefault);
-  const [isOpenCategoryAll, setIsOpenCategoryAll] = useState(false);
-
-  useEffect(() => {
-    return setIsActiveClick(valueDefault);
-  }, [valueDefault]);
-
-  useEffect(() => {
-    Array.isArray(type)
-      ? type.map(
-          (item) => categoriaAllUser.includes(item.type as string) && setIsOpenCategoryAll(true)
-        )
-      : null;
-  }, []);
-  return (
-    <>
-      <button
-        key={name}
-        className={`flex items-center gap-[0.2rem] hover:opacity-60 transition-[border] duration-100 ease-linear ${
-          isActiveClick && !Array.isArray(type)
-            ? 'font-bold border-b-2 border-b-[#3c006c] max-md:border-b-white text-[#3c006c] max-md:text-white'
-            : 'font-light border-none  max-md:text-white'
-        }	`}
-        id={type}
-        onClick={(e: React.MouseEvent) => {
-          if (Array.isArray(type)) {
-            setIsOpenCategoryAll(!isOpenCategoryAll);
-            return;
-          }
-          isCategoria(e.currentTarget.id);
-          setIsActiveClick(!isActiveClick);
-        }}>
-        {Array.isArray(type) ? (
-          <img
-            src='/addition.svg'
-            width={'12px'}
-            className='border border-solid border-[#8e8e8e]'
-          />
-        ) : null}
-        {name}
-      </button>
-      {Array.isArray(type) && isOpenCategoryAll
-        ? type.map((item) => (
-            <TemplateCategorySecond
-              name={item.id}
-              isCategoria={isCategoria}
-              valueDefault={categoriaAllUser.includes(item.type as string)}
-              type={item.type}
-              key={item.type}
-            />
-          ))
-        : null}
-    </>
-  );
-}
-export function TemplateCategorySecond({
-  name,
-  isCategoria,
-  valueDefault,
-  type,
-}: {
-  valueDefault: boolean;
-  type: string;
-  name: string;
-  isCategoria: (categoria: string) => void;
-}) {
-  const [isActiveClick, setIsActiveClick] = useState(valueDefault);
-
-  useEffect(() => {
-    return setIsActiveClick(valueDefault);
-  }, [valueDefault]);
-
-  return (
-    <button
-      key={name}
-      className={`ml-4 flex items-center gap-[0.2rem] hover:opacity-60 transition-[border] duration-100 ease-linear  ${
-        isActiveClick
-          ? 'font-bold border-b-2 border-b-[#3c006c] max-md:border-b-white text-[#3c006c] max-md:text-white'
-          : 'font-light border-none  max-md:text-white'
-      }	`}
-      id={type}
-      onClick={(e: React.MouseEvent) => {
-        isCategoria(e.currentTarget.id);
-        setIsActiveClick(!isActiveClick);
-      }}>
-      {name}
-    </button>
-  );
-}
 export function TemplateShopppingCartProduct({
   id,
   title,
@@ -290,35 +159,41 @@ export function TemplateShopppingCartProduct({
 }) {
   const [openFocusName, setOpenFocusName] = useState(false);
   const [shoppingCartValue, setShoppingCartValue] = useRecoilState(shoppingCart);
+
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
-
     const newShoppingCart = shoppingCartValue.filter(
-      (item: any) => item.id !== e.currentTarget.id || item.size !== size
+      (item: any) => item.id !== e.currentTarget.id || item.talla !== size
     );
-    if (window !== undefined) {
+    if (typeof window !== 'undefined') {
       localStorage.setItem('category', JSON.stringify(newShoppingCart));
     }
     setShoppingCartValue(newShoppingCart);
   };
+
   return (
-    <div className='flex justify-between border-b-2 border-b-white  pb-6 last:border-none pr-2 pl-2 h-[106px]'>
-      <div className='flex gap-4'>
-        <img src={img} alt={title} loading='lazy' className='h-full w-[80px] object-cover' />
-        <div>
+    <div className='flex justify-between items-center gap-4 border-b border-gray-200 py-4 px-3 hover:bg-gray-50 transition-colors rounded-lg w-full'>
+      <div className='flex gap-4 items-center w-full'>
+        <img
+          src={img}
+          alt={title}
+          loading='lazy'
+          className='h-24 w-24 object-cover rounded-md shadow-sm'
+        />
+        <div className='relative truncate'>
           <p
             onMouseEnter={() => setOpenFocusName(true)}
             onMouseLeave={() => setOpenFocusName(false)}
-            className='h-[24px] overflow-hidden max-w-[220px]'>
+            className='text-sm font-medium text-gray-800 truncate cursor-default'>
             {title}
-            {openFocusName ? (
-              <span className=' absolute botton-0 left-[20%] bg-gray-900 text-white p-[2px] pr-4 pl-4 text-[0.7rem] z-10 '>
-                {title}
-              </span>
-            ) : null}
           </p>
-          <h3 className='font-bold'>
-            {' '}
+          {/* {openFocusName && (
+            <h3 className=' z-20 left-1/2 transform -translate-x-1/2 top-full mt-1 bg-gray-900 text-white text-xs rounded px-3 py-1 shadow-lg '>
+              {title}
+            </h3>
+          )} */}
+          {size && <span className='text-sm font-medium text-gray-600'>Talle: {size}</span>}
+          <h3 className='text-base font-semibold text-gray-900 mt-1'>
             {price.toLocaleString('es-AR', {
               style: 'currency',
               currency: 'ARS',
@@ -326,18 +201,20 @@ export function TemplateShopppingCartProduct({
               maximumFractionDigits: 0,
             })}
           </h3>
-          <div className='flex justify-between items-center'>
-            <InputNumber cantidad={cantidad || 1} id={id} talla={size} />
-            {size ? <p className='font-semibold'>Talle: {size}</p> : null}
+          <div className='flex flex-row items-center gap-2 justify-between mt-2'>
+            <div className='flex items-center gap-4 '>
+              <InputNumber cantidad={cantidad || 1} id={id} talla={size} />
+            </div>
+            <button
+              onClick={handleDelete}
+              id={id}
+              className='p-2 rounded  text-red-400 hover:text-red-600  transition-colors cursor-pointer'
+              aria-label='Eliminar producto'>
+              <Trash size={20} />
+            </button>
           </div>
         </div>
       </div>
-      <button
-        onClick={handleDelete}
-        id={id}
-        className='fill-white hover:fill-red-400 hover:scale-125'>
-        <img src='/delete.svg' alt='delete' width={14} className='' />
-      </button>
     </div>
   );
 }

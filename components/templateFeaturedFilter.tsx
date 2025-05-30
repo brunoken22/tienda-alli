@@ -13,7 +13,7 @@ export default function TemplateFeaturedFilter({ name, img, url }: TemplateFeatu
       <div className='relative overflow-hidden rounded-xl bg-card border shadow-sm hover:shadow-lg transition-all duration-300 group-hover:scale-105'>
         <div className='aspect-square relative '>
           <Image
-            src={img || '/placeholder.svg'}
+            src={img || '/tienda-alli.webp'}
             alt={name}
             fill
             className='object-cover group brightness-50 hover:brightness-100 hover:scale-110 transition-transform duration-300  '

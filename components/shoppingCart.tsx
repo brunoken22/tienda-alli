@@ -8,7 +8,7 @@ import { TemplateShopppingCartProduct } from './templateProduct';
 import { Button } from '@/components/ui/button';
 import { X, ShoppingBag } from 'lucide-react';
 
-export function ShoppingCart() {
+export default function ShoppingCart() {
   const [openShoppingCartValue, setOpenShoppingCartValue] = useRecoilState(openShoppingCart);
   const shoppingCartValue = useRecoilValue(shoppingCart);
   const [buysAll, setBuysAll] = useState<any>([]);
@@ -35,7 +35,7 @@ export function ShoppingCart() {
     (acumulador, objeto) => acumulador + objeto.price * (objeto.cantidad || 1),
     0
   );
-
+  console.log(shoppingCartValue);
   return (
     <>
       {/* Carrito */}
@@ -62,13 +62,13 @@ export function ShoppingCart() {
               <div className='space-y-4'>
                 {shoppingCartValue.map((item, position) => (
                   <TemplateShopppingCartProduct
-                    key={`${item.id}-${item.talla}-${position}`}
+                    key={`${item.id}-${item.size}-${position}`}
                     id={item.id}
                     price={item.price}
                     title={item.title}
                     cantidad={item.cantidad}
                     img={item.img}
-                    size={item.talla}
+                    size={item.size}
                   />
                 ))}
               </div>

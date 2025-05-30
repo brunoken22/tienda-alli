@@ -50,8 +50,8 @@ export async function getCartShopping(dataParans: any[]) {
       id: item?.id,
       title: item.title,
       price: item.price,
-      talla: item.talla,
-      img: data.Images[0].url,
+      size: item.size,
+      img: data.Images[0].url || '/tienda-alli.webp',
     };
   });
 

@@ -4,7 +4,7 @@ import { openShoppingCart, shoppingCart } from '@/lib/atom';
 import { FormSearchHome } from '@/components/ui/form';
 import Link from 'next/link';
 import { useRecoilState } from 'recoil';
-import { ShoppingCart } from './shoppingCart';
+import ShoppingCart from './shoppingCart';
 import { usePathname } from 'next/navigation';
 import { getDataCartShopping } from '@/lib/hook';
 import { useEffect, useState } from 'react';

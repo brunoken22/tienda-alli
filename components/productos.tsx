@@ -28,7 +28,6 @@ import {
 
 export default function ProductosPage() {
   const { replace } = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [openInput, setOpenInput] = useState(false);
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
@@ -232,7 +231,7 @@ export default function ProductosPage() {
                       price={item['Unit cost']}
                       oferta={item.oferta ? true : false}
                       id={item.objectID}
-                      inicio={false}
+                      // inicio={false}
                       type={item.type}
                       size={item.talla}
                       addItem={() =>

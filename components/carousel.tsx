@@ -33,7 +33,7 @@ export function CarouselHeader({ data }: { data: ProductFrontPage[] }) {
               className='block relative w-full h-full group'>
               <div className='absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors z-10' />
               <Image
-                src={product.Images[1]?.url || '/placeholder.svg'}
+                src={product.Images[1]?.url || '/tienda-alli.webp'}
                 alt={product.Name}
                 fill
                 className='object-contain'
@@ -75,7 +75,7 @@ export function CarouselProduct({ imgs }: { imgs: string[] }) {
         {imgs.map((item, index) => (
           <SwiperSlide key={index} className='w-full h-full '>
             <Image
-              src={item || '/placeholder.svg'}
+              src={item || '/tienda-alli.webp'}
               alt={`Product image ${index + 1}`}
               fill
               className='object-contain rounded-lg'
