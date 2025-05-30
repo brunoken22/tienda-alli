@@ -36,7 +36,7 @@ export function CarouselHeader({ data }: { data: ProductFrontPage[] }) {
               <div className=' absolute  inset-0 bg-gradient-to-t from-black/90 via-black/90 to-black/90 group-hover:opacity-80 transition-opacity z-10' />
 
               <Image
-                src={product.Images[1]?.url || '/tienda-alli.webp'}
+                src={product.Images[0]?.url || '/tienda-alli.webp'}
                 alt={product.Name}
                 fill
                 className='object-contain relative z-20'
