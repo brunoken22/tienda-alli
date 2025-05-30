@@ -1,13 +1,6 @@
 import React from 'react';
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  Image,
-  StyleSheet,
-} from '@react-pdf/renderer';
-import {TypeCompra} from '@/lib/atom';
+import { Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/renderer';
+import { TypeCompra } from '@/lib/atom';
 
 const styles = StyleSheet.create({
   page: {
@@ -91,7 +84,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export function GeneratePdf({data}: {data: TypeCompra[]}) {
+export function GeneratePdf({ data }: { data: TypeCompra[] }) {
   const fecha = obtenerFechaDelMes();
 
   return (
@@ -120,20 +113,14 @@ export function GeneratePdf({data}: {data: TypeCompra[]}) {
             {data.map((producto) => (
               <View style={styles.tableRow} key={producto.id}>
                 <Image src={producto.img} style={styles.image}></Image>
-                <Text style={styles.tableCell}>
-                  {producto.title + 'TALLE ' + producto.talla}
-                </Text>
+                <Text style={styles.tableCell}>{producto.title + 'TALLE ' + producto.size}</Text>
                 <Text style={styles.tableCell}>{producto.cantidad}</Text>
-                <Text
-                  style={styles.tableCell}>{`${producto.price.toLocaleString(
-                  'es-AR',
-                  {
-                    style: 'currency',
-                    currency: 'ARS',
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                  }
-                )}`}</Text>
+                <Text style={styles.tableCell}>{`${producto.price.toLocaleString('es-AR', {
+                  style: 'currency',
+                  currency: 'ARS',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}`}</Text>
                 <Text style={styles.tableCell}>{`${(
                   producto.cantidad * producto.price
                 ).toLocaleString('es-AR', {
@@ -183,9 +170,7 @@ const obtenerFechaDelMes = () => {
   const año = fechaActual.getFullYear();
 
   // Construir la cadena de fecha en el formato deseado (DD/MM/YYYY)
-  const fechaFormateada = `${dia < 10 ? '0' : ''}${dia}/${
-    mes < 10 ? '0' : ''
-  }${mes}/${año}`;
+  const fechaFormateada = `${dia < 10 ? '0' : ''}${dia}/${mes < 10 ? '0' : ''}${mes}/${año}`;
 
   return fechaFormateada;
 };
