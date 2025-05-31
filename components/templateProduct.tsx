@@ -102,14 +102,15 @@ export function TemplateProduct({
           </p>
 
           {size && (
-            <div className='mt-2 '>
-              <label htmlFor='size-select' className='sr-only'>
+            <div className='mt-2'>
+              <label htmlFor='size-select' className='block text-sm font-medium text-gray-700'>
                 Seleccionar talla
               </label>
               <select
+                id='size-select' // Asegúrate de que este ID coincida con el htmlFor del label
                 value={selectedSize}
                 onChange={(e) => setSelectedSize(e.target.value)}
-                className='block w-full  px-2 py-1 border rounded-md text-sm'>
+                className='block w-full px-2 py-1 border rounded-md text-sm mt-1'>
                 <option value=''>Seleccionar talla</option>
                 {size.map((s) => (
                   <option key={s} value={s}>

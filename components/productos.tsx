@@ -201,6 +201,7 @@ export default function ProductosPage() {
                       </label>
 
                       <select
+                        id='size-select'
                         value={order}
                         onChange={(e) => setOrder(e.target.value as 'asc' | 'desc')}
                         className='text-sm border rounded-md px-3 py-1 bg-background focus:outline-none focus:ring-2 focus:ring-primary'>
