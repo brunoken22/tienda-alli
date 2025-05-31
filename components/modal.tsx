@@ -1,141 +1,220 @@
-import { shoppingCart } from '@/lib/atom';
-import { IconCopy } from '@/components/ui/icons';
+'use client';
+
+import type React from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { Copy, X, Download, MessageCircle } from 'lucide-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { useRecoilState } from 'recoil';
-import { GeneratePdf } from './generatePdf';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-export function Modal({ closeModal }: { closeModal: (data: boolean) => any }) {
+import { useRecoilState } from 'recoil';
+import { shoppingCart } from '@/lib/atom';
+import type { TypeCompra } from '@/types/shopping-cart';
+import { GeneratePdf } from './generatePdf';
+
+interface ModalProps {
+  closeModal: (data: boolean) => void;
+}
+
+export default function Modal({ closeModal }: ModalProps) {
   const [shoppingCartUserData] = useRecoilState(shoppingCart);
   const [textShoppingCopy, setTextShoppingCopy] = useState('');
-  const [mostrarDiv, setMostrarDiv] = useState(false);
+  const [showCopySuccess, setShowCopySuccess] = useState(false);
 
+  // Calcular total
+  const calculateTotal = useCallback((items: TypeCompra[]) => {
+    return items.reduce((accumulator, item) => accumulator + item.price * (item.cantidad || 1), 0);
+  }, []);
+
+  const total = calculateTotal(shoppingCartUserData);
+
+  const formattedTotal = total.toLocaleString('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+
+  // Generar texto para copiar y WhatsApp
   useEffect(() => {
-    if (shoppingCartUserData) {
-      setTextShoppingCopy(
-        `Mi pedido:
-        ${shoppingCartUserData.map((item) => `🖌 ${item.cantidad} ${item.title}`).join('\n')}
-        🛒 *Total:  $${
-          shoppingCartUserData.reduce(
-            (acumalador, objeto) => acumalador + objeto.price * (objeto.cantidad || 1),
-            0
-          ) || 0
-        }*
-        `
-      );
+    if (shoppingCartUserData?.length > 0) {
+      const orderText = `Mi pedido:
+${shoppingCartUserData
+  .map((item) => `🖌 ${item.cantidad} ${item.title} (Talle: ${item.size})`)
+  .join('\n')}
+🛒 *Total: ${formattedTotal}*`;
+      setTextShoppingCopy(orderText);
     }
-  }, [shoppingCartUserData]);
+  }, [shoppingCartUserData, formattedTotal]);
+
+  // Manejar notificación de copiado
   useEffect(() => {
-    if (mostrarDiv) {
+    if (showCopySuccess) {
       const timeout = setTimeout(() => {
-        setMostrarDiv(false);
+        setShowCopySuccess(false);
       }, 3000);
       return () => clearTimeout(timeout);
     }
-  }, [mostrarDiv]);
+  }, [showCopySuccess]);
+
+  // Manejar tecla Escape
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeModal(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [closeModal]);
+
+  const handleCopySuccess = () => {
+    setShowCopySuccess(true);
+  };
+
+  const handleWhatsAppClick = () => {
+    const whatsappUrl = `https://wa.me/541159102865?text=${encodeURIComponent(textShoppingCopy)}`;
+    window.open(whatsappUrl, '_blank');
+    closeModal(false);
+  };
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      closeModal(false);
+    }
+  };
+
+  if (!shoppingCartUserData?.length) {
+    return (
+      <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm'>
+        <div className='bg-white rounded-lg p-6 max-w-md w-[95%] mx-auto'>
+          <h3 className='text-xl font-semibold text-gray-900 mb-4'>Carrito vacío</h3>
+          <p className='text-gray-600 mb-6'>No tienes productos en tu carrito de compras.</p>
+          <button
+            onClick={() => closeModal(false)}
+            className='w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors'>
+            Cerrar
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-[60] outline-none focus:outline-none backdrop-brightness-50	'>
-        <div className='relative  my-6 mx-auto max-w-3xl w-[95%]'>
-          <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
-            <div className='flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t'>
-              <h3 className='text-3xl font-semibold text-black'>
-                Descargar la compra y envía al Whatsaap
-              </h3>
-              <button
-                className='p-1 ml-auto bg-transparent border-0  opacity-60 float-right text-3xl leading-none font-semibold outline-none focus:outline-none'
-                onClick={() => closeModal(false)}>
-                <img src={'/closeBlack.svg'} width={20} />
-              </button>
-            </div>
-            <div className='relative p-6 flex-auto'>
-              <div className='my-4 text-black Gray-500 text-lg leading-relaxed'>
-                <h3 className='mb-4'>Mi pedido:</h3>
-                <div className='max-h-[350px] overflow-auto'>
-                  {shoppingCartUserData.length
-                    ? shoppingCartUserData.map((item) => (
-                        <div key={item.id} className='flex justify-between'>
-                          <div>
-                            <span className=' bg-[#6aa7ff] p-[0.2rem] pl-[0.5rem] pr-[0.5rem] rounded-full'>
-                              {item.cantidad}
-                            </span>{' '}
-                            {item.title}{' '}
-                          </div>
-                          <div>
-                            <p>Talla: {item.size}</p>
-                          </div>
-                        </div>
-                      ))
-                    : null}
-                </div>
-                <div className='flex justify-between mt-4'>
-                  <h2 className='font-bold text-1xl'>Total:</h2>
-                  <div>
-                    <h2 className='font-bold text-1xl'>
-                      {shoppingCartUserData
-                        .reduce(
-                          (acumalador, objeto) =>
-                            acumalador + objeto.price * (objeto.cantidad || 1),
-                          0
-                        )
-                        .toLocaleString('es-AR', {
+    <div
+      className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm'
+      onClick={handleBackdropClick}>
+      <div className='bg-white rounded-lg shadow-xl max-w-4xl w-[95%] max-h-[90vh] flex flex-col'>
+        {/* Header */}
+        <div className='flex items-center justify-between p-6 border-b border-gray-200'>
+          <div>
+            <h3 className='text-2xl font-semibold text-gray-900'>Resumen de tu pedido</h3>
+            <p className='text-gray-600 mt-1'>
+              Revisa tu pedido, descarga el PDF o envíalo por WhatsApp
+            </p>
+          </div>
+          <button
+            onClick={() => closeModal(false)}
+            className='p-2 hover:bg-gray-100 rounded-full transition-colors'
+            aria-label='Cerrar modal'>
+            <X className='h-5 w-5 text-gray-500' />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className='flex-1 p-6 overflow-hidden'>
+          {/* Lista de productos */}
+          <div className='mb-6'>
+            <h4 className='text-lg font-medium text-gray-900 mb-4'>Productos:</h4>
+            <div className='max-h-80 overflow-y-auto border border-gray-200 rounded-lg'>
+              {shoppingCartUserData.map((item: TypeCompra, index: number) => (
+                <div
+                  key={`${item.id}-${index}`}
+                  className='p-4 border-b border-gray-100 last:border-b-0'>
+                  <div className='flex items-center justify-between'>
+                    <div className='flex items-center gap-3'>
+                      <span className='bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded-full'>
+                        {item.cantidad}
+                      </span>
+                      <div>
+                        <p className='font-medium text-gray-900'>{item.title}</p>
+                        <p className='text-sm text-gray-500'>Talla: {item.size}</p>
+                      </div>
+                    </div>
+                    <div className='text-right'>
+                      <p className='font-medium text-gray-900'>
+                        {(item.price * item.cantidad).toLocaleString('es-AR', {
                           style: 'currency',
                           currency: 'ARS',
                           minimumFractionDigits: 0,
                           maximumFractionDigits: 0,
-                        }) || '$ ' + 0}
-                    </h2>
+                        })}
+                      </p>
+                      <p className='text-sm text-gray-500'>
+                        {item.price.toLocaleString('es-AR', {
+                          style: 'currency',
+                          currency: 'ARS',
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                        })}{' '}
+                        c/u
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <div className='absolute  top-[5%] right-[5%] flex align-center gap-4'>
-                  {mostrarDiv && (
-                    <div className='bg-[#9bff9b] p-[0.5rem] rounded-lg'>
-                      <h3>Pedido copiado</h3>
-                    </div>
-                  )}
-                  <CopyToClipboard text={textShoppingCopy}>
-                    <button
-                      className='relative  top-[5%] right-[5%]'
-                      onClick={() => setMostrarDiv(true)}>
-                      <IconCopy />
-                    </button>
-                  </CopyToClipboard>
-                </div>
-              </div>
-            </div>
-            <div className='flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b max-md:p-2'>
-              <PDFDownloadLink
-                document={<GeneratePdf data={shoppingCartUserData} />}
-                fileName='tiendaAlli.pdf'>
-                {({ loading, error }) =>
-                  loading ? (
-                    <button className='bg-primary text-white active:bg-primary font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 max-sm:text-center'>
-                      Loading...
-                    </button>
-                  ) : (
-                    <button
-                      className='bg-primary text-white active:bg-primary font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 max-sm:text-center'
-                      type='button'>
-                      Descargar Compra
-                    </button>
-                  )
-                }
-              </PDFDownloadLink>
-              <Link
-                href={
-                  'https://api.whatsapp.com/send?phone=+541159102865&text=Hola%20te%20hablo%20desde%20la%20p%C3%A1gina'
-                }
-                className='bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 max-sm:text-center'
-                onClick={() => closeModal(false)}
-                target='_blank'>
-                Ir a Whatsaap
-              </Link>
+              ))}
             </div>
           </div>
+
+          {/* Total */}
+          <div className='bg-gray-50 rounded-lg p-4 mb-6'>
+            <div className='flex justify-between items-center'>
+              <span className='text-lg font-semibold text-gray-900'>Total:</span>
+              <span className='text-2xl font-bold text-blue-600'>{formattedTotal}</span>
+            </div>
+          </div>
+
+          {/* Botón copiar */}
+          <div className='flex justify-center mb-6 relative'>
+            {showCopySuccess && (
+              <div className='absolute -top-12 bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-lg'>
+                ¡Pedido copiado al portapapeles!
+              </div>
+            )}
+            <CopyToClipboard text={textShoppingCopy} onCopy={handleCopySuccess}>
+              <button className='flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors'>
+                <Copy className='h-4 w-4' />
+                Copiar pedido
+              </button>
+            </CopyToClipboard>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className='flex flex-col sm:flex-row gap-3 p-6 border-t border-gray-200'>
+          <PDFDownloadLink
+            document={<GeneratePdf data={shoppingCartUserData} />}
+            fileName='pedido-tienda-alli.pdf'
+            className='flex-1'>
+            {({ loading }) => (
+              <button
+                disabled={loading}
+                className='w-full flex items-center justify-center gap-2 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white py-3 px-6 rounded-lg transition-colors'>
+                <Download className='h-4 w-4' />
+                {loading ? 'Generando PDF...' : 'Descargar PDF'}
+              </button>
+            )}
+          </PDFDownloadLink>
+
+          {/* Botón de WhatsApp modificado */}
+          <button
+            onClick={handleWhatsAppClick}
+            className='flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg transition-colors'>
+            <MessageCircle className='h-4 w-4' />
+            Enviar por WhatsApp
+          </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

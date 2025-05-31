@@ -3,7 +3,7 @@
 import { openShoppingCart, shoppingCart } from '@/lib/atom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useEffect, useState } from 'react';
-import { Modal } from './modal';
+import Modal from './modal';
 import { TemplateShopppingCartProduct } from './templateProduct';
 import { Button } from '@/components/ui/button';
 import { X, ShoppingBag } from 'lucide-react';
@@ -35,7 +35,6 @@ export default function ShoppingCart() {
     (acumulador, objeto) => acumulador + objeto.price * (objeto.cantidad || 1),
     0
   );
-  console.log(shoppingCartValue);
   return (
     <>
       {/* Carrito */}
@@ -108,7 +107,7 @@ export default function ShoppingCart() {
           )}
         </div>
       </div>
-      {openIsCompraLink && <Modal closeModal={(data) => setOpenIsCompraLink(data)} />}
+      {openIsCompraLink && <Modal closeModal={() => setOpenIsCompraLink(false)} />}
     </>
   );
 }

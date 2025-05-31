@@ -1,4 +1,7 @@
 import useSWR from 'swr';
+import { useMemo } from 'react';
+import { TypeCompra } from './atom';
+
 export type ProductFrontPage = {
   Name: string;
   Images: { url: string }[]; // Puedes ajustar esto según cómo venga exactamente
@@ -102,4 +105,26 @@ export async function getFrontPage(): Promise<ProductFrontPage[]> {
   );
   const data = await response.json();
   return data;
+}
+
+export function useCartCalculations(items: TypeCompra[]) {
+  return useMemo(() => {
+    const total = items.reduce(
+      (accumulator, item) => accumulator + item.price * (item.cantidad || 1),
+      0
+    );
+
+    const formattedTotal = total.toLocaleString('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+
+    const orderText = `Mi pedido:
+${items.map((item) => `🖌 ${item.cantidad} ${item.title}`).join('\n')}
+🛒 *Total: ${formattedTotal}*`;
+
+    return { total, formattedTotal, orderText };
+  }, [items]);
 }
