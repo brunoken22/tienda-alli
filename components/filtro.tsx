@@ -186,59 +186,88 @@ export function FiltroSearch({
           <Button
             variant='primary'
             onClick={() => toggleSection('price')}
-            className='w-full justify-between p-0 h-auto font-medium text-sm'>
+            className='w-full justify-between p-0 h-auto font-medium text-sm'
+            aria-expanded={expandedSections.price} // Mejora accesibilidad
+          >
             Precio
             {expandedSections.price ? (
-              <ChevronUp className='w-4 h-4' />
+              <ChevronUp className='w-4 h-4' aria-hidden='true' />
             ) : (
-              <ChevronDown className='w-4 h-4' />
+              <ChevronDown className='w-4 h-4' aria-hidden='true' />
             )}
           </Button>
+
           {expandedSections.price && (
             <div className='space-y-4'>
+              {/* Inputs de número */}
               <div className='grid grid-cols-2 gap-2'>
                 <div>
-                  <label className='text-sm text-muted-foreground'>Mínimo</label>
+                  <label htmlFor='min-price' className='block text-sm text-muted-foreground mb-1'>
+                    Mínimo
+                  </label>
                   <input
+                    id='min-price'
                     type='number'
                     value={priceRange[0]}
                     onChange={(e) => handlePriceChange(0, Number(e.target.value))}
-                    className='w-full text-black px-3 py-1 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-primary'
+                    className='w-full text-black px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-primary'
                     min='0'
                     max={priceRange[1]}
                   />
                 </div>
                 <div>
-                  <label className='text-sm text-muted-foreground'>Máximo</label>
+                  <label htmlFor='max-price' className='block text-sm text-muted-foreground mb-1'>
+                    Máximo
+                  </label>
                   <input
+                    id='max-price'
                     type='number'
                     value={priceRange[1]}
                     onChange={(e) => handlePriceChange(1, Number(e.target.value))}
-                    className='w-full text-black px-3 py-1 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-primary'
+                    className='w-full text-black px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-primary'
                     min={priceRange[0]}
                     max='100000'
                   />
                 </div>
               </div>
+
+              {/* Sliders */}
               <div className='space-y-2'>
+                <label id='min-range-label' htmlFor='min-range' className='sr-only'>
+                  Rango mínimo de precio
+                </label>
                 <input
+                  id='min-range'
                   type='range'
                   min='0'
                   max='70000'
                   value={priceRange[0]}
                   onChange={(e) => handlePriceChange(0, Number(e.target.value))}
                   className='w-full'
+                  aria-labelledby='min-range-label price-range-text'
+                  aria-valuetext={`${priceRange[0].toLocaleString()}`}
                 />
+                <label id='max-range-label' htmlFor='max-range' className='sr-only'>
+                  Rango máximo de precio
+                </label>
                 <input
+                  id='max-range'
                   type='range'
                   min='0'
                   max='70000'
                   value={priceRange[1]}
                   onChange={(e) => handlePriceChange(1, Number(e.target.value))}
                   className='w-full'
+                  aria-labelledby='max-range-label price-range-text'
+                  aria-valuetext={`${priceRange[1].toLocaleString()}`}
                 />
               </div>
-              <div className='text-center text-sm text-muted-foreground'>
+
+              {/* Texto descriptivo */}
+              <div
+                id='price-range-text'
+                className='text-center text-sm text-muted-foreground'
+                role='status'>
                 ${priceRange[0].toLocaleString()} - ${priceRange[1].toLocaleString()}
               </div>
             </div>

@@ -178,6 +178,7 @@ export default function ProductosPage() {
                     {/* Selector de vista */}
                     <div className='hidden sm:flex items-center border rounded-lg p-1'>
                       <Button
+                        aria-label='Mostrando en grid'
                         variant={viewMode === 'grid' ? 'default' : 'ghost'}
                         size='sm'
                         onClick={() => setViewMode('grid')}
@@ -185,6 +186,7 @@ export default function ProductosPage() {
                         <Grid3X3 className='w-4 h-4' />
                       </Button>
                       <Button
+                        aria-label='Mostrando en uno'
                         variant={viewMode === 'list' ? 'default' : 'ghost'}
                         size='sm'
                         onClick={() => setViewMode('list')}
@@ -196,14 +198,11 @@ export default function ProductosPage() {
                     {/* Ordenamiento */}
                     <div className='flex items-center gap-2'>
                       <ArrowUpDown className='w-4 h-4 text-muted-foreground' />
-                      <label htmlFor='size-select' className='sr-only'>
-                        Seleccionar precio
-                      </label>
-
                       <select
-                        id='size-select'
+                        id='price-order-select' // Cambiado a un ID más descriptivo
                         value={order}
                         onChange={(e) => setOrder(e.target.value as 'asc' | 'desc')}
+                        aria-label='Ordenar por precio' // Etiqueta accesible para lectores de pantalla
                         className='text-sm border rounded-md px-3 py-1 bg-background focus:outline-none focus:ring-2 focus:ring-primary'>
                         <option value='desc'>Precio: Mayor a menor</option>
                         <option value='asc'>Precio: Menor a mayor</option>

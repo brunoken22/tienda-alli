@@ -21,10 +21,10 @@ export function FormSearch({
   }, [value]);
   return (
     <form
-      className='flex justify-center items-center  bg-gray-200 p-2'
+      className='flex justify-center items-center bg-gray-200 p-1 gap-3'
       onSubmit={(e: any) => {
         e.preventDefault();
-        modValue(e.target.search.value);
+        modValue(e.target?.search.value);
       }}>
       <input
         type='text'
@@ -32,23 +32,29 @@ export function FormSearch({
         id='search'
         onChange={debounced}
         placeholder='Mochila'
-        className='bg-transparent focus-visible:outline-none placeholder:white-500 w-[80%]'
+        className='bg-transparent focus-visible:outline-none placeholder-white-500 w-[80%] py-3 px-4 text-base rounded-md'
         defaultValue={value || ''}
         ref={inputSearch}
       />
-      {value ? (
+
+      {value && (
         <button
           type='button'
-          className='mr-2 ml-2'
+          className='p-3 min-w-[48px] min-h-[48px] flex items-center justify-center'
           onClick={() => {
             inputSearch.current.value = '';
             modValue('');
-          }}>
-          <img src='/close.svg' alt='clear' width={12} height={8} />
+          }}
+          aria-label='Limpiar búsqueda'>
+          <img src='/close.svg' alt='Limpiar' width={16} height={16} />
         </button>
-      ) : null}
-      <button type='submit'>
-        <img src='/search.svg' alt='search' width={20} height={20} />
+      )}
+
+      <button
+        type='submit'
+        className='p-3 min-w-[48px] min-h-[48px] flex items-center justify-center'
+        aria-label='Buscar'>
+        <img src='/search.svg' alt='Buscar' width={24} height={24} />
       </button>
     </form>
   );
@@ -89,6 +95,7 @@ export function FormSearchHome() {
         <Button
           type='button'
           variant='ghost'
+          aria-label='Elminar producto'
           size='icon'
           className='text-white/70 hover:text-white hover:bg-white/10 h-8 w-8'
           onClick={() => {
@@ -99,6 +106,7 @@ export function FormSearchHome() {
         </Button>
       )}
       <Button
+        aria-label='Buscar producto'
         type='submit'
         variant='ghost'
         size='icon'
