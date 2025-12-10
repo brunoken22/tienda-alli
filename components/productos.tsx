@@ -1,19 +1,19 @@
-'use client';
-import { GetDataProduct, type Product } from '@/lib/hook';
-import { EsqueletonProduct } from '@/components/esqueleton';
-import { useEffect, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { TemplateProduct } from '@/components/templateProduct';
-import { FiltroSearch } from '@/components/filtro';
-import { FormSearch } from '@/components/ui/form';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { CarouselProduct } from '@/components/carousel';
-import { useDebouncedCallback } from 'use-debounce';
-import { shoppingCart } from '@/lib/atom';
-import { useSetRecoilState } from 'recoil';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+"use client";
+import { GetDataProduct, type Product } from "@/lib/hook";
+import { EsqueletonProduct } from "@/components/esqueleton";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { TemplateProduct } from "@/components/templateProduct";
+import { FiltroSearch } from "@/components/filtro";
+import { FormSearch } from "@/components/ui/form";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { CarouselProduct } from "@/components/carousel";
+import { useDebouncedCallback } from "use-debounce";
+import { shoppingCart } from "@/lib/atom";
+import { useSetRecoilState } from "recoil";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Search,
   Filter,
@@ -24,26 +24,26 @@ import {
   Grid3X3,
   List,
   ArrowUpDown,
-} from 'lucide-react';
+} from "lucide-react";
 
 export default function ProductosPage() {
   const { replace } = useRouter();
-  const searchParams = useSearchParams();
   const [openInput, setOpenInput] = useState(false);
-  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
-  const [search, setSearch] = useState(searchParams.get('q') || '');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const setShoppingCartUserData = useSetRecoilState(shoppingCart);
-
+  const searchParams = useSearchParams();
+  const [order, setOrder] = useState<"asc" | "desc">("desc");
+  const [search, setSearch] = useState(searchParams.get("q") || "");
+  const [offset, setOffset] = useState(Number(searchParams.get("offset")) || 0);
   const [typeSearch, setTypeSearch] = useState<string[]>(
-    JSON.parse(searchParams.get('type')!) || []
+    JSON.parse(searchParams.get("type")!) || []
   );
   const [typePrice, setTypePrice] = useState<number[]>(
-    JSON.parse(searchParams.get('price')!) || [0, 70000]
+    JSON.parse(searchParams.get("price")!) || [0, 70000]
   );
+
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const setShoppingCartUserData = useSetRecoilState(shoppingCart);
   const [isOpenFilter, setIsOpenFilter] = useState(false);
   const [openLinkProduct, setOpenLinkProduct] = useState<string[]>([]);
-  const [offset, setOffset] = useState(Number(searchParams.get('offset')) || 0);
 
   const useDebouncePrice = useDebouncedCallback((category: string[], price: number[]) => {
     setTypePrice(price);
@@ -61,18 +61,18 @@ export default function ProductosPage() {
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
     if (!typeSearch.length) {
-      params.set('q', search);
+      params.set("q", search);
     } else {
-      params.delete('q');
-      setSearch('');
+      params.delete("q");
+      setSearch("");
     }
-    params.set('price', JSON.stringify(typePrice));
-    params.set('type', JSON.stringify(typeSearch));
-    params.set('limit', JSON.stringify(16));
-    params.set('offset', JSON.stringify(offset));
+    params.set("price", JSON.stringify(typePrice));
+    params.set("type", JSON.stringify(typeSearch));
+    params.set("limit", JSON.stringify(16));
+    params.set("offset", JSON.stringify(offset));
 
     replace(`?${params.toString()}`);
-  }, [typeSearch, typePrice, search, offset, replace]);
+  }, [typeSearch, typePrice, search, offset, replace, searchParams]);
 
   const handleModValueFormSearch = (inputSearchFrom: string) => {
     setSearch(inputSearchFrom);
@@ -90,7 +90,7 @@ export default function ProductosPage() {
   const totalPages = Math.ceil(totalResults / 15);
 
   return (
-    <div className='min-h-screen bg-background max-md:p-3 !pt-24 '>
+    <div className='min-h-screen bg-background max-md:p-3  '>
       {/* Header de búsqueda móvil */}
       {openInput && (
         <div className='fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden'>
@@ -109,7 +109,8 @@ export default function ProductosPage() {
                 setIsOpenFilter(true);
                 setOpenInput(false);
               }}
-              className='w-full'>
+              className='w-full'
+            >
               <Filter className='w-4 h-4 mr-2' />
               Filtros
             </Button>
@@ -124,7 +125,8 @@ export default function ProductosPage() {
             aria-label='Buscar producto'
             size='icon'
             onClick={() => setOpenInput(true)}
-            className='rounded-full shadow-lg'>
+            className='rounded-full shadow-lg'
+          >
             <Search className='w-5 h-5' />
           </Button>
         </div>
@@ -144,7 +146,8 @@ export default function ProductosPage() {
                 typeCategoriaPrice={useDebouncePrice}
                 closeFilter={() => setIsOpenFilter(false)}
                 search={search}
-                isMobile={false}>
+                isMobile={false}
+              >
                 <FormSearch value={search} modValue={handleModValueFormSearch} />
               </FiltroSearch>
             </div>
@@ -158,11 +161,11 @@ export default function ProductosPage() {
                 <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
                   <div className='flex items-center gap-4'>
                     <p className='text-sm text-muted-foreground'>
-                      Mostrando{' '}
+                      Mostrando{" "}
                       <span className='font-medium text-foreground'>
                         {offset + 1}-{Math.min(offset + currentResults, totalResults)}
-                      </span>{' '}
-                      de <span className='font-medium text-foreground'>{totalResults}</span>{' '}
+                      </span>{" "}
+                      de <span className='font-medium text-foreground'>{totalResults}</span>{" "}
                       productos
                     </p>
                     {(typeSearch.length > 0 || search) && (
@@ -179,18 +182,20 @@ export default function ProductosPage() {
                     <div className='hidden sm:flex items-center border rounded-lg p-1'>
                       <Button
                         aria-label='Mostrando en grid'
-                        variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                        variant={viewMode === "grid" ? "default" : "ghost"}
                         size='sm'
-                        onClick={() => setViewMode('grid')}
-                        className='h-8 w-8 p-0'>
+                        onClick={() => setViewMode("grid")}
+                        className='h-8 w-8 p-0'
+                      >
                         <Grid3X3 className='w-4 h-4' />
                       </Button>
                       <Button
                         aria-label='Mostrando en uno'
-                        variant={viewMode === 'list' ? 'default' : 'ghost'}
+                        variant={viewMode === "list" ? "default" : "ghost"}
                         size='sm'
-                        onClick={() => setViewMode('list')}
-                        className='h-8 w-8 p-0'>
+                        onClick={() => setViewMode("list")}
+                        className='h-8 w-8 p-0'
+                      >
                         <List className='w-4 h-4' />
                       </Button>
                     </div>
@@ -201,9 +206,10 @@ export default function ProductosPage() {
                       <select
                         id='price-order-select' // Cambiado a un ID más descriptivo
                         value={order}
-                        onChange={(e) => setOrder(e.target.value as 'asc' | 'desc')}
+                        onChange={(e) => setOrder(e.target.value as "asc" | "desc")}
                         aria-label='Ordenar por precio' // Etiqueta accesible para lectores de pantalla
-                        className='text-sm border rounded-md px-3 py-1 bg-background focus:outline-none focus:ring-2 focus:ring-primary'>
+                        className='text-sm border rounded-md px-3 py-1 bg-background focus:outline-none focus:ring-2 focus:ring-primary'
+                      >
                         <option value='desc'>Precio: Mayor a menor</option>
                         <option value='asc'>Precio: Menor a mayor</option>
                       </select>
@@ -216,10 +222,11 @@ export default function ProductosPage() {
             {/* Grid de productos */}
             <div
               className={`grid  gap-6 ${
-                viewMode === 'grid'
-                  ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 '
-                  : 'grid-cols-1 gap-4'
-              }`}>
+                viewMode === "grid"
+                  ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 "
+                  : "grid-cols-1 gap-4"
+              }`}
+            >
               {data?.results?.length
                 ? data.results.map((item: Product) => (
                     <TemplateProduct
@@ -227,7 +234,7 @@ export default function ProductosPage() {
                       key={item.objectID}
                       openImg={(data: string[]) => {
                         setOpenLinkProduct(data);
-                        document.body.style.overflow = 'hidden';
+                        document.body.style.overflow = "hidden";
                       }}
                       Name={item.Name}
                       Images={
@@ -236,15 +243,15 @@ export default function ProductosPage() {
                           : []
                       }
                       priceOfert={item.priceOfert}
-                      price={item['Unit cost']}
+                      price={item["Unit cost"]}
                       oferta={item.oferta ? true : false}
                       id={item.objectID}
                       // inicio={false}
                       type={item.type}
                       size={item.talla}
                       addItem={() =>
-                        toast.success('¡Producto agregado al carrito!', {
-                          position: 'bottom-right',
+                        toast.success("¡Producto agregado al carrito!", {
+                          position: "bottom-right",
                           autoClose: 3000,
                         })
                       }
@@ -269,10 +276,11 @@ export default function ProductosPage() {
                 <Button
                   variant='outline'
                   onClick={() => {
-                    setSearch('');
+                    setSearch("");
                     setTypeSearch([]);
                     setTypePrice([0, 70000]);
-                  }}>
+                  }}
+                >
                   Limpiar filtros
                 </Button>
               </div>
@@ -289,7 +297,8 @@ export default function ProductosPage() {
                     variant='outline'
                     size='sm'
                     onClick={() => setOffset(Math.max(0, offset - 15))}
-                    disabled={offset === 0}>
+                    disabled={offset === 0}
+                  >
                     <ChevronLeft className='w-4 h-4 mr-1' />
                     Anterior
                   </Button>
@@ -297,7 +306,8 @@ export default function ProductosPage() {
                     variant='outline'
                     size='sm'
                     onClick={() => setOffset(offset + 15)}
-                    disabled={offset + currentResults >= totalResults}>
+                    disabled={offset + currentResults >= totalResults}
+                  >
                     Siguiente
                     <ChevronRight className='w-4 h-4 ml-1' />
                   </Button>
@@ -318,9 +328,10 @@ export default function ProductosPage() {
                 size='icon'
                 onClick={() => {
                   setOpenLinkProduct([]);
-                  document.body.style.overflow = 'auto';
+                  document.body.style.overflow = "auto";
                 }}
-                className='text-white hover:bg-white/20 rounded-full'>
+                className='text-white hover:bg-white/20 rounded-full'
+              >
                 <X className='w-6 h-6' />
               </Button>
             </div>

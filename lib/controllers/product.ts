@@ -1,17 +1,19 @@
-import { index } from '@/lib/algolia';
+import { index } from "@/lib/algolia";
+import { base } from "../airtable";
+
 export async function searchProduct(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const search = searchParams.get('q') || '';
-    const typeCategory = searchParams.get('type') || '';
-    const typePrice = JSON.parse(searchParams.get('price') || '');
-    const limit = Number(searchParams.get('limit') || 16);
-    const offset = Number(searchParams.get('offset') || 0);
-    const order = searchParams.get('order') || 'desc';
+    const search = searchParams.get("q") || "";
+    const typeCategory = searchParams.get("type") || "";
+    const typePrice = JSON.parse(searchParams.get("price") || "");
+    const limit = Number(searchParams.get("limit") || 16);
+    const offset = Number(searchParams.get("offset") || 0);
+    const order = searchParams.get("order") || "desc";
     const { finalLimit, finalOffset } = getOffsetAndLimitFom(limit, offset);
     const cadenaDeBusquedaCategory = JSON.parse(typeCategory)
       .map((item: string) => `type:${item}`)
-      .join(' OR ');
+      .join(" OR ");
 
     const cadenaDeBusquedaPrice = `"Unit cost" >= ${typePrice[0]} AND "Unit cost" <= ${typePrice[1]}`;
 
@@ -24,13 +26,14 @@ export async function searchProduct(req: Request) {
       hitsPerPage: finalLimit,
       offset: finalOffset,
       length: finalLimit,
-      filters: `${cadenaDeBusquedaPrice ? cadenaDeBusquedaPrice : ''}   ${
-        cadenaDeBusquedaCategory ? ' AND ' + cadenaDeBusquedaCategory : ''
+      filters: `${cadenaDeBusquedaPrice ? cadenaDeBusquedaPrice : ""}   ${
+        cadenaDeBusquedaCategory ? " AND " + cadenaDeBusquedaCategory : ""
       } AND (NOT fontPage:true OR NOT _exists_:fontPage)`,
     });
 
     return {
       results: data.hits,
+      success: true,
       pagination: {
         limit: finalLimit,
         offset: finalOffset,
@@ -38,10 +41,11 @@ export async function searchProduct(req: Request) {
         order,
       },
     };
-  } catch (e) {
-    return e;
+  } catch (e: any) {
+    return { success: false, message: e.message };
   }
 }
+
 export async function getCartShopping(dataParans: any[]) {
   const newDataFinalPromises = dataParans.map(async (item) => {
     const data: any = await index.getObject(item.id);
@@ -51,13 +55,14 @@ export async function getCartShopping(dataParans: any[]) {
       title: item.title,
       price: item.price,
       size: item.size,
-      img: data.Images[0].url || '/tienda-alli.webp',
+      img: data.Images[0].url || "/tienda-alli.webp",
     };
   });
 
   const newDataFinal = await Promise.all(newDataFinalPromises);
   return newDataFinal;
 }
+
 export function getOffsetAndLimitFom(
   limit: number,
   offset: number,
@@ -74,6 +79,9 @@ export function getOffsetAndLimitFom(
   const finalOffset = offset < maxOffset ? offset : 0;
   return { finalLimit, finalOffset };
 }
-export function suma(num1: number, num2: number): number {
-  return num1 + num2;
+
+export async function getProducts() {
+  const productBase = base("Furniture").select();
+  const data = await productBase.all();
+  return data.map((product) => ({ ...product.fields, id: product.id }));
 }

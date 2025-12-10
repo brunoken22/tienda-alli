@@ -1,11 +1,11 @@
-import useSWR from 'swr';
-import { useMemo } from 'react';
-import { TypeCompra } from './atom';
+import useSWR from "swr";
+import { useMemo } from "react";
+import { TypeCompra } from "./atom";
 
 export type ProductFrontPage = {
   Name: string;
   Images: { url: string }[]; // Puedes ajustar esto según cómo venga exactamente
-  'Unit cost': number;
+  "Unit cost": number;
   type: string[];
   featured: boolean;
   frontPage: boolean;
@@ -38,7 +38,7 @@ type ProductImage = {
 
 export type Product = {
   Name: string;
-  'Unit cost': number;
+  "Unit cost": number;
   priceOfert: number;
   oferta: string;
   talla: string[];
@@ -50,7 +50,7 @@ export type Product = {
 async function fetcher(dataParams: any[]) {
   const option = dataParams[1] || {};
   const response = await fetch(
-    (process.env.NEXT_PUBLIC_API || 'http://localhost:3000') + dataParams[0],
+    (process.env.NEXT_PUBLIC_API || "http://localhost:3000") + dataParams[0],
     option
   );
   const data = await response.json();
@@ -59,20 +59,20 @@ async function fetcher(dataParams: any[]) {
 
 export function GetDataProduct(
   search?: string,
-  typeSearch?: string[] | '',
-  typePrice?: number[] | '',
+  typeSearch?: string[] | "",
+  typePrice?: number[] | "",
   limit?: number,
   offset?: number,
-  order?: 'asc' | 'desc'
+  order?: "asc" | "desc"
 ) {
   const { data, isLoading } = useSWR(
     [
-      `/api/product${search ? '?q=' + search : ''}${
+      `/api/product${search ? "?q=" + search : ""}${
         typePrice?.length && search
-          ? '&price=' + JSON.stringify(typePrice)
-          : '?price=' + JSON.stringify(typePrice)
+          ? "&price=" + JSON.stringify(typePrice)
+          : "?price=" + JSON.stringify(typePrice)
       }${
-        typeSearch?.length ? '&type=' + JSON.stringify(typeSearch) : '&type=[]'
+        typeSearch?.length ? "&type=" + JSON.stringify(typeSearch) : "&type=[]"
       }&limit=${limit}&offset=${offset}&order=${order}`,
     ],
     fetcher,
@@ -85,9 +85,9 @@ export function GetDataProduct(
 }
 export async function getDataCartShopping(ids: string | null) {
   const option = {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ ids }),
   };
@@ -100,13 +100,12 @@ export async function getProductFeatured() {
 }
 export async function getFrontPage(): Promise<ProductFrontPage[]> {
   const response = await fetch(
-    (process.env.NEXT_PUBLIC_API || 'http://localhost:3000') + '/api/product/frontPage',
-    { cache: 'no-cache' }
+    (process.env.NEXT_PUBLIC_API || "http://localhost:3000") + "/api/product/frontPage",
+    { cache: "no-cache" }
   );
   const data = await response.json();
   return data;
 }
-
 export function useCartCalculations(items: TypeCompra[]) {
   return useMemo(() => {
     const total = items.reduce(
@@ -114,15 +113,15 @@ export function useCartCalculations(items: TypeCompra[]) {
       0
     );
 
-    const formattedTotal = total.toLocaleString('es-AR', {
-      style: 'currency',
-      currency: 'ARS',
+    const formattedTotal = total.toLocaleString("es-AR", {
+      style: "currency",
+      currency: "ARS",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     });
 
     const orderText = `Mi pedido:
-${items.map((item) => `🖌 ${item.cantidad} ${item.title}`).join('\n')}
+${items.map((item) => `🖌 ${item.cantidad} ${item.title}`).join("\n")}
 🛒 *Total: ${formattedTotal}*`;
 
     return { total, formattedTotal, orderText };

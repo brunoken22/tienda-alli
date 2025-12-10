@@ -1,6 +1,6 @@
-import { shoppingCart } from '@/lib/atom';
-import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { shoppingCart } from "@/lib/atom";
+import React, { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 
 function InputNumber({ cantidad, id, talla }: { cantidad: number; id: string; talla?: string }) {
   const [cantidadState, setCantidadState] = useState(cantidad || 1);
@@ -25,7 +25,7 @@ function InputNumber({ cantidad, id, talla }: { cantidad: number; id: string; ta
   }, [cantidadState]);
   useEffect(() => {
     if (shoppingCartValue.length) {
-      return localStorage.setItem('category', JSON.stringify(shoppingCartValue));
+      return localStorage.setItem("category", JSON.stringify(shoppingCartValue));
     }
   }, [shoppingCartValue]);
   const handleCantidadChange = (e: React.ChangeEvent) => {
@@ -39,7 +39,7 @@ function InputNumber({ cantidad, id, talla }: { cantidad: number; id: string; ta
     if (cantidadState < 1) {
       return;
     }
-    if (e.currentTarget.id == 'min') {
+    if (e.currentTarget.id == "min") {
       setCantidadState(cantidadState - 1);
       return;
     }
@@ -75,17 +75,17 @@ function InputNumber({ cantidad, id, talla }: { cantidad: number; id: string; ta
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className = '', type, ...props }, ref) => {
+  ({ className = "", type, ...props }, ref) => {
     return (
       <input
         type={type}
-        className={`flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+        className={`flex h-10 w-full rounded-md border border-black px-3 py-2 text-sm  file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:border-0 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
         ref={ref}
         {...props}
       />
     );
   }
 );
-Input.displayName = 'Input';
+Input.displayName = "Input";
 
 export { Input, InputNumber };
