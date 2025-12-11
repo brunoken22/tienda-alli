@@ -100,10 +100,7 @@ export async function getProductFeatured() {
   return data;
 }
 export async function getFrontPage(): Promise<ProductFrontPage[]> {
-  const response = await fetch(
-    (process.env.NEXT_PUBLIC_API || "http://localhost:3000") + "/api/product/frontPage",
-    { cache: "no-cache" }
-  );
+  const response = await fetch("/api/product/frontPage", { cache: "no-cache" });
   const data = await response.json();
   return data;
 }
