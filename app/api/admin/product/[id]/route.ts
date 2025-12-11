@@ -3,13 +3,12 @@ import {
   editProductController,
 } from "@/features/product/product.controller";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
 type Params = {
   id: string;
 };
 
-export async function PATCH(req: NextRequest, { params }: { params: Promise<Params> }) {
+export async function PATCH(req: Request, { params }: { params: Promise<Params> }) {
   try {
     const id = (await params).id;
     const formData = await req.formData();
@@ -20,7 +19,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<Para
   }
 }
 
-export async function DELETE(_: NextRequest, { params }: { params: Promise<Params> }) {
+export async function DELETE(_: Request, { params }: { params: Promise<Params> }) {
   try {
     const id = (await params).id;
     const data = await deleteProductController(id);

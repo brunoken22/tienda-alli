@@ -2,6 +2,7 @@ import { base } from "@/lib/airtable";
 import { NextResponse } from "next/server";
 
 const TABLE_NAME = "Productos";
+
 type Params = {
   id: string;
 };
@@ -30,7 +31,7 @@ export async function PUT(req: Request, { params }: { params: Promise<Params> })
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: Promise<Params> }) {
+export async function DELETE(_: Request, { params }: { params: Promise<Params> }) {
   try {
     const id = (await params).id;
     await base(TABLE_NAME).destroy(id);
