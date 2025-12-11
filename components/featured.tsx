@@ -11,7 +11,11 @@ import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-cont
 
 export function ProductsFeatured({ featured }: { featured: any }) {
   const [openLinkProduct, setOpenLinkProduct] = useState<string[]>([]);
-  const { setCart } = useShoppingCartActions();
+  const { addItem } = useShoppingCartActions();
+  const {
+    state: { cart },
+  } = useShoppingCart();
+
   const closeModal = () => {
     setOpenLinkProduct([]);
     document.body.style.overflow = "auto";
@@ -45,7 +49,8 @@ export function ProductsFeatured({ featured }: { featured: any }) {
                   draggable: true,
                 })
               }
-              setCart={setCart}
+              cart={cart}
+              addItem={addItem}
             />
           ))
         : Array.from({ length: 8 }, (_, i) => <EsqueletonProduct key={i} />)}
