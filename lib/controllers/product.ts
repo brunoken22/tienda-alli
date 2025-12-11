@@ -1,4 +1,3 @@
-import { index } from "@/lib/algolia";
 import { base } from "../airtable";
 
 export async function searchProduct(req: Request) {
@@ -17,27 +16,13 @@ export async function searchProduct(req: Request) {
 
     const cadenaDeBusquedaPrice = `"Unit cost" >= ${typePrice[0]} AND "Unit cost" <= ${typePrice[1]}`;
 
-    await index.setSettings({
-      customRanking: [`${order}(Unit cost)`],
-    });
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
-    const data = await index.search(search, {
-      hitsPerPage: finalLimit,
-      offset: finalOffset,
-      length: finalLimit,
-      filters: `${cadenaDeBusquedaPrice ? cadenaDeBusquedaPrice : ""}   ${
-        cadenaDeBusquedaCategory ? " AND " + cadenaDeBusquedaCategory : ""
-      } AND (NOT fontPage:true OR NOT _exists_:fontPage)`,
-    });
-
     return {
-      results: data.hits,
+      results: [],
       success: true,
       pagination: {
         limit: finalLimit,
         offset: finalOffset,
-        total: data.nbHits,
+        total: 4,
         order,
       },
     };
@@ -48,14 +33,13 @@ export async function searchProduct(req: Request) {
 
 export async function getCartShopping(dataParans: any[]) {
   const newDataFinalPromises = dataParans.map(async (item) => {
-    const data: any = await index.getObject(item.id);
     return {
       cantidad: item.cantidad,
       id: item?.id,
       title: item.title,
       price: item.price,
       size: item.size,
-      img: data.Images[0].url || "/tienda-alli.webp",
+      img: "/tienda-alli.webp",
     };
   });
 

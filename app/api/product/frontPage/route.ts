@@ -1,12 +1,5 @@
-export const dynamic = 'force-dynamic';
-
-import {index} from '@/lib/algolia';
+export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const products = await index
-    .search('', {
-      filters: 'frontPage:true',
-    })
-    .catch((e) => e);
-  return Response.json(products.hits);
+  return Response.json([]);
 }

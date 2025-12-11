@@ -1,7 +1,7 @@
 import { Model } from "sequelize";
 import Admin from "./admin.model";
 import bcrypt from "bcrypt";
-import generate5DigitCode from "@/lib/code-random";
+import generate5DigitCode from "@/utils/codeRandom";
 import sendCodeEmail from "@/lib/nodemailer";
 
 export async function getAdminService(id: string) {
