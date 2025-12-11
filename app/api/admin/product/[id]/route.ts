@@ -2,29 +2,37 @@ import {
   deleteProductController,
   editProductController,
 } from "@/features/product/product.controller";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-type Params = {
-  id: string;
-};
-
-export async function PATCH(req: Request, { params }: { params: Promise<Params> }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const id = (await params).id;
+    const { id } = await params;
+
+    if (!id) {
+      return NextResponse.json({ error: "Product ID is required" }, { status: 400 });
+    }
+
     const formData = await req.formData();
     const data = await editProductController(id, formData);
     return NextResponse.json(data, { status: 200 });
-  } catch (e) {
-    return NextResponse.json(e, { status: 404 });
+  } catch (e: any) {
+    console.error("Error in PATCH /api/admin/product/[id]:", e);
+    return NextResponse.json({ error: e.message || "Internal server error" }, { status: 500 });
   }
 }
 
-export async function DELETE(_: Request, { params }: { params: Promise<Params> }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const id = (await params).id;
+    const { id } = await params;
+
+    if (!id) {
+      return NextResponse.json({ error: "Product ID is required" }, { status: 400 });
+    }
+
     const data = await deleteProductController(id);
     return NextResponse.json(data, { status: 200 });
-  } catch (e) {
-    return NextResponse.json(e, { status: 404 });
+  } catch (e: any) {
+    console.error("Error in DELETE /api/admin/product/[id]:", e);
+    return NextResponse.json({ error: e.message || "Internal server error" }, { status: 500 });
   }
 }

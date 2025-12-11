@@ -1,3 +1,4 @@
+"use client";
 import useSWR from "swr";
 import { useMemo } from "react";
 import { TypeCompra } from "./atom";
