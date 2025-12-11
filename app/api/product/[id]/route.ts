@@ -1,15 +1,18 @@
-import { base } from '@/lib/airtable';
-import { NextResponse } from 'next/server';
+import { base } from "@/lib/airtable";
+import { NextResponse } from "next/server";
 
-const TABLE_NAME = 'Productos';
+const TABLE_NAME = "Productos";
+type Params = {
+  id: string;
+};
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<Params> }) {
   const body = await req.json();
-
+  const id = (await params).id;
   try {
     const updated = await base(TABLE_NAME).update([
       {
-        id: params.id,
+        id: id,
         fields: {
           name: body.name,
           price: body.price,
@@ -22,19 +25,20 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
     return NextResponse.json({ success: true, record: updated[0] });
   } catch (err) {
-    console.error('Error al actualizar:', err);
-    return NextResponse.json({ error: 'Error al actualizar el producto' }, { status: 500 });
+    console.error("Error al actualizar:", err);
+    return NextResponse.json({ error: "Error al actualizar el producto" }, { status: 500 });
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<Params> }) {
   try {
-    await base(TABLE_NAME).destroy(params.id);
-    return NextResponse.json({ success: true, message: 'Producto eliminado correctamente.' });
+    const id = (await params).id;
+    await base(TABLE_NAME).destroy(id);
+    return NextResponse.json({ success: true, message: "Producto eliminado correctamente." });
   } catch (error) {
-    console.error('Error al eliminar producto:', error);
+    console.error("Error al eliminar producto:", error);
     return NextResponse.json(
-      { success: false, error: 'No se pudo eliminar el producto.' },
+      { success: false, error: "No se pudo eliminar el producto." },
       { status: 500 }
     );
   }

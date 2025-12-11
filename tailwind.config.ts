@@ -22,11 +22,16 @@ const config: Config = {
         primary: "#3c006c",
         primaryLight: "#3c006ce6",
         secondary: "#fff",
+        tertiary: "#7e22ce",
       },
       colors: {
         primary: "#3c006c",
         primaryLight: "#3c006ce6",
         secondary: "#fff",
+        tertiary: "#7e22ce",
+      },
+      gradientColorStops: {
+        primary: "#7e22ce",
       },
       keyframes: {
         arrow: {

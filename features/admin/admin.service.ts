@@ -129,13 +129,14 @@ export async function recoverPasswordService(email: string, code: string, passwo
       where: {
         email,
       },
-      attributes: ["id", "name"],
     });
 
-    console.log(admin);
-
-    if (!admin) {
-      return "No se encontro el usuario";
+    if (
+      !admin ||
+      !admin?.dataValues?.recoverPasswordExpires ||
+      !admin?.dataValues?.recoverPassword
+    ) {
+      throw new Error("No se encontro el usuario");
     }
 
     const date = new Date().getTime();
@@ -146,8 +147,8 @@ export async function recoverPasswordService(email: string, code: string, passwo
     if (code.trim() !== admin.dataValues.recoverPassword) {
       throw new Error("Codigó inválido");
     }
-
-    const [updateAdminRecover] = await Admin.update(
+    const oldPassword = admin.dataValues.password;
+    const updateAdminRecover = await admin.update(
       {
         password,
         recoverPassword: null,
@@ -155,10 +156,13 @@ export async function recoverPasswordService(email: string, code: string, passwo
       },
       { where: { id: admin.dataValues.id } }
     );
-
-    return { message: "Se cambia la contraseña exitosamente.", update: updateAdminRecover };
+    if (updateAdminRecover.dataValues.password !== oldPassword) {
+      return { message: "Se cambia la contraseña exitosamente.", update: updateAdminRecover };
+    }
+    throw new Error("Hubo un error al actualizar la contraseña");
   } catch (e) {
     const error = e as Error;
+    console.error("recoverPasswordService: ", error);
     throw new Error(error.message);
   }
 }

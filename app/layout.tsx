@@ -1,57 +1,57 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
-import LayoutRecoilRoot from '@/components/layout';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import LayoutRecoilRoot from "@/components/layout";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: 'Tienda Alli',
-    template: '%s | Tienda Alli', // Para títulos dinámicos en páginas hijas
+    default: "Tienda Alli",
+    template: "%s | Tienda Alli", // Para títulos dinámicos en páginas hijas
   },
   description:
-    'Útiles escolares, mochilas, cartucheras, ropa y camperas importadas. Productos de calidad para todas tus necesidades',
+    "Útiles escolares, mochilas, cartucheras, ropa y camperas importadas. Productos de calidad para todas tus necesidades",
   keywords: [
-    'útiles escolares',
-    'mochilas',
-    'cartucheras',
-    'material educativo',
-    'tienda escolar',
-    'ropa importada',
-    'camperas importadas',
-    'moda',
-    'vestimenta',
+    "útiles escolares",
+    "mochilas",
+    "cartucheras",
+    "material educativo",
+    "tienda escolar",
+    "ropa importada",
+    "camperas importadas",
+    "moda",
+    "vestimenta",
   ],
   openGraph: {
-    title: 'Tienda Alli - Útiles Escolares y Ropa Importada',
+    title: "Tienda Alli - Útiles Escolares y Ropa Importada",
     description:
-      'Encuentra los mejores útiles escolares, mochilas, cartucheras y ropa importada de calidad',
-    url: 'https://tienda-alli.vercel.app',
-    siteName: 'Tienda Alli',
+      "Encuentra los mejores útiles escolares, mochilas, cartucheras y ropa importada de calidad",
+    url: "https://tienda-alli.vercel.app",
+    siteName: "Tienda Alli",
     images: [
       {
-        url: 'https://tienda-alli.vercel.app/tienda-alli.webp',
+        url: "https://tienda-alli.vercel.app/tienda-alli.webp",
         width: 1200,
         height: 630,
-        alt: 'Tienda Alli - Productos escolares y ropa importada de calidad',
+        alt: "Tienda Alli - Productos escolares y ropa importada de calidad",
       },
     ],
-    locale: 'es_EC',
-    type: 'website',
+    locale: "es_EC",
+    type: "website",
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'Tienda Alli - Útiles Escolares y Moda',
-    description: 'Los mejores productos escolares y ropa importada para todas tus necesidades',
-    images: ['https://tienda-alli.vercel.app/tienda-alli.webp'],
-    creator: '@BrunoKen',
+    card: "summary_large_image",
+    title: "Tienda Alli - Útiles Escolares y Moda",
+    description: "Los mejores productos escolares y ropa importada para todas tus necesidades",
+    images: ["https://tienda-alli.vercel.app/tienda-alli.webp"],
+    creator: "@BrunoKen",
   },
   alternates: {
-    canonical: 'https://tienda-alli.vercel.app',
+    canonical: "https://tienda-alli.vercel.app",
   },
-  metadataBase: new URL('https://tienda-alli.vercel.app'),
-  authors: [{ name: 'Bruno ken', url: 'https://brunoken.vercel.app/' }],
+  metadataBase: new URL("https://tienda-alli.vercel.app"),
+  authors: [{ name: "Bruno ken", url: "https://brunoken.vercel.app/" }],
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

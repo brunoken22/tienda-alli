@@ -2,10 +2,9 @@ import {
   createProductController,
   getProductsController,
 } from "@/features/product/product.controller";
-import { NextApiRequest } from "next";
 import { NextResponse } from "next/server";
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: Request) {
   try {
     const products = await getProductsController();
     return NextResponse.json(products, { status: 200 });

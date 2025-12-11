@@ -1,21 +1,20 @@
-'use client';
-import { TemplateProduct } from '@/components/templateProduct';
-import { useState } from 'react';
-import { EsqueletonProduct } from './esqueleton';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { CarouselProduct } from './carousel';
-import { X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { shoppingCart } from '@/lib/atom';
-import { useSetRecoilState } from 'recoil';
+"use client";
+import { TemplateProduct } from "@/components/templateProduct";
+import { useState } from "react";
+import { EsqueletonProduct } from "./esqueleton";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { CarouselProduct } from "./carousel";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-context";
 
 export function ProductsFeatured({ featured }: { featured: any }) {
   const [openLinkProduct, setOpenLinkProduct] = useState<string[]>([]);
-  const setShoppingCartUserData = useSetRecoilState(shoppingCart);
+  const { setCart } = useShoppingCartActions();
   const closeModal = () => {
     setOpenLinkProduct([]);
-    document.body.style.overflow = 'auto';
+    document.body.style.overflow = "auto";
   };
 
   return (
@@ -26,19 +25,19 @@ export function ProductsFeatured({ featured }: { featured: any }) {
               key={item.objectID}
               openImg={(data: string[]) => {
                 setOpenLinkProduct(data);
-                document.body.style.overflow = 'hidden';
+                document.body.style.overflow = "hidden";
               }}
               Name={item.Name}
               Images={item.Images.map((itemImages: any) => itemImages.thumbnails.full.url)}
               priceOfert={item.priceOfert}
-              price={item['Unit cost']}
+              price={item["Unit cost"]}
               oferta={item.oferta}
               id={item.objectID}
               type={item.type}
               size={item.talla}
-              addItem={() =>
-                toast.success('¡Se agregó al carrito!', {
-                  position: 'top-right',
+              addToast={() =>
+                toast.success("¡Se agregó al carrito!", {
+                  position: "top-right",
                   autoClose: 3000,
                   hideProgressBar: false,
                   closeOnClick: true,
@@ -46,7 +45,7 @@ export function ProductsFeatured({ featured }: { featured: any }) {
                   draggable: true,
                 })
               }
-              setShoppingCartUserData={setShoppingCartUserData}
+              setCart={setCart}
             />
           ))
         : Array.from({ length: 8 }, (_, i) => <EsqueletonProduct key={i} />)}
@@ -59,7 +58,8 @@ export function ProductsFeatured({ featured }: { featured: any }) {
                 variant='ghost'
                 size='icon'
                 onClick={closeModal}
-                className='text-white hover:bg-white/20 rounded-full'>
+                className='text-white hover:bg-white/20 rounded-full'
+              >
                 <X className='w-6 h-6' />
               </Button>
             </div>

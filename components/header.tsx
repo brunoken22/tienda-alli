@@ -1,9 +1,6 @@
 "use client";
-
-import { openShoppingCart, shoppingCart } from "@/lib/atom";
 import { FormSearchHome } from "@/components/ui/form";
 import Link from "next/link";
-import { useRecoilState } from "recoil";
 import ShoppingCart from "./shoppingCart";
 import { usePathname } from "next/navigation";
 import { getDataCartShopping } from "@/lib/hook";
@@ -11,13 +8,14 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Search, ShoppingCartIcon as CartIcon, Menu, X, MessageCircle } from "lucide-react";
+import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-context";
 
 export function Header() {
   const [openInput, setOpenInput] = useState(false);
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
-  const [openShoppingCartValue, setOpenShoppingCartValue] = useRecoilState(openShoppingCart);
+  const { toggleCart, setCart } = useShoppingCartActions();
+  const { state } = useShoppingCart();
   const pathname = usePathname();
-  const [shoppingCartUserData, setShoppingCartUserData] = useRecoilState(shoppingCart);
 
   useEffect(() => {
     (async () => {
@@ -25,10 +23,10 @@ export function Header() {
         typeof window !== "undefined" ? localStorage.getItem("category") : null
       );
       if (data) {
-        setShoppingCartUserData(data);
+        setCart(data);
       }
     })();
-  }, [setShoppingCartUserData]);
+  }, []);
 
   const navigationItems = [
     { href: "/", label: "Inicio" },
@@ -41,15 +39,14 @@ export function Header() {
   return (
     <>
       {/* Header Principal */}
-      <header className='bg-gradient-to-r from-primary/80 to-primary/90 shadow-lg fixed top-0 left-0 right-0 z-50 backdrop-blur-sm'>
+      <header className=' rounded-bl-xl bg-gradient-to-r from-primary to-primary/90 shadow-lg fixed top-0 left-0 right-0 z-50 backdrop-blur-sm'>
         <div className='container mx-auto px-4'>
           <div className='flex items-center justify-between h-16 md:h-20'>
-            {/* Logo */}
             <Link href='/' className='flex items-center space-x-2 group'>
               <div className='w-8 h-8 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform'>
                 <span className='text-purple-600 font-bold text-lg'>A</span>
               </div>
-              <span className='text-white font-bold text-xl md:text-2xl group-hover:text-purple-200 transition-colors'>
+              <span className='max-lg:hidden text-white font-bold text-xl md:text-2xl group-hover:text-purple-200 transition-colors'>
                 Tienda de ALLI
               </span>
             </Link>
@@ -99,17 +96,17 @@ export function Header() {
                 variant='ghost'
                 size='icon'
                 aria-label='Carrito de compras'
-                onClick={() => setOpenShoppingCartValue(true)}
+                onClick={() => toggleCart()}
                 className='relative text-white hover:bg-white/20'
               >
                 <CartIcon className='w-5 h-5' />
-                {shoppingCartUserData.length > 0 && (
+                {state.cart.length > 0 && (
                   <Badge
                     variant='destructive'
                     size='sm'
                     className='absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-sm'
                   >
-                    {shoppingCartUserData.length}
+                    {state.cart.length}
                   </Badge>
                 )}
               </Button>
@@ -149,6 +146,7 @@ export function Header() {
             </div>
           )}
         </div>
+        <div className=' bg-secondary w-full h-2 mt-16 rounded-tr-3xl' />
       </header>
 
       {/* Overlay de búsqueda mobile */}
@@ -168,7 +166,7 @@ export function Header() {
       )}
 
       {/* Carrito lateral */}
-      {openShoppingCartValue && <ShoppingCart />}
+      {state.isOpen && <ShoppingCart />}
 
       {/* Botón WhatsApp flotante con tooltip horizontal a la izquierda */}
       <div className='fixed bottom-6 right-6 z-40 group'>

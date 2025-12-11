@@ -26,16 +26,14 @@ const Admin = sequelize.define(
         notEmpty: true,
       },
     },
-    // Autenticación
     password: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
-        len: [8, 255], // Longitud mínima recomendada
+        len: [8, 255],
       },
     },
-    // Recuperación de contraseña
     recoverPassword: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -45,12 +43,10 @@ const Admin = sequelize.define(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    // Verificación de cuenta (opcional)
     isVerified: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    // Rol y estado
     role: {
       type: DataTypes.ENUM("admin", "user"),
       defaultValue: "admin",
@@ -77,8 +73,7 @@ const Admin = sequelize.define(
       },
       withRecover: {
         attributes: {
-          include: ["recoverPassword", "recoverPasswordExpires"],
-          exclude: ["password"],
+          include: ["recoverPassword", "recoverPasswordExpires", "id", "password"],
         },
       },
     },
@@ -92,7 +87,7 @@ const Admin = sequelize.define(
         }
       },
       beforeUpdate: async (admin) => {
-        if (admin.dataValues.password) {
+        if (admin.previous("password") && admin.dataValues.password) {
           const bcrypt = await import("bcrypt");
           const salt = await bcrypt.genSalt(10);
           admin.dataValues.password = await bcrypt.hash(admin.dataValues.password, salt);

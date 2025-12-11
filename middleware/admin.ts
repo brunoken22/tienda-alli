@@ -2,8 +2,8 @@ import { AuthService } from "@/lib/jsonwebtoken";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-export function verifyTokenMiddleware(req: Request) {
-  const authHeader = cookies().get("token_admin");
+export async function verifyTokenMiddleware(req: Request) {
+  const authHeader = (await cookies()).get("token_admin");
 
   if (!authHeader || !authHeader.value) {
     return NextResponse.json({ error: "Token no proporcionado" }, { status: 401 });

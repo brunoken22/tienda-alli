@@ -1,8 +1,9 @@
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { useDebouncedCallback } from 'use-debounce';
-import { Button } from '@/components/ui/button';
-import { Search, X } from 'lucide-react';
+"use client";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
+import { Button } from "@/components/ui/button";
+import { Search, X } from "lucide-react";
 
 export function FormSearch({
   value,
@@ -21,19 +22,20 @@ export function FormSearch({
   }, [value]);
   return (
     <form
-      className='flex justify-center items-center bg-gray-200 p-1 gap-3'
+      className='flex justify-center items-center bg-gray-200  gap-3 rounded-md'
       onSubmit={(e: any) => {
         e.preventDefault();
         modValue(e.target?.search.value);
-      }}>
+      }}
+    >
       <input
         type='text'
         name='search'
         id='search'
         onChange={debounced}
         placeholder='Mochila'
-        className='bg-transparent focus-visible:outline-none placeholder-white-500 w-[80%] py-3 px-4 text-base rounded-md'
-        defaultValue={value || ''}
+        className='bg-transparent text-black focus-visible:outline-none placeholder-white-500 w-[80%] py-3 px-4 text-base rounded-md'
+        defaultValue={value || ""}
         ref={inputSearch}
       />
 
@@ -42,10 +44,11 @@ export function FormSearch({
           type='button'
           className='p-3 min-w-[48px] min-h-[48px] flex items-center justify-center'
           onClick={() => {
-            inputSearch.current.value = '';
-            modValue('');
+            inputSearch.current.value = "";
+            modValue("");
           }}
-          aria-label='Limpiar búsqueda'>
+          aria-label='Limpiar búsqueda'
+        >
           <img src='/close.svg' alt='Limpiar' width={16} height={16} />
         </button>
       )}
@@ -53,7 +56,8 @@ export function FormSearch({
       <button
         type='submit'
         className='p-3 min-w-[48px] min-h-[48px] flex items-center justify-center'
-        aria-label='Buscar'>
+        aria-label='Buscar'
+      >
         <img src='/search.svg' alt='Buscar' width={24} height={24} />
       </button>
     </form>
@@ -63,7 +67,7 @@ export function FormSearch({
 export function FormSearchHome() {
   const { push } = useRouter();
   const searchParams = useSearchParams();
-  const [search, setSearch] = useState(searchParams.get('q') || '');
+  const [search, setSearch] = useState(searchParams.get("q") || "");
   const inputSearch: any = useRef();
 
   return (
@@ -72,13 +76,14 @@ export function FormSearchHome() {
       onSubmit={(e: any) => {
         e.preventDefault();
         const params = new URLSearchParams(searchParams);
-        params.set('q', JSON.stringify(e.target.search.value));
-        params.set('price', JSON.stringify([0, 70000]));
-        params.set('type', JSON.stringify([]));
-        params.set('limit', JSON.stringify(15));
-        params.set('offset', JSON.stringify(0));
+        params.set("q", JSON.stringify(e.target.search.value));
+        params.set("price", JSON.stringify([0, 70000]));
+        params.set("type", JSON.stringify([]));
+        params.set("limit", JSON.stringify(15));
+        params.set("offset", JSON.stringify(0));
         push(`/productos?${params.toString()}`);
-      }}>
+      }}
+    >
       <div className='flex-1 flex items-center px-3 py-2'>
         <Search className='w-4 h-4 text-white/70 mr-2' />
         <input
@@ -99,9 +104,10 @@ export function FormSearchHome() {
           size='icon'
           className='text-white/70 hover:text-white hover:bg-white/10 h-8 w-8'
           onClick={() => {
-            setSearch('');
-            inputSearch.current.value = '';
-          }}>
+            setSearch("");
+            inputSearch.current.value = "";
+          }}
+        >
           <X className='w-4 h-4' />
         </Button>
       )}
@@ -110,7 +116,8 @@ export function FormSearchHome() {
         type='submit'
         variant='ghost'
         size='icon'
-        className='text-white/70 hover:text-white hover:bg-white/10 h-8 w-8'>
+        className='text-white/70 hover:text-white hover:bg-white/10 h-8 w-8'
+      >
         <Search className='w-4 h-4' />
       </Button>
     </form>

@@ -1,5 +1,5 @@
-import { atom } from 'recoil';
-// import {TypePropsProduct} from '../types';
+import { atom } from "recoil";
+
 export type TypeCompra = {
   cantidad: number;
   id: string;
@@ -9,11 +9,11 @@ export type TypeCompra = {
   size: string;
 };
 export const shoppingCart = atom({
-  key: 'shoppingCart',
+  key: "shoppingCart",
   default: [] as TypeCompra[],
 });
 
 export const openShoppingCart = atom({
-  key: 'openShoppingCart',
+  key: "openShoppingCart",
   default: false,
 });

@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Eye, ShoppingCart as ShoppingCartIcon, Trash } from 'lucide-react';
-import Image from 'next/image';
-import { useRecoilState } from 'recoil';
-import { shoppingCart } from '@/lib/atom';
-import { InputNumber } from './ui/input';
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { Car, Eye, ShoppingCart as ShoppingCartIcon, Trash } from "lucide-react";
+import Image from "next/image";
+import { InputNumber } from "./ui/input";
+import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-context";
+import { TypeCompra } from "@/lib/atom";
 
 interface TemplateProductProps {
   openImg: (data: string[]) => void;
@@ -17,8 +17,9 @@ interface TemplateProductProps {
   id: string;
   type: string[];
   size?: string[];
-  addItem: () => void;
-  setShoppingCartUserData: React.Dispatch<React.SetStateAction<any[]>>;
+  addToast: () => void;
+  addItem: (cart: TypeCompra) => void;
+  cart: TypeCompra[];
 }
 
 export function TemplateProduct({
@@ -31,10 +32,11 @@ export function TemplateProduct({
   id,
   type,
   size,
+  addToast,
   addItem,
-  setShoppingCartUserData,
+  cart,
 }: TemplateProductProps) {
-  const [selectedSize, setSelectedSize] = useState<string>('');
+  const [selectedSize, setSelectedSize] = useState<string>("");
 
   const handleImageClick = () => openImg(Images);
 
@@ -43,7 +45,7 @@ export function TemplateProduct({
 
     if (!selectedSize && size) return;
 
-    const newItem = {
+    const newItem: TypeCompra = {
       size: selectedSize,
       cantidad: 1,
       id,
@@ -52,16 +54,15 @@ export function TemplateProduct({
       price: priceOfert || price,
     };
 
-    setShoppingCartUserData((prev) => {
-      const exists = prev.find((item) => item.id === id && item.size === selectedSize);
-      if (exists) return prev;
+    const exists = cart.find((item) => item.id === id && item.size === selectedSize);
+    if (exists) return cart;
 
-      const updated = [newItem, ...prev];
-      localStorage.setItem('category', JSON.stringify(updated));
-      return updated;
-    });
+    const updated = [newItem, ...cart];
+    localStorage.setItem("category", JSON.stringify(updated));
 
-    addItem();
+    addItem(newItem);
+
+    addToast();
   };
 
   return (
@@ -71,7 +72,7 @@ export function TemplateProduct({
           <Badge className='absolute top-2 left-2 z-10 bg-red-600 hover:bg-red-700'>Oferta</Badge>
         )}
         <Image
-          src={Images[0] || '/tienda-alli.webp'}
+          src={Images[0] || "/tienda-alli.webp"}
           alt={Name}
           fill
           className='object-cover group-hover:scale-105 transition-transform duration-300'
@@ -83,7 +84,8 @@ export function TemplateProduct({
             size='icon'
             variant='secondary'
             onClick={handleImageClick}
-            className='rounded-full'>
+            className='rounded-full'
+          >
             <Eye className='w-4 h-4' />
           </Button>
         </div>
@@ -96,7 +98,7 @@ export function TemplateProduct({
             {type.map((s, i) => (
               <span key={i} className='capitalize'>
                 {s}
-                {i !== type.length - 1 ? ', ' : ''}
+                {i !== type.length - 1 ? ", " : ""}
               </span>
             ))}
           </p>
@@ -110,7 +112,8 @@ export function TemplateProduct({
                 id='size-select' // Asegúrate de que este ID coincida con el htmlFor del label
                 value={selectedSize}
                 onChange={(e) => setSelectedSize(e.target.value)}
-                className='block w-full px-2 py-1 border rounded-md text-sm mt-1'>
+                className='block w-full px-2 py-1 border rounded-md text-sm mt-1'
+              >
                 <option value=''>Seleccionar talla</option>
                 {size.map((s) => (
                   <option key={s} value={s}>
@@ -140,7 +143,8 @@ export function TemplateProduct({
             aria-label='Agregar al carrito'
             onClick={handleClick}
             disabled={!selectedSize && size ? true : false}
-            className='bg-purple-600 hover:bg-purple-700'>
+            className='bg-purple-600 hover:bg-purple-700'
+          >
             <ShoppingCartIcon className='w-4 h-4 mr-1' />
             Agregar
           </Button>
@@ -166,17 +170,20 @@ export function TemplateShopppingCartProduct({
   size: string;
 }) {
   const [openFocusName, setOpenFocusName] = useState(false);
-  const [shoppingCartValue, setShoppingCartValue] = useRecoilState(shoppingCart);
+  const {
+    state: { cart },
+  } = useShoppingCart();
+  const { setCart } = useShoppingCartActions();
 
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
-    const newShoppingCart = shoppingCartValue.filter(
+    const newShoppingCart = cart.filter(
       (item: any) => item.id !== e.currentTarget.id || item.talla !== size
     );
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('category', JSON.stringify(newShoppingCart));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("category", JSON.stringify(newShoppingCart));
     }
-    setShoppingCartValue(newShoppingCart);
+    setCart(newShoppingCart);
   };
 
   return (
@@ -192,7 +199,8 @@ export function TemplateShopppingCartProduct({
           <p
             onMouseEnter={() => setOpenFocusName(true)}
             onMouseLeave={() => setOpenFocusName(false)}
-            className='text-sm font-medium text-gray-800 truncate cursor-default'>
+            className='text-sm font-medium text-gray-800 truncate cursor-default'
+          >
             {title}
           </p>
           {/* {openFocusName && (
@@ -202,9 +210,9 @@ export function TemplateShopppingCartProduct({
           )} */}
           {size && <span className='text-sm font-medium text-gray-600'>Talle: {size}</span>}
           <h3 className='text-base font-semibold text-gray-900 mt-1'>
-            {price.toLocaleString('es-AR', {
-              style: 'currency',
-              currency: 'ARS',
+            {price.toLocaleString("es-AR", {
+              style: "currency",
+              currency: "ARS",
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
             })}
@@ -217,7 +225,8 @@ export function TemplateShopppingCartProduct({
               onClick={handleDelete}
               id={id}
               className='p-2 rounded  text-red-400 hover:text-red-600  transition-colors cursor-pointer'
-              aria-label='Eliminar producto'>
+              aria-label='Eliminar producto'
+            >
               <Trash size={20} />
             </button>
           </div>

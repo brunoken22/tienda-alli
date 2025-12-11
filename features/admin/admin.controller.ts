@@ -10,7 +10,7 @@ import {
 import { cookies } from "next/headers";
 
 export async function getAdminController() {
-  const token = cookies().get("token_admin")?.value;
+  const token = (await cookies()).get("token_admin")?.value;
   if (!token) throw new Error("Hace falta el token para acceder");
   const verifyToken = AuthService.verifyToken(token);
   if (!verifyToken?.id) throw new Error("Token inválido");
@@ -31,7 +31,7 @@ export async function signinAdminController(email: string, password: string) {
     expires.setDate(expires.getDate() + 7);
     const { role, email, id } = admin.dataValues;
     const token = AuthService.generateToken({ role, email, id });
-    cookies().set("token_admin", token, { expires });
+    (await cookies()).set("token_admin", token, { expires });
     return { signin: true };
   }
   throw new Error("Contraseña o email incorrectos");
@@ -90,7 +90,7 @@ export async function recoverPasswordController(email: string, code: string, pas
       throw new Error("Faltan datos");
     }
     const responseRecoverPasswordService = await recoverPasswordService(email, code, password);
-    return { data: responseRecoverPasswordService, success: false };
+    return { data: responseRecoverPasswordService, success: true };
   } catch (e) {
     const error = e as Error;
     console.error("recoverPasswordController: ", e);

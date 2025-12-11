@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
-import type React from 'react';
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { X, Filter, ChevronDown, ChevronUp } from 'lucide-react';
+import type React from "react";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { X, Filter, ChevronDown, ChevronUp } from "lucide-react";
+import * as Slider from "@radix-ui/react-slider";
 
 interface FiltroSearchProps {
   valueDefault: {
@@ -34,12 +35,12 @@ export function FiltroSearch({
   });
 
   const categories = [
-    { id: 'camperas_mujer', name: 'Camperas Mujer' },
-    { id: 'camperas_hombre', name: 'Camperas Hombre' },
-    { id: 'mochilas', name: 'Mochilas' },
-    { id: 'billeteras', name: 'Billeteras' },
-    { id: 'carteras', name: 'Carteras' },
-    { id: 'riñoneras', name: 'Riñoneras' },
+    { id: "camperas_mujer", name: "Camperas Mujer" },
+    { id: "camperas_hombre", name: "Camperas Hombre" },
+    { id: "mochilas", name: "Mochilas" },
+    { id: "billeteras", name: "Billeteras" },
+    { id: "carteras", name: "Carteras" },
+    { id: "riñoneras", name: "Riñoneras" },
   ];
 
   useEffect(() => {
@@ -74,41 +75,41 @@ export function FiltroSearch({
     selectedCategories.length + (priceRange[0] > 0 || priceRange[1] < 70000 ? 1 : 0);
 
   return (
-    <div className={`${isMobile ? 'h-full flex flex-col text-white' : 'text-foreground'}`}>
+    <div className={`${isMobile ? "h-full flex flex-col text-white" : "text-foreground"}`}>
       {isMobile && (
         <div className='flex items-center justify-between p-4 border-b bg-card'>
           <div className='flex items-center gap-2'>
             <Filter className='w-5 h-5' />
             <h2 className='font-semibold'>Filtros</h2>
             {activeFiltersCount > 0 && (
-              <Badge variant={isMobile ? 'default' : 'secondary'} size='sm'>
+              <Badge variant={isMobile ? "default" : "secondary"} size='sm'>
                 {activeFiltersCount}
               </Badge>
             )}
           </div>
-          <Button variant={isMobile ? 'default' : 'secondary'} size='icon' onClick={closeFilter}>
+          <Button variant={isMobile ? "default" : "secondary"} size='icon' onClick={closeFilter}>
             <X className='w-5 h-5' />
           </Button>
         </div>
       )}
 
-      <div className={`${isMobile ? 'flex-1 overflow-y-auto p-4' : ''} space-y-6`}>
+      <div className={`${isMobile ? "flex-1 overflow-y-auto p-4" : ""} space-y-6`}>
         {children && (
           <div className='space-y-2'>
             <h3 className='font-medium text-sm text-muted-foreground'>Búsqueda</h3>
             {children}
           </div>
         )}
-
         {activeFiltersCount > 0 && (
           <div className='space-y-2'>
             <div className='flex items-center justify-between'>
               <h3 className='font-medium text-sm text-muted-foreground'>Filtros activos</h3>
               <Button
-                variant={isMobile ? 'default' : 'secondary'}
+                variant={isMobile ? "default" : "secondary"}
                 size='sm'
                 onClick={clearAllFilters}
-                className='text-sm'>
+                className='text-sm'
+              >
                 Limpiar todo
               </Button>
             </div>
@@ -118,27 +119,30 @@ export function FiltroSearch({
                 return (
                   <Badge
                     key={categoryId}
-                    variant={isMobile ? 'default' : 'secondary'}
-                    className='text-sm'>
+                    variant={isMobile ? "default" : "secondary"}
+                    className='text-sm'
+                  >
                     {category?.name}
                     <Button
                       variant='ghost'
                       size='icon'
                       className='h-4 w-4 ml-1 hover:bg-destructive hover:text-destructive-foreground'
-                      onClick={() => handleCategoryToggle(categoryId)}>
+                      onClick={() => handleCategoryToggle(categoryId)}
+                    >
                       <X className='w-3 h-3' />
                     </Button>
                   </Badge>
                 );
               })}
               {(priceRange[0] > 0 || priceRange[1] < 70000) && (
-                <Badge variant={isMobile ? 'default' : 'secondary'} className='text-sm'>
+                <Badge variant={isMobile ? "default" : "secondary"} className='text-sm'>
                   ${priceRange[0].toLocaleString()} - ${priceRange[1].toLocaleString()}
                   <Button
                     variant='ghost'
                     size='icon'
                     className='h-4 w-4 ml-1 hover:bg-destructive hover:text-destructive-foreground'
-                    onClick={() => setPriceRange([0, 70000])}>
+                    onClick={() => setPriceRange([0, 70000])}
+                  >
                     <X className='w-3 h-3' />
                   </Button>
                 </Badge>
@@ -146,13 +150,13 @@ export function FiltroSearch({
             </div>
           </div>
         )}
-
         {/* Categorías */}
         <div className='space-y-3'>
           <Button
             variant='primary'
-            onClick={() => toggleSection('categories')}
-            className='w-full justify-between p-0 h-auto font-medium text-sm'>
+            onClick={() => toggleSection("categories")}
+            className='w-full justify-between p-0 h-auto font-medium text-sm'
+          >
             Categorías
             {expandedSections.categories ? (
               <ChevronUp className='w-4 h-4' />
@@ -165,7 +169,8 @@ export function FiltroSearch({
               {categories.map((category) => (
                 <label
                   key={category.id}
-                  className='flex items-center space-x-2 cursor-pointer group'>
+                  className='flex items-center space-x-2 cursor-pointer group'
+                >
                   <input
                     type='checkbox'
                     checked={selectedCategories.includes(category.id)}
@@ -180,98 +185,106 @@ export function FiltroSearch({
             </div>
           )}
         </div>
-
         {/* Precio */}
-        <div className='space-y-3'>
-          <Button
-            variant='primary'
-            onClick={() => toggleSection('price')}
-            className='w-full justify-between p-0 h-auto font-medium text-sm'
-            aria-expanded={expandedSections.price} // Mejora accesibilidad
+        <div className='space-y-3 '>
+          <h3
+            // onClick={() => toggleSection("categories")}
+            className='w-full  text-xl font-bold'
           >
             Precio
-            {expandedSections.price ? (
-              <ChevronUp className='w-4 h-4' aria-hidden='true' />
-            ) : (
-              <ChevronDown className='w-4 h-4' aria-hidden='true' />
-            )}
-          </Button>
+          </h3>
+          <div className='relative py-2'>
+            <Slider.Root
+              className='relative flex items-center w-full h-5'
+              value={[priceRange[0], priceRange[1]]}
+              max={70000}
+              step={1000}
+              onValueChange={(value) => setPriceRange([value[0], value[1]])}
+            >
+              <Slider.Track className='bg-gray-300 relative flex-1 rounded-full h-1.5'>
+                <Slider.Range className='absolute bg-primary rounded-full h-full' />
+              </Slider.Track>
 
-          {expandedSections.price && (
-            <div className='space-y-4'>
-              {/* Inputs de número */}
-              <div className='grid grid-cols-2 gap-2'>
-                <div>
-                  <label htmlFor='min-price' className='block text-sm text-muted-foreground mb-1'>
-                    Mínimo
-                  </label>
-                  <input
-                    id='min-price'
-                    type='number'
-                    value={priceRange[0]}
-                    onChange={(e) => handlePriceChange(0, Number(e.target.value))}
-                    className='w-full text-black px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-primary'
-                    min='0'
-                    max={priceRange[1]}
-                  />
+              {/* Thumb mínimo con etiqueta */}
+              <Slider.Thumb
+                className='relative block w-6 h-6 bg-white border-2 border-primary rounded-full shadow-lg hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary transition-transform'
+                aria-label='Precio mínimo'
+              >
+                <div className='absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded-md whitespace-nowrap'>
+                  ${priceRange[0].toLocaleString()}
+                  <div className='absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45'></div>
                 </div>
-                <div>
-                  <label htmlFor='max-price' className='block text-sm text-muted-foreground mb-1'>
-                    Máximo
-                  </label>
-                  <input
-                    id='max-price'
-                    type='number'
-                    value={priceRange[1]}
-                    onChange={(e) => handlePriceChange(1, Number(e.target.value))}
-                    className='w-full text-black px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-primary'
-                    min={priceRange[0]}
-                    max='100000'
-                  />
-                </div>
-              </div>
+              </Slider.Thumb>
 
-              {/* Sliders */}
-              <div className='space-y-2'>
-                <label id='min-range-label' htmlFor='min-range' className='sr-only'>
-                  Rango mínimo de precio
-                </label>
+              {/* Thumb máximo con etiqueta */}
+              <Slider.Thumb
+                className='relative block w-6 h-6 bg-white border-2 border-primary rounded-full shadow-lg hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary transition-transform'
+                aria-label='Precio máximo'
+              >
+                <div className='absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded-md whitespace-nowrap'>
+                  ${priceRange[1].toLocaleString()}
+                  <div className='absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45'></div>
+                </div>
+              </Slider.Thumb>
+            </Slider.Root>
+
+            {/* Límites del slider */}
+            <div className='flex justify-between mt-2 text-sm text-gray-200'>
+              <span>$0</span>
+              <span>$70k</span>
+            </div>
+          </div>
+
+          {/* Inputs manuales */}
+          <div className='grid grid-cols-2 gap-4'>
+            <div>
+              <label htmlFor='min-price' className='block text-sm font-medium text-gray-200 mb-2'>
+                Precio mínimo
+              </label>
+              <div className='relative'>
+                <span className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500'>
+                  $
+                </span>
                 <input
-                  id='min-range'
-                  type='range'
-                  min='0'
-                  max='70000'
+                  id='min-price'
+                  type='number'
                   value={priceRange[0]}
-                  onChange={(e) => handlePriceChange(0, Number(e.target.value))}
-                  className='w-full'
-                  aria-labelledby='min-range-label price-range-text'
-                  aria-valuetext={`${priceRange[0].toLocaleString()}`}
-                />
-                <label id='max-range-label' htmlFor='max-range' className='sr-only'>
-                  Rango máximo de precio
-                </label>
-                <input
-                  id='max-range'
-                  type='range'
+                  onChange={(e) => {
+                    const newMin = Math.min(Number(e.target.value), priceRange[1]);
+                    setPriceRange([newMin, priceRange[1]]);
+                  }}
+                  className='w-full pl-8 pr-4 py-3 text-base border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent'
                   min='0'
-                  max='70000'
-                  value={priceRange[1]}
-                  onChange={(e) => handlePriceChange(1, Number(e.target.value))}
-                  className='w-full'
-                  aria-labelledby='max-range-label price-range-text'
-                  aria-valuetext={`${priceRange[1].toLocaleString()}`}
+                  max={priceRange[1]}
+                  step='1000'
                 />
-              </div>
-
-              {/* Texto descriptivo */}
-              <div
-                id='price-range-text'
-                className='text-center text-sm text-muted-foreground'
-                role='status'>
-                ${priceRange[0].toLocaleString()} - ${priceRange[1].toLocaleString()}
               </div>
             </div>
-          )}
+
+            <div>
+              <label htmlFor='max-price' className='block text-sm font-medium text-gray-200 mb-2'>
+                Precio máximo
+              </label>
+              <div className='relative'>
+                <span className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500'>
+                  $
+                </span>
+                <input
+                  id='max-price'
+                  type='number'
+                  value={priceRange[1]}
+                  onChange={(e) => {
+                    const newMax = Math.max(Number(e.target.value), priceRange[0]);
+                    setPriceRange([priceRange[0], newMax]);
+                  }}
+                  className='w-full pl-8 pr-4 py-3 text-base border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent'
+                  min={priceRange[0]}
+                  max='70000'
+                  step='1000'
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -279,7 +292,8 @@ export function FiltroSearch({
         <div className='border-t p-4 bg-card'>
           <Button
             className='w-full text-white bg-purple-600 hover:bg-purple-700'
-            onClick={closeFilter}>
+            onClick={closeFilter}
+          >
             Aplicar filtros
           </Button>
         </div>

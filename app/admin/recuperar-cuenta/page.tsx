@@ -2,8 +2,8 @@
 
 import type React from "react";
 
-import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +25,7 @@ interface PasswordStrength {
 type Step = "email" | "code" | "reset";
 
 export default function ForgotPasswordPage() {
+  const { push, replace } = useRouter();
   const searchParams = useSearchParams();
   const resetCode = searchParams.get("code");
   const resetEmail = searchParams.get("email");
@@ -103,6 +104,7 @@ export default function ForgotPasswordPage() {
         setEmailError(responseSendCodePassword.message);
         return;
       }
+      replace(`/admin/recuperar-cuenta?email=${email}`);
       setEmailSent(true);
       setCurrentStep("code");
     } catch (error) {
@@ -116,7 +118,7 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setCodeError("");
 
-    if (code.length < 6) {
+    if (code.length !== 5) {
       setCodeError("El código debe tener al menos 6 caracteres");
       return;
     }
@@ -131,8 +133,7 @@ export default function ForgotPasswordPage() {
 
       setCodeVerified(true);
       setCurrentStep("reset");
-      // Store token or pass it to next step
-      // sessionStorage.setItem("resetToken", token);
+      replace(`/admin/recuperar-cuenta?email=${email}&code=${code}`);
     } catch (error) {
       setCodeError("Error de conexión. Intenta nuevamente");
     } finally {
@@ -157,16 +158,34 @@ export default function ForgotPasswordPage() {
 
       setResetSuccess(true);
       setTimeout(() => {
-        // Redirect to login or home
-        window.location.href = "/login";
+        push("/admin/login");
       }, 2000);
-    } catch (error) {
+    } catch (e) {
+      const error = e as Error;
       console.error("Reset error:", error);
-      alert("Error al resetear la contraseña");
+      alert(error.message);
     } finally {
       setLoadingReset(false);
     }
   };
+
+  useEffect(() => {
+    // Obtener los parámetros actuales
+    const code = searchParams.get("code");
+    const email = searchParams.get("email");
+
+    console.log("Parámetros actuales:", { code, email });
+
+    if (email) {
+      setEmailSent(true);
+      console.log("Email detectado en URL");
+    }
+
+    if (code) {
+      setCodeVerified(true);
+      console.log("código detectado en URL");
+    }
+  }, [searchParams]);
 
   return (
     <div className='flex items-center justify-center border-2 !pt-24'>
@@ -239,14 +258,14 @@ export default function ForgotPasswordPage() {
                   <Input
                     id='code'
                     type='text'
-                    placeholder='Ingresa el código de 6 dígitos'
+                    placeholder='Ingresa el código de 5 dígitos'
                     value={code}
                     onChange={(e) => {
                       setCode(e.target.value.toUpperCase());
                       setCodeError("");
                     }}
                     disabled={codeVerified}
-                    maxLength={10}
+                    maxLength={5}
                     className={codeError ? "border-destructive" : ""}
                   />
                   {codeError && (
@@ -263,7 +282,7 @@ export default function ForgotPasswordPage() {
 
                 <Button
                   type='submit'
-                  disabled={code.length < 6 || loadingCode || codeVerified}
+                  disabled={code.length !== 5 || loadingCode || codeVerified}
                   className='w-full'
                   size='lg'
                 >

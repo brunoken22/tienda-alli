@@ -17,7 +17,7 @@ export async function updateResetPassword(id: string, password: string, newPassw
 
 export async function sendCodePassword(email: string) {
   try {
-    const response = await fetch("/api/admin/recuperar-cuenta", {
+    const response = await fetch("/api/admin/recover-password", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -51,14 +51,15 @@ export async function verifyCodePassword(email: string, code: string) {
 
 export async function updateRecoverPassword(email: string, code: string, password: string) {
   try {
-    const response = await fetch("/api/admin/recover-password/verify", {
-      method: "POST",
+    const response = await fetch("/api/admin/recover-password", {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ email, code, password }),
     });
     const data = await response.json();
+    return data;
   } catch (e) {
     const error = e as Error;
     return { message: error.message, success: false };

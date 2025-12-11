@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function NotFound() {
   return (
@@ -12,7 +12,8 @@ export default function NotFound() {
         strokeWidth='1.5'
         fill='none'
         strokeLinecap='round'
-        strokeLinejoin='round'>
+        strokeLinejoin='round'
+      >
         <path stroke='none' d='M0 0h24v24H0z' fill='none' />
         <path d='M4 8v-2a2 2 0 0 1 2 -2h2' />
         <path d='M4 16v2a2 2 0 0 0 2 2h2' />
@@ -29,7 +30,8 @@ export default function NotFound() {
       <div className='text-center flex flex-col gap-4'>
         <Link
           href='/'
-          className='hover:opacity-60 bg-secundary text-primary dark:text-secundary dark:bg-primary p-4 pb-2 pt-2'>
+          className='hover:opacity-60 bg-secundary text-primary dark:text-secundary dark:bg-primary p-4 pb-2 pt-2'
+        >
           Ir a Inicio
         </Link>
       </div>

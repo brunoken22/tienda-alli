@@ -1,33 +1,36 @@
-import { shoppingCart } from "@/lib/atom";
+import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-context";
 import React, { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
 
 function InputNumber({ cantidad, id, talla }: { cantidad: number; id: string; talla?: string }) {
   const [cantidadState, setCantidadState] = useState(cantidad || 1);
-  const [shoppingCartValue, setShoppingCartValue] = useRecoilState(shoppingCart);
+  const { setCart } = useShoppingCartActions();
+  const {
+    state: { cart },
+  } = useShoppingCart();
   useEffect(() => {
     setCantidadState(cantidad);
   }, [cantidad]);
 
   useEffect(() => {
-    setShoppingCartValue((prev) => {
-      return prev.map((item) => {
-        if (item.id == id) {
-          if (talla && item.size !== talla) {
-            return item;
-          }
-          return { ...item, cantidad: cantidadState };
+    const newCart = cart.map((item) => {
+      if (item.id == id) {
+        if (talla && item.size !== talla) {
+          return item;
         }
+        return { ...item, cantidad: cantidadState };
+      }
 
-        return item;
-      });
+      return item;
     });
+    setCart(newCart);
   }, [cantidadState]);
+
   useEffect(() => {
-    if (shoppingCartValue.length) {
-      return localStorage.setItem("category", JSON.stringify(shoppingCartValue));
+    if (cart.length) {
+      return localStorage.setItem("category", JSON.stringify(cart));
     }
-  }, [shoppingCartValue]);
+  }, [cart]);
+
   const handleCantidadChange = (e: React.ChangeEvent) => {
     e.preventDefault();
     const target = e.target as HTMLInputElement;
