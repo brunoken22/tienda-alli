@@ -95,15 +95,7 @@ export async function getDataCartShopping(ids: string | null) {
   const data = await fetcher([`/api/product/cartShopping`, option]);
   return data.length ? data : [];
 }
-export async function getProductFeatured() {
-  const data = await fetcher([`/api/product/featured`]);
-  return data;
-}
-export async function getFrontPage(): Promise<ProductFrontPage[]> {
-  const response = await fetch("/api/product/frontPage", { cache: "no-cache" });
-  const data = await response.json();
-  return data;
-}
+
 export function useCartCalculations(items: TypeCompra[]) {
   return useMemo(() => {
     const total = items.reduce(

@@ -11,7 +11,9 @@ export default function LayoutRecoilRoot({ children }: { children: React.ReactNo
       <Header />
       <Suspense>
         <div
-          className={`${pathname.includes("/admin/dashboard") ? "" : "container"}  m-auto mt-24`}
+          className={`${
+            pathname.includes("/admin/dashboard") ? "" : "container"
+          }  m-auto  bg-secondary rounded-tr-[30px]  pt-2`}
         >
           {children}
         </div>

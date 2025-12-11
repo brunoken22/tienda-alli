@@ -1,20 +1,49 @@
-export const dynamic = 'force-dynamic';
+import { CarouselHeader } from "@/components/carousel";
+import { ProductsFeatured } from "@/components/featured";
+import FeaturedFilter from "@/components/featuredFilter";
+import { ProductFrontPage } from "@/lib/hook";
+import Link from "next/link";
+import { ArrowRight, Truck, Shield, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import baseURL from "@/utils/baseUrl";
 
-import { CarouselHeader } from '@/components/carousel';
-import { ProductsFeatured } from '@/components/featured';
-import FeaturedFilter from '@/components/featuredFilter';
-import { getFrontPage, getProductFeatured } from '@/lib/hook';
-import Link from 'next/link';
-import { ArrowRight, Truck, Shield, Clock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+async function getFrontPage() {
+  try {
+    const response = await fetch(`${baseURL}/api/product/frontPage`);
+    const data = await response.json();
+    return [
+      baseURL + "/billeteras.webp",
+      baseURL + "/hombre.webp",
+      baseURL + "/mochilas.webp",
+      baseURL + "mujer./webp",
+    ];
+  } catch (e) {
+    return [
+      baseURL + "/billeteras.webp",
+      baseURL + "/hombre.webp",
+      baseURL + "/mochilas.webp",
+      baseURL + "mujer./webp",
+    ];
+  }
+}
+
+async function getProductFeatured() {
+  try {
+    const response = await fetch(`${baseURL}/api/product/featured`);
+    const data = await response.json();
+    return data;
+  } catch (e) {
+    return [];
+  }
+}
 
 export default async function Home() {
   const data = await getFrontPage();
   const featured = await getProductFeatured();
   return (
-    <div className='min-h-screen bg-gradient-to-b from-background to-muted/20 '>
+    <div className=''>
       {/* Hero Section */}
-      <section className='relative overflow-hidden mt-20'>
+      <section className='relative overflow-hidden '>
         <div className='relative rounded-2xl overflow-hidden shadow-2xl  mt-9 mb-9'>
           <div className='h-[300px] md:h-[500px]'>
             <CarouselHeader data={data} />
@@ -71,8 +100,9 @@ export default async function Home() {
             rápida y segura.
           </p>
           <Link
-            href={'/productos'}
-            className='flex items-center m-auto w-max bg-secundary p-3 text-nowrap rounded-md text-primary hover:bg-primary hover:text-white transition-colors '>
+            href={"/productos"}
+            className='flex items-center m-auto w-max bg-secondary p-3 text-nowrap rounded-md text-primary hover:bg-primary hover:text-white transition-colors '
+          >
             Explorar Productos
             <ArrowRight className='ml-2  text-inherit' size={16} />
           </Link>
@@ -91,40 +121,42 @@ export default async function Home() {
       </section>
 
       {/* Featured Products Section */}
-      <section className='py-16 bg-muted/30'>
-        <div className='container mx-auto px-4 max-w-7xl'>
-          <div className='flex items-center justify-between mb-12'>
-            <div>
-              <h2 className='text-3xl md:text-4xl font-bold mb-2'>Productos Destacados</h2>
-              <p className='text-muted-foreground'>Los favoritos de nuestros clientes</p>
+      {featured?.lenght ? (
+        <section className='py-16 bg-muted/30'>
+          <div className='container mx-auto px-4 max-w-7xl'>
+            <div className='flex items-center justify-between mb-12'>
+              <div>
+                <h2 className='text-3xl md:text-4xl font-bold mb-2'>Productos Destacados</h2>
+                <p className='text-muted-foreground'>Los favoritos de nuestros clientes</p>
+              </div>
+              <div className='hidden md:block'>
+                <Link href='/productos'>
+                  <Button variant='outline' className='group'>
+                    Ver todos
+                    <ArrowRight className='w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform' />
+                  </Button>
+                </Link>
+              </div>
             </div>
-            <div className='hidden md:block'>
+
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
+              <ProductsFeatured featured={featured} />
+            </div>
+
+            <div className='md:hidden text-center mt-8'>
               <Link href='/productos'>
                 <Button variant='outline' className='group'>
-                  Ver todos
+                  Ver todos los productos
                   <ArrowRight className='w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform' />
                 </Button>
               </Link>
             </div>
           </div>
-
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-            <ProductsFeatured featured={featured} />
-          </div>
-
-          <div className='md:hidden text-center mt-8'>
-            <Link href='/productos'>
-              <Button variant='outline' className='group'>
-                Ver todos los productos
-                <ArrowRight className='w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform' />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       {/* Newsletter Section */}
-      {/* <section className='py-16 bg-card border-t'>
+      <section className='py-16 bg-card border-t'>
         <div className='container mx-auto px-4 max-w-7xl'>
           <div className='max-w-2xl mx-auto text-center'>
             <h2 className='text-2xl md:text-3xl font-bold mb-4'>
@@ -143,7 +175,7 @@ export default async function Home() {
             </div>
           </div>
         </div>
-      </section> */}
+      </section>
     </div>
   );
 }

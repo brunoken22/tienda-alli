@@ -2,7 +2,7 @@
 const nextConfig = {
   serverExternalPackages: ["sequelize", "pg", "pg-hstore"],
   images: {
-    domains: ["v5.airtableusercontent.com", "res.cloudinary.com"],
+    domains: ["v5.airtableusercontent.com", "res.cloudinary.com", "localhost"],
   },
 };
 

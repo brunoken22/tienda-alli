@@ -1,5 +1,4 @@
 export const dynamic = "force-dynamic";
-import { createProductController } from "@/features/product/product.controller";
 import { searchProduct } from "@/lib/controllers/product";
 import { NextResponse } from "next/server";
 

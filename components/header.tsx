@@ -39,115 +39,118 @@ export function Header() {
   return (
     <>
       {/* Header Principal */}
-      <header className=' rounded-bl-xl bg-gradient-to-r from-primary to-primary/90 shadow-lg fixed top-0 left-0 right-0 z-50 backdrop-blur-sm'>
-        <div className='container mx-auto px-4'>
-          <div className='flex items-center justify-between h-16 md:h-20'>
-            <Link href='/' className='flex items-center space-x-2 group'>
-              <div className='w-8 h-8 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform'>
-                <span className='text-purple-600 font-bold text-lg'>A</span>
-              </div>
-              <span className='max-lg:hidden text-white font-bold text-xl md:text-2xl group-hover:text-purple-200 transition-colors'>
-                Tienda de ALLI
-              </span>
-            </Link>
+      <div className='bg-secondary'>
+        <header className=' max-sm:rounded-bl-[30px] bg-primary/90 '>
+          <div className='container mx-auto px-4'>
+            <div className='flex items-center justify-between h-16 md:h-20'>
+              <Link href='/' className='flex items-center space-x-2 group'>
+                <div className='w-8 h-8 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform'>
+                  <span className='text-purple-600 font-bold text-lg'>A</span>
+                </div>
+                <span className='max-lg:hidden text-white font-bold text-xl md:text-2xl group-hover:text-purple-200 transition-colors'>
+                  Tienda de ALLI
+                </span>
+              </Link>
 
-            {/* Búsqueda Desktop */}
-            {pathname !== "/productos" && (
-              <div className='hidden md:flex flex-1 max-w-md mx-8'>
-                <FormSearchHome />
-              </div>
-            )}
-
-            {/* Navegación Desktop */}
-            <nav className='hidden md:flex items-center space-x-6'>
-              {navigationItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`relative px-3 py-2 text-sm font-medium transition-colors ${
-                    isActivePath(item.href) ? "text-yellow-300" : "text-white hover:text-purple-200"
-                  }`}
-                >
-                  {item.label}
-                  {isActivePath(item.href) && (
-                    <div className='absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-300 rounded-full' />
-                  )}
-                </Link>
-              ))}
-            </nav>
-
-            {/* Acciones Desktop */}
-            <div className='flex items-center space-x-4'>
-              {/* Búsqueda Mobile */}
-              {!openInput && pathname !== "/productos" && (
-                <Button
-                  variant='ghost'
-                  size='icon'
-                  aria-label='Buscar producto'
-                  onClick={() => setOpenInput(true)}
-                  className='md:hidden text-white hover:bg-white/20'
-                >
-                  <Search className='w-5 h-5' />
-                </Button>
+              {/* Búsqueda Desktop */}
+              {pathname !== "/productos" && (
+                <div className='hidden md:flex flex-1 max-w-md mx-8'>
+                  <FormSearchHome />
+                </div>
               )}
 
-              {/* Carrito */}
-              <Button
-                variant='ghost'
-                size='icon'
-                aria-label='Carrito de compras'
-                onClick={() => toggleCart()}
-                className='relative text-white hover:bg-white/20'
-              >
-                <CartIcon className='w-5 h-5' />
-                {state.cart.length > 0 && (
-                  <Badge
-                    variant='destructive'
-                    size='sm'
-                    className='absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-sm'
-                  >
-                    {state.cart.length}
-                  </Badge>
-                )}
-              </Button>
-
-              {/* Menu Mobile */}
-              <Button
-                variant='ghost'
-                aria-label='Menu Mobile'
-                size='icon'
-                onClick={() => setOpenMobileMenu(!openMobileMenu)}
-                className='md:hidden text-white hover:bg-white/20'
-              >
-                {openMobileMenu ? <X className='w-5 h-5' /> : <Menu className='w-5 h-5' />}
-              </Button>
-            </div>
-          </div>
-
-          {/* Navegación Mobile */}
-          {openMobileMenu && (
-            <div className='md:hidden border-t border-purple-500/30 py-4'>
-              <nav className='flex flex-col space-y-2'>
+              {/* Navegación Desktop */}
+              <nav className='hidden md:flex items-center space-x-6'>
                 {navigationItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    onClick={() => setOpenMobileMenu(false)}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                    className={`relative px-3 py-2 text-sm font-medium transition-colors ${
                       isActivePath(item.href)
-                        ? "bg-white/20 text-yellow-300"
-                        : "text-white hover:bg-white/10"
+                        ? "text-yellow-300"
+                        : "text-white hover:text-purple-200"
                     }`}
                   >
                     {item.label}
+                    {isActivePath(item.href) && (
+                      <div className='absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-300 rounded-full' />
+                    )}
                   </Link>
                 ))}
               </nav>
+
+              {/* Acciones Desktop */}
+              <div className='flex items-center space-x-4'>
+                {/* Búsqueda Mobile */}
+                {!openInput && pathname !== "/productos" && (
+                  <Button
+                    variant='ghost'
+                    size='icon'
+                    aria-label='Buscar producto'
+                    onClick={() => setOpenInput(true)}
+                    className='md:hidden text-white hover:bg-white/20'
+                  >
+                    <Search className='w-5 h-5' />
+                  </Button>
+                )}
+
+                {/* Carrito */}
+                <Button
+                  variant='ghost'
+                  size='icon'
+                  aria-label='Carrito de compras'
+                  onClick={() => toggleCart()}
+                  className='relative text-white hover:bg-white/20'
+                >
+                  <CartIcon className='w-5 h-5' />
+                  {state.cart.length > 0 && (
+                    <Badge
+                      variant='destructive'
+                      size='sm'
+                      className='absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-sm'
+                    >
+                      {state.cart.length}
+                    </Badge>
+                  )}
+                </Button>
+
+                {/* Menu Mobile */}
+                <Button
+                  variant='ghost'
+                  aria-label='Menu Mobile'
+                  size='icon'
+                  onClick={() => setOpenMobileMenu(!openMobileMenu)}
+                  className='md:hidden text-white hover:bg-white/20'
+                >
+                  {openMobileMenu ? <X className='w-5 h-5' /> : <Menu className='w-5 h-5' />}
+                </Button>
+              </div>
             </div>
-          )}
-        </div>
-        <div className=' bg-secondary w-full h-2 mt-16 rounded-tr-3xl' />
-      </header>
+
+            {/* Navegación Mobile */}
+            {openMobileMenu && (
+              <div className='md:hidden border-t border-purple-500/30 py-4'>
+                <nav className='flex flex-col space-y-2'>
+                  {navigationItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setOpenMobileMenu(false)}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                        isActivePath(item.href)
+                          ? "bg-white/20 text-yellow-300"
+                          : "text-white hover:bg-white/10"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+            )}
+          </div>
+        </header>
+      </div>
 
       {/* Overlay de búsqueda mobile */}
       {openInput && pathname !== "/productos" && (
