@@ -99,12 +99,12 @@ export default function ProductCarousel({ className }: { className?: string }) {
         }}
         pagination={false}
         modules={[Autoplay, Navigation]}
-        className='overflow-visible'
+        className='!overflow-y-visible'
       >
         {products.map((product) => (
           <SwiperSlide key={product.id}>
-            <Card className='bg-secondary p-2 hover:shadow-xl transition-all duration-300 hover:-translate-y-1'>
-              <CardContent className='p-4'>
+            <Card className='bg-primary/20  shadow-sm   transition-all duration-300 hover:-translate-y-1'>
+              <CardContent className='p-0'>
                 <div className='h-48 mb-4 overflow-hidden rounded-lg bg-muted'>
                   <img
                     src={product.image || "/placeholder.svg"}
@@ -112,7 +112,7 @@ export default function ProductCarousel({ className }: { className?: string }) {
                     className='h-full w-full object-cover transition-transform duration-500 hover:scale-110'
                   />
                 </div>
-                <div className='space-y-2'>
+                <div className='space-2 p-3'>
                   <h3 className='font-semibold text-lg'>{product.name}</h3>
                   <p className='text-sm text-muted-foreground line-clamp-2'>
                     {product.description}
