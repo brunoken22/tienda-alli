@@ -15,8 +15,8 @@ export function CarouselHeader({ data }: { data: string[] }) {
         spaceBetween={0}
         centeredSlides={true}
         autoplay={{
-          delay: 4000,
-          disableOnInteraction: false,
+          delay: 1000,
+          disableOnInteraction: true,
         }}
         pagination={{
           clickable: true,
@@ -30,10 +30,10 @@ export function CarouselHeader({ data }: { data: string[] }) {
           <SwiperSlide key={product || index}>
             <Link href={`/productos`} className='block relative w-full h-full group'>
               {/* Overlay con gradiente para mejor legibilidad */}
-              <div className=' absolute  inset-0 bg-gradient-to-t from-black/90 via-black/90 to-black/90 group-hover:opacity-80 transition-opacity z-10' />
+              <div className=' absolute  inset-0 bg-gradient-to-t from-black/90  to-primary/60 group-hover:opacity-90 transition-opacity z-10' />
 
               <Image
-                src={"/tienda-alli.webp"}
+                src={product || "/tienda-alli.webp"}
                 alt={"Banner"}
                 fill
                 className='object-contain relative z-20'

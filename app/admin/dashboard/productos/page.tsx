@@ -115,6 +115,8 @@ export default function ProductsPage() {
       productData.title.trim()[0].toUpperCase() + productData.title.trim().slice(1)
     );
     formData.append("price", productData.price.toString());
+    formData.append("priceOffer", productData.priceOffer.toString());
+
     // formData.append("stock", productData.stock.toString());
     formData.append(
       "description",

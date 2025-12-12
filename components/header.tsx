@@ -41,7 +41,7 @@ export function Header() {
       {/* Header Principal */}
       <div className='bg-secondary'>
         <header className=' max-sm:rounded-bl-[30px] bg-primary/90 '>
-          <div className='container mx-auto px-4'>
+          <div className='max-w-7xl mx-auto px-4'>
             <div className='flex items-center justify-between h-16 md:h-20'>
               <Link href='/' className='flex items-center space-x-2 group'>
                 <div className='w-8 h-8 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform'>

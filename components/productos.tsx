@@ -93,7 +93,7 @@ export default function ProductosPage() {
   const totalPages = Math.ceil(totalResults / 15);
 
   return (
-    <div className='min-h-screen bg-background max-md:p-3  '>
+    <div className='min-h-screen  max-md:p-3  '>
       {/* Header de búsqueda móvil */}
       {openInput && (
         <div className='fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden'>
@@ -137,7 +137,7 @@ export default function ProductosPage() {
 
       <div className='flex gap-8'>
         {/* Sidebar de filtros - Desktop */}
-        <aside className='hidden lg:block w-80 flex-shrink-0 bg-gradient-to-r from-primary to-primary/90  text-secondary p-4 max-mdp-2 rounded-t-lg'>
+        <aside className='hidden lg:block w-80 h-full flex-shrink-0 bg-primary/90  text-secondary p-4 max-mdp-2 rounded-t-lg'>
           <div className='sticky top-24 bottom-0  '>
             <h2 className='font-semibold text-lg mb-4 flex items-center'>
               <SlidersHorizontal className='w-5 h-5 mr-2' />
