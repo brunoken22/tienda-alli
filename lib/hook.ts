@@ -3,51 +3,6 @@ import useSWR from "swr";
 import { useMemo } from "react";
 import { TypeCompra } from "./atom";
 
-export type ProductFrontPage = {
-  Name: string;
-  Images: { url: string }[]; // Puedes ajustar esto según cómo venga exactamente
-  "Unit cost": number;
-  type: string[];
-  featured: boolean;
-  frontPage: boolean;
-  talla: string[];
-  objectID: string;
-  _highlightResult?: any; // Puedes tipar esto mejor si lo usas
-};
-type Thumbnail = {
-  url: string;
-  width: number;
-  height: number;
-};
-
-type Thumbnails = {
-  small: Thumbnail;
-  large: Thumbnail;
-  full: Thumbnail;
-};
-
-type ProductImage = {
-  id: string;
-  filename: string;
-  size: number;
-  type: string;
-  url: string;
-  width: number;
-  height: number;
-  thumbnails: Thumbnails;
-};
-
-export type Product = {
-  Name: string;
-  "Unit cost": number;
-  priceOfert: number;
-  oferta: string;
-  talla: string[];
-  type: string[];
-  objectID: string;
-  Images: ProductImage[];
-};
-
 async function fetcher(dataParams: any[]) {
   const option = dataParams[1] || {};
   const response = await fetch(
@@ -68,7 +23,7 @@ export function GetDataProduct(
 ) {
   const { data, isLoading } = useSWR(
     [
-      `/api/product${search ? "?q=" + search : ""}${
+      `/api/admin/product${search ? "?q=" + search : ""}${
         typePrice?.length && search
           ? "&price=" + JSON.stringify(typePrice)
           : "?price=" + JSON.stringify(typePrice)
@@ -84,6 +39,7 @@ export function GetDataProduct(
   );
   return { data, isLoading };
 }
+
 export async function getDataCartShopping(ids: string | null) {
   const option = {
     method: "POST",

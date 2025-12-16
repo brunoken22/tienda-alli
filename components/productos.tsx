@@ -1,5 +1,5 @@
 "use client";
-import { GetDataProduct, type Product } from "@/lib/hook";
+import { GetDataProduct } from "@/lib/hook";
 import { EsqueletonProduct } from "@/components/esqueleton";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -24,6 +24,7 @@ import {
   ArrowUpDown,
 } from "lucide-react";
 import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-context";
+import { ProductType } from "@/types/product";
 
 export default function ProductosPage() {
   const { replace } = useRouter();
@@ -92,8 +93,9 @@ export default function ProductosPage() {
   const currentPage = Math.floor(offset / 15) + 1;
   const totalPages = Math.ceil(totalResults / 15);
 
+  console.log(data);
   return (
-    <div className='min-h-screen  max-md:p-3  '>
+    <div className='min-h-screen  max-md:p-3  py-8'>
       {/* Header de búsqueda móvil */}
       {openInput && (
         <div className='fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden'>
@@ -158,8 +160,8 @@ export default function ProductosPage() {
         {/* Contenido principal */}
         <main className='flex-1 min-w-0'>
           {/* Header de resultados */}
-          {data?.results?.length ? (
-            <div className='bg-card rounded-lg border p-4 mb-6 shadow-sm'>
+          {data?.data.length ? (
+            <div className=' rounded-lg border mb-6 shadow-sm'>
               <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
                 <div className='flex items-center gap-4'>
                   <p className='text-sm text-muted-foreground'>
@@ -228,29 +230,29 @@ export default function ProductosPage() {
                 : "grid-cols-1 gap-4"
             }`}
           >
-            {data?.results?.length
-              ? data.results.map((item: Product) => (
+            {data?.data?.length
+              ? data.data.map((item: ProductType) => (
                   <TemplateProduct
                     addItem={addItem}
                     cart={cart}
-                    key={item.objectID}
+                    key={item.id}
                     openImg={(data: string[]) => {
                       setOpenLinkProduct(data);
                       document.body.style.overflow = "hidden";
                     }}
-                    Name={item.Name}
+                    Name={item.title}
                     Images={
-                      item.Images?.length
-                        ? item.Images.map((itemImages) => itemImages.thumbnails.full.url)
+                      item.images?.length
+                        ? item.images.filter((itemImages) => typeof itemImages === "string")
                         : []
                     }
-                    priceOfert={item.priceOfert}
-                    price={item["Unit cost"]}
-                    oferta={item.oferta ? true : false}
-                    id={item.objectID}
+                    priceOfert={item.priceOffer}
+                    price={item.price}
+                    oferta={item.priceOffer ? true : false}
+                    id={item.id}
                     // inicio={false}
-                    type={item.type}
-                    size={item.talla}
+                    categories={item.categories}
+                    size={item.sizes}
                     addToast={() =>
                       toast.success("¡Producto agregado al carrito!", {
                         position: "bottom-right",

@@ -8,6 +8,7 @@ import { CarouselProduct } from "./carousel";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-context";
+import { ProductType } from "@/types/product";
 
 export function ProductsFeatured({ featured }: { featured: any }) {
   const [openLinkProduct, setOpenLinkProduct] = useState<string[]>([]);
@@ -24,21 +25,21 @@ export function ProductsFeatured({ featured }: { featured: any }) {
   return (
     <>
       {featured
-        ? featured.map((item: any) => (
+        ? featured.map((item: ProductType) => (
             <TemplateProduct
-              key={item.objectID}
+              key={item.id}
               openImg={(data: string[]) => {
                 setOpenLinkProduct(data);
                 document.body.style.overflow = "hidden";
               }}
-              Name={item.Name}
-              Images={item.Images.map((itemImages: any) => itemImages.thumbnails.full.url)}
-              priceOfert={item.priceOfert}
-              price={item["Unit cost"]}
-              oferta={item.oferta}
-              id={item.objectID}
-              type={item.type}
-              size={item.talla}
+              id={item.id}
+              Name={item.title}
+              Images={item.images}
+              price={item.price}
+              priceOfert={item.priceOffer}
+              oferta={item.priceOffer ? true : false}
+              categories={item.categories}
+              size={item.sizes}
               addToast={() =>
                 toast.success("¡Se agregó al carrito!", {
                   position: "top-right",

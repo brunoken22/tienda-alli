@@ -30,7 +30,7 @@ export default function NotFound() {
       <div className='text-center flex flex-col gap-4'>
         <Link
           href='/'
-          className='hover:opacity-60 bg-secundary text-primary dark:text-secundary dark:bg-primary p-4 pb-2 pt-2'
+          className='hover:opacity-60 bg-primary text-secondary dark:text-secondary dark:bg-primary p-4 pb-2 pt-2'
         >
           Ir a Inicio
         </Link>

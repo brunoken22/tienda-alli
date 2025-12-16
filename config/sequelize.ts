@@ -11,6 +11,7 @@ export async function initDatabase() {
     // Sincronizar modelos (en desarrollo)
     if (process.env.NODE_ENV === "development") {
       await sequelize.sync({ alter: true });
+      console.log("En modo development");
       // Usar { force: true } para recrear tablas
     }
 
@@ -20,5 +21,7 @@ export async function initDatabase() {
     throw error;
   }
 }
+
 initDatabase();
+
 export default sequelize;

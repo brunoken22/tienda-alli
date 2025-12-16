@@ -2,13 +2,17 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getProducts } from "@/lib/products";
-import { Package, Palette, Plus, Lock, ShoppingBag, Tag } from "lucide-react";
+import { Package, Palette, Plus, Lock, ShoppingBag, Tag, Logs } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { Product } from "@/types/admin";
 import Link from "next/link";
+import { ProductType } from "@/types/product";
+import Loading from "@/components/loading";
 
 export default function DashboardPage() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<{ data: ProductType[]; isLoading: boolean }>({
+    data: [],
+    isLoading: true,
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,11 +24,11 @@ export default function DashboardPage() {
     loadProducts();
   }, []);
 
-  const totalProducts = products.length;
-  const totalVariants = products.reduce((acc, p) => acc + p.variant.length, 0);
-  const productsWithOffers = products.filter((p) => p.priceOffer > 0).length;
-  const recentProducts = products.slice(0, 5);
-  const uniqueCategories = new Set(products.flatMap((p) => p.category)).size;
+  const totalProducts = products.data.length;
+  const totalVariants = products.data.reduce((acc, p) => acc + p.variant.length, 0);
+  const productsWithOffers = products.data.filter((p) => p.priceOffer > 0).length;
+  const recentProducts = products.data.slice(0, 5);
+  const uniqueCategories = new Set(products.data.flatMap((p) => p.categories)).size;
 
   const stats = [
     {
@@ -70,6 +74,13 @@ export default function DashboardPage() {
       description: "Gestiona tu catálogo completo",
       icon: Package,
       href: "/admin/dashboard/productos",
+      gradient: "from-blue-500 to-indigo-500",
+    },
+    {
+      title: "Ver Todos las categorias",
+      description: "Gestiona tus categorias.",
+      icon: Logs,
+      href: "/admin/dashboard/categorrias",
       gradient: "from-blue-500 to-indigo-500",
     },
     {
@@ -151,7 +162,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {loading ? (
-              <p className='text-sm text-muted-foreground'>Cargando...</p>
+              <Loading />
             ) : recentProducts.length === 0 ? (
               <p className='text-sm text-muted-foreground'>No hay productos aún</p>
             ) : (

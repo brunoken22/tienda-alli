@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Package, LogOut, UserCircle, LockKeyhole } from "lucide-react";
+import { LayoutDashboard, Package, LogOut, UserCircle, LockKeyhole, Logs } from "lucide-react";
 import { AuthContext } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
 import { logout } from "@/lib/serverAdmin";
 import { useContext } from "react";
 
-const navItems = [
+export const navItemsAdmin = [
   {
     title: "Dashboard",
     href: "/admin/dashboard",
@@ -20,7 +20,12 @@ const navItems = [
     icon: Package,
   },
   {
-    title: "Cambiar contraseña",
+    title: "Categorias",
+    href: "/admin/dashboard/categorias",
+    icon: Logs,
+  },
+  {
+    title: "Contraseña",
     href: "/admin/dashboard/cambiar-contrasena",
     icon: LockKeyhole,
   },
@@ -53,7 +58,7 @@ export function Sidebar() {
       </div>
 
       <nav className='flex-1 p-4 space-y-2'>
-        {navItems.map((item) => {
+        {navItemsAdmin.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
 

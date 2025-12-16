@@ -1,19 +1,45 @@
+import dynamic from "next/dynamic";
 import { CarouselHeader } from "@/components/carousel";
 import { ProductsFeatured } from "@/components/featured";
 import FeaturedFilter from "@/components/featuredFilter";
 import Link from "next/link";
-import { ArrowRight, Truck, Shield, Clock } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import baseURL from "@/utils/baseUrl";
-import ProductCarousel from "@/components/carouselProduct";
+// import ProductCarousel from "@/components/carouselProduct";
+import { ProductType } from "@/types/product";
+import { getCategories } from "@/lib/category";
+import { ProductCardSkeletonGrid } from "@/components/ui/EsqueletonCardSwiper";
 
-async function getFrontPage() {
+const ProductCarousel = dynamic(() => import("@/components/carouselProduct"), {
+  ssr: true,
+  loading: () => <ProductCardSkeletonGrid />,
+});
+const banner = [baseURL + "/banner1.webp", baseURL + "/banner2.webp", baseURL + "/banner3.webp"];
+
+async function getFrontPage(): Promise<ProductType[] | []> {
   try {
     const response = await fetch(`${baseURL}/api/product/frontPage`);
     const data = await response.json();
-    return [baseURL + "/banner1.webp", baseURL + "/banner2.webp", baseURL + "/banner3.webp"];
+    if (!data.success) {
+      return [];
+    }
+    return data.data;
   } catch (e) {
-    return [baseURL + "/banner1.webp", baseURL + "/banner2.webp", baseURL + "/banner3.webp"];
+    return [];
+  }
+}
+
+async function getOfferPage(): Promise<ProductType[] | []> {
+  try {
+    const response = await fetch(`${baseURL}/api/product/offer`);
+    const data = await response.json();
+    if (!data.success) {
+      return [];
+    }
+    return data.data;
+  } catch (e) {
+    return [];
   }
 }
 
@@ -30,42 +56,45 @@ async function getProductFeatured() {
 export default async function Home() {
   const data = await getFrontPage();
   const featured = await getProductFeatured();
+  const offer = await getOfferPage();
+  const categories = await getCategories();
   return (
-    <div className='mb-8'>
+    <div className='flex flex-col gap-12 pb-8 max-md:px-2'>
       {/* Hero Section */}
       <section className='relative overflow-hidden '>
-        <div className='relative rounded-2xl overflow-hidden shadow-2xl px-2'>
+        <div className='relative rounded-2xl overflow-hidden shadow-2xl '>
           <div className='h-[300px] md:h-[800px]'>
-            <CarouselHeader data={data} />
+            <CarouselHeader data={banner} />
           </div>
         </div>
       </section>
 
       {/* Agregado recientemente */}
-      <div className='-mt-44 max-md:mt-4'>
-        <ProductCarousel />
-      </div>
+      <section className='-mt-44 max-md:mt-4'>
+        <ProductCarousel products={data} />
+      </section>
 
       {/* Categorias */}
-      <section className='py-16 bg-background'>
-        <div className='container mx-auto px-4 max-w-7xl'>
-          <div className='text-center mb-12'>
-            <h2 className='text-3xl md:text-4xl font-bold mb-4'>Categorías Populares</h2>
-            <p className='text-muted-foreground text-lg'>Encuentra exactamente lo que buscas</p>
-          </div>
-          <FeaturedFilter />
+      <section className=' bg-background '>
+        <div className=' mb-4'>
+          <h2 className='text-3xl md:text-3xl font-bold '>Categorías Populares</h2>
+          <p className='text-muted-foreground text-lg'>Encuentra exactamente lo que buscas</p>
         </div>
+        <FeaturedFilter categories={categories} />
       </section>
 
       {/* Ofertas */}
-      <div className='my-8'>
-        <h2 className='font-bold text-3xl mb-4'>Ofertas imparables</h2>
-        <ProductCarousel className='px-0' />
-      </div>
+      <section className=' '>
+        <div className=' mb-4'>
+          <h2 className='text-3xl md:text-3xl font-bold '>Ofertas imparables</h2>
+          <p className='text-muted-foreground text-lg'>Encuentra nuestras ofertas</p>
+        </div>
+        <ProductCarousel className='px-0 ' products={offer} />
+      </section>
 
       {/* Productos Destacados */}
       {featured?.lenght ? (
-        <section className='py-16 bg-muted/30'>
+        <section className=''>
           <div className='container mx-auto px-4 max-w-7xl'>
             <div className='flex items-center justify-between mb-12'>
               <div>
@@ -99,7 +128,7 @@ export default async function Home() {
       ) : null}
 
       {/* CTA Section */}
-      <section className='py-20 bg-gradient-to-r from-purple-600 to-pink-600 text-white'>
+      <section className=' p-12 max-md:p-4 rounded-md bg-gradient-to-r from-primary/80 to-primary text-white'>
         <div className='container mx-auto px-4 max-w-7xl text-center'>
           <h2 className='text-3xl md:text-5xl font-bold mb-6'>
             HACÉ TU PEDIDO Y COORDINÁ TU RETIRO FÁCILMENTE

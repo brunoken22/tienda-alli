@@ -1,11 +1,16 @@
+"use client";
+
+import type React from "react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { Car, Eye, ShoppingCart as ShoppingCartIcon, Trash } from "lucide-react";
-import Image from "next/image";
+import { Eye, ShoppingCartIcon, Trash } from "lucide-react";
 import { InputNumber } from "./ui/input";
 import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-context";
-import { TypeCompra } from "@/lib/atom";
+import type { TypeCompra } from "@/lib/atom";
+import type { CategoryType } from "@/types/category";
+import HoverSwiper from "@/components/HoverSwiper";
+import Link from "next/link";
 
 interface TemplateProductProps {
   openImg: (data: string[]) => void;
@@ -15,7 +20,7 @@ interface TemplateProductProps {
   price: number;
   oferta?: boolean;
   id: string;
-  type: string[];
+  categories?: CategoryType[];
   size?: string[];
   addToast: () => void;
   addItem: (cart: TypeCompra) => void;
@@ -30,7 +35,7 @@ export function TemplateProduct({
   price,
   oferta,
   id,
-  type,
+  categories,
   size,
   addToast,
   addItem,
@@ -42,8 +47,6 @@ export function TemplateProduct({
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-
-    if (!selectedSize && size) return;
 
     const newItem: TypeCompra = {
       size: selectedSize,
@@ -65,92 +68,122 @@ export function TemplateProduct({
     addToast();
   };
 
+  const discountPercentage =
+    oferta && priceOfert ? Math.round(((price - priceOfert) / price) * 100) : 0;
+
   return (
-    <div className='bg-card border rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group'>
-      <div className='relative aspect-square overflow-hidden'>
+    <Link
+      href={`/productos/${id}`}
+      className='bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group hover:-translate-y-1'
+    >
+      <div className='relative aspect-square overflow-hidden bg-muted'>
         {oferta && (
-          <Badge className='absolute top-2 left-2 z-10 bg-red-600 hover:bg-red-700'>Oferta</Badge>
+          <div className='absolute top-3 left-3 z-10 flex flex-col gap-1'>
+            <Badge className='bg-red-600 hover:bg-red-700 text-white font-semibold shadow-lg'>
+              Oferta
+            </Badge>
+            {discountPercentage > 0 && (
+              <Badge className='bg-green-600 hover:bg-green-700 text-white font-semibold shadow-lg'>
+                -{discountPercentage}%
+              </Badge>
+            )}
+          </div>
         )}
-        <Image
-          src={Images[0] || "/tienda-alli.webp"}
-          alt={Name}
-          fill
-          className='object-cover group-hover:scale-105 transition-transform duration-300'
-        />
-        <div className='absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300' />
-        <div className='absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+
+        <HoverSwiper imageUrls={Images} title={Name} classNameImg='object-cover' />
+
+        <div className='absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
+
+        <div className='absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110'>
           <Button
             aria-label='Ver imagen'
             size='icon'
             variant='secondary'
             onClick={handleImageClick}
-            className='rounded-full'
+            className='rounded-full shadow-lg hover:shadow-xl backdrop-blur-sm bg-white/90 hover:bg-white'
           >
             <Eye className='w-4 h-4' />
           </Button>
         </div>
       </div>
 
-      <div className='p-4 space-y-3'>
-        <div>
-          <h3 className='font-semibold text-sm line-clamp-2 mb-1'>{Name}</h3>
-          <p className='text-sm text-muted-foreground'>
-            {type.map((s, i) => (
-              <span key={i} className='capitalize'>
-                {s}
-                {i !== type.length - 1 ? ", " : ""}
+      <div className='p-5 space-y-4'>
+        <div className='space-y-2'>
+          <h3 className='font-semibold text-base line-clamp-2 leading-tight text-foreground group-hover:text-primary transition-colors'>
+            {Name}
+          </h3>
+
+          {/* <div className='flex flex-wrap gap-1.5'>
+            {categories.map((category) => (
+              <span
+                key={category.id}
+                className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/20 text-primary capitalize'
+              >
+                {category.title}
               </span>
             ))}
-          </p>
+          </div> */}
 
-          {size && (
-            <div className='mt-2'>
-              <label htmlFor='size-select' className='block text-sm font-medium text-gray-700'>
-                Seleccionar talla
-              </label>
-              <select
-                id='size-select' // Asegúrate de que este ID coincida con el htmlFor del label
-                value={selectedSize}
-                onChange={(e) => setSelectedSize(e.target.value)}
-                className='block w-full px-2 py-1 border rounded-md text-sm mt-1'
+          {size?.length ? (
+            <div className='mt-3'>
+              <label
+                htmlFor='size-select'
+                className='block text-sm font-medium text-foreground mb-2'
               >
-                <option value=''>Seleccionar talla</option>
+                Talla
+              </label>
+              <div className='grid grid-cols-4 gap-2'>
                 {size.map((s) => (
-                  <option key={s} value={s}>
+                  <button
+                    key={s}
+                    type='button'
+                    onClick={() => setSelectedSize(s)}
+                    className={`
+                      px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all duration-200
+                      ${
+                        selectedSize === s
+                          ? "border-primary bg-primary text-secondary shadow-md scale-105"
+                          : "border-primary/50 bg-background hover:border-primary/90 hover:bg-accent"
+                      }
+                    `}
+                  >
                     {s}
-                  </option>
+                  </button>
                 ))}
-              </select>
+              </div>
             </div>
-          )}
+          ) : null}
         </div>
 
-        <div className='flex items-center justify-between'>
-          <div className='space-y-1'>
+        <div className='space-y-3 pt-2 border-t border-border'>
+          <div className='flex items-baseline gap-2'>
             {oferta && priceOfert ? (
-              <div className='flex items-center gap-2'>
-                <span className='font-bold text-green-800'>${priceOfert.toLocaleString()}</span>
+              <>
+                <span className='text-2xl font-bold text-green-600'>
+                  ${priceOfert.toLocaleString()}
+                </span>
                 <span className='text-sm text-muted-foreground line-through'>
                   ${price.toLocaleString()}
                 </span>
-              </div>
+              </>
             ) : (
-              <span className='font-bold'>${price.toLocaleString()}</span>
+              <span className='text-2xl font-bold text-foreground'>${price.toLocaleString()}</span>
             )}
           </div>
+
           <Button
-            size='sm'
+            size='lg'
             aria-label='Agregar al carrito'
             onClick={handleClick}
-            disabled={!selectedSize && size ? true : false}
-            className='bg-purple-600 hover:bg-purple-700'
+            disabled={!selectedSize && !!size?.length}
+            className='w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
           >
-            <ShoppingCartIcon className='w-4 h-4 mr-1' />
-            Agregar
+            <ShoppingCartIcon className='w-4 h-4 mr-2' />
+            {!selectedSize && size?.length ? "Selecciona una talla" : "Agregar al carrito"}
           </Button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -187,29 +220,28 @@ export function TemplateShopppingCartProduct({
   };
 
   return (
-    <div className='flex justify-between items-center gap-4 border-b border-gray-200 py-4 px-3 hover:bg-gray-50 transition-colors rounded-lg w-full'>
+    <div className='flex justify-between items-center gap-4 border-b border-border py-4 px-3 hover:bg-accent/50 transition-colors rounded-lg w-full'>
       <div className='flex gap-4 items-center w-full'>
         <img
-          src={img}
+          src={img || "/placeholder.svg"}
           alt={title}
           loading='lazy'
-          className='h-24 w-24 object-cover rounded-md shadow-sm'
+          className='h-24 w-24 object-cover rounded-lg shadow-sm border border-border'
         />
-        <div className='relative truncate'>
+        <div className='flex-1 min-w-0'>
           <p
             onMouseEnter={() => setOpenFocusName(true)}
             onMouseLeave={() => setOpenFocusName(false)}
-            className='text-sm font-medium text-gray-800 truncate cursor-default'
+            className='text-sm font-medium text-foreground truncate cursor-default'
           >
             {title}
           </p>
-          {/* {openFocusName && (
-            <h3 className=' z-20 left-1/2 transform -translate-x-1/2 top-full mt-1 bg-gray-900 text-white text-xs rounded px-3 py-1 shadow-lg '>
-              {title}
-            </h3>
-          )} */}
-          {size && <span className='text-sm font-medium text-gray-600'>Talle: {size}</span>}
-          <h3 className='text-base font-semibold text-gray-900 mt-1'>
+          {size && (
+            <span className='inline-block mt-1 px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded'>
+              Talla: {size}
+            </span>
+          )}
+          <h3 className='text-lg font-semibold text-foreground mt-2'>
             {price.toLocaleString("es-AR", {
               style: "currency",
               currency: "ARS",
@@ -217,14 +249,12 @@ export function TemplateShopppingCartProduct({
               maximumFractionDigits: 0,
             })}
           </h3>
-          <div className='flex flex-row items-center gap-2 justify-between mt-2'>
-            <div className='flex items-center gap-4 '>
-              <InputNumber cantidad={cantidad || 1} id={id} talla={size} />
-            </div>
+          <div className='flex flex-row items-center gap-3 justify-between mt-3'>
+            <InputNumber cantidad={cantidad || 1} id={id} talla={size} />
             <button
               onClick={handleDelete}
               id={id}
-              className='p-2 rounded  text-red-400 hover:text-red-600  transition-colors cursor-pointer'
+              className='p-2 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors cursor-pointer'
               aria-label='Eliminar producto'
             >
               <Trash size={20} />

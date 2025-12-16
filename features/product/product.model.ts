@@ -1,6 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "@/config/sequelize";
 import { VariantType } from "@/types/product";
+import Category from "../category/category.model";
+import ProductCategory from "../productCategory/productCategory.model";
 
 const Product = sequelize.define(
   "Product",
@@ -17,15 +19,26 @@ const Product = sequelize.define(
     price: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
+      get() {
+        // Convertir el string a número float cuando se obtiene el valor
+        const value = this.getDataValue("price");
+        return value ? parseFloat(value) : null;
+      },
     },
     priceOffer: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
+      get() {
+        // Convertir el string a número float cuando se obtiene el valor
+        const value = this.getDataValue("priceOffer");
+        return value ? parseFloat(value) : null;
+      },
     },
     category: {
       type: DataTypes.ARRAY(DataTypes.STRING),
       defaultValue: [],
     },
+
     images: {
       type: DataTypes.ARRAY(DataTypes.STRING),
       defaultValue: [],
@@ -89,5 +102,19 @@ const Product = sequelize.define(
     timestamps: true,
   }
 );
+
+Product.belongsToMany(Category, {
+  through: ProductCategory,
+  foreignKey: "productId", // FK en tabla intermedia
+  otherKey: "categoryId", // Otra FK en tabla intermedia
+  as: "categories",
+});
+
+Category.belongsToMany(Product, {
+  through: ProductCategory,
+  foreignKey: "categoryId",
+  otherKey: "productId",
+  as: "products",
+});
 
 export default Product;

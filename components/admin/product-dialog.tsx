@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useState, useEffect, type Dispatch, type SetStateAction } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,14 +15,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { X, Plus, TriangleAlert, Badge, Upload } from "lucide-react";
-import type { Product, Variant } from "@/types/admin";
+import { X, Plus, TriangleAlert, Upload } from "lucide-react";
 import convertUrlsToFiles from "@/utils/convertFilesImg";
+import { getCategories } from "@/lib/category";
+import type { CategoryType } from "@/types/category";
+import { ProductType, VariantType } from "@/types/product";
 
 interface ProductDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  product?: Product | null;
+  product?: ProductType | null;
   alert: { success: boolean; message: string };
   setAlert: Dispatch<
     SetStateAction<{
@@ -30,7 +32,10 @@ interface ProductDialogProps {
       message: string;
     }>
   >;
-  onSave: (product: Omit<Product, "id">, images: File[]) => Promise<boolean>;
+  onSave: (
+    product: Omit<ProductType, "id" | "categories" | "imagesId">,
+    images: File[]
+  ) => Promise<boolean>;
 }
 
 export function ProductDialog({
@@ -41,19 +46,21 @@ export function ProductDialog({
   alert,
   setAlert,
 }: ProductDialogProps) {
-  const [formData, setFormData] = useState<Omit<Product, "id">>({
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState<Omit<ProductType, "id" | "imagesId">>({
     title: "",
     description: "",
     price: 0,
     priceOffer: 0,
-    category: [],
-    sizes: [],
+    categories: [],
+    categoryFormData: [],
     images: [],
     imagesFormData: [],
-    // stock: 0,
+    sizes: [],
     variant: [],
+    isActive: false,
   });
-  const [categoryInput, setCategoryInput] = useState<string>("");
+  const [categories, setCategories] = useState<CategoryType[]>([]);
   const [sizeInput, setSizeInput] = useState("");
   const [sizeVariantInput, setSizeVariantInput] = useState("");
   const [imagesUrl, setImagesUrl] = useState<string[]>([]);
@@ -61,21 +68,23 @@ export function ProductDialog({
   useEffect(() => {
     if (product) {
       (async () => {
-        const fileImages = await convertUrlsToFiles(product.images);
+        const filterImages = product.images.filter((img) => typeof img === "string");
+        const imagesConvert = await convertUrlsToFiles(filterImages);
         setFormData({
           title: product.title,
           description: product.description,
           price: product.price,
           priceOffer: product.priceOffer,
-          category: product.category,
+          categoryFormData: product.categories.map((category) => category.id),
           sizes: product.sizes,
           images: [],
-          imagesFormData: fileImages,
-          // stock: product.stock,
+          categories: product.categories,
+          imagesFormData: imagesConvert,
           variant: product.variant,
+          isActive: product.isActive,
         });
 
-        setImagesUrl(product.images);
+        setImagesUrl(filterImages);
       })();
     } else {
       setFormData({
@@ -83,40 +92,58 @@ export function ProductDialog({
         description: "",
         price: 0,
         priceOffer: 0,
-        category: [],
+        categories: [],
+        categoryFormData: [],
         variant: [],
         sizes: [],
         images: [],
-        // stock: 0,
+        isActive: false,
       });
       setImagesUrl([]);
     }
   }, [product, open]);
 
+  useEffect(() => {
+    (async () => {
+      const categories = await getCategories();
+      setCategories(categories);
+    })();
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formDataTarget = new FormData(e.target as HTMLFormElement);
+    setIsLoading(true);
     const images = formData.imagesFormData;
-    // const images = formDataTarget.getAll("imageFile");
-
-    const repsonseOnSave = await onSave(formData, images as File[]);
-
-    if (repsonseOnSave) {
-      onOpenChange(false);
+    try {
+      const repsonseOnSave = await onSave(formData, images as File[]);
+      setIsLoading(false);
+      if (repsonseOnSave) {
+        onOpenChange(false);
+      }
+    } catch (e) {
+      document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" });
+      setIsLoading(false);
     }
   };
 
-  const addCategory = () => {
-    if (categoryInput.trim() && !formData.category.includes(categoryInput.trim() as never)) {
-      setFormData({ ...formData, category: [...formData.category, categoryInput.trim()] });
-      setCategoryInput("");
+  const addCategory = (categoryId: string) => {
+    if (categoryId && !formData?.categoryFormData?.find((category) => category === categoryId)) {
+      const categoriesTransform = formData.categoryFormData ? formData.categoryFormData : [];
+      const categoryFind = categories.find((category) => category.id === categoryId)!;
+      setFormData({
+        ...formData,
+        categoryFormData: [...categoriesTransform, categoryId],
+        categories: [...formData.categories, categoryFind],
+      });
     }
   };
 
   const removeCategory = (index: number) => {
     setFormData({
       ...formData,
-      category: formData.category.filter((_, i) => i !== index),
+      categoryFormData: formData.categoryFormData
+        ? formData.categoryFormData.filter((_, i) => i !== index)
+        : [],
     });
   };
 
@@ -176,23 +203,21 @@ export function ProductDialog({
 
     setImagesUrl((prev) => [...prev, ...objectUrl]);
 
-    // Reset input para permitir seleccionar el mismo archivo nuevamente
     e.target.value = "";
   };
 
   const addVariant = () => {
-    const newVariant: Variant = {
+    const newVariant: VariantType = {
       id: crypto.randomUUID(),
       sizes: [],
       color: "",
-      // stock: 0,
       price: formData.price,
       priceOffer: formData.priceOffer,
     };
     setFormData({ ...formData, variant: [...formData.variant, newVariant] });
   };
 
-  const updateVariant = (index: number, field: keyof Variant, value: any) => {
+  const updateVariant = (index: number, field: keyof VariantType, value: any) => {
     const updatedVariants = [...formData.variant];
     updatedVariants[index] = { ...updatedVariants[index], [field]: value };
     setFormData({ ...formData, variant: updatedVariants });
@@ -223,9 +248,14 @@ export function ProductDialog({
     setFormData({ ...formData, variant: updatedVariants });
   };
 
+  const getCategoryTitle = (categoryId: string) => {
+    const category = categories.find((cat) => cat.id === categoryId);
+    return category?.title || categoryId;
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[700px] max-h-[90vh] overflow-y-auto bg-secondary border-border'>
+      <DialogContent className='sm:max-w-[700px] max-h-[90vh] overflow-y-auto bg-secondary border-primary'>
         <DialogHeader>
           <DialogTitle className='text-foreground'>
             {product ? "Editar Producto" : "Agregar Producto"}
@@ -300,23 +330,11 @@ export function ProductDialog({
                   type='number'
                   step='0.01'
                   value={formData.priceOffer}
+                  // max={formData.price}
                   onChange={(e) => setFormData({ ...formData, priceOffer: Number(e.target.value) })}
                   className='bg-background border-border text-foreground'
                 />
               </div>
-              {/* <div className='space-y-2'>
-                <Label className='text-sm text-foreground'>
-                  Stock <span className='text-red-500'>*</span>
-                </Label>
-                <Input
-                  type='number'
-                  value={formData.stock}
-                  onChange={(e) =>
-                    setFormData((data) => ({ ...data, stock: Number(e.target.value) }))
-                  }
-                  className='bg-background border-border text-foreground'
-                />
-              </div> */}
             </div>
 
             {/* Tallas */}
@@ -361,25 +379,38 @@ export function ProductDialog({
                 Categorías <span className='text-red-500'>*</span>
               </Label>
               <div className='flex gap-2'>
-                <Input
-                  value={categoryInput}
-                  onChange={(e) => setCategoryInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addCategory())}
-                  placeholder='Ej: Ropa, Calzado, Accesorios...'
-                  className='bg-background border-border text-foreground'
-                />
-                <Button type='button' onClick={addCategory} size='icon' variant='outline'>
-                  <Plus className='h-4 w-4' />
-                </Button>
+                <select
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      addCategory(e.target.value);
+                      e.target.value = "";
+                    }
+                  }}
+                  className='flex h-10 w-full rounded-md px-3 py-2 text-sm border border-black disabled:cursor-not-allowed disabled:opacity-50'
+                >
+                  <option value=''>Selecciona una categoría...</option>
+                  {categories.length &&
+                    categories
+                      .filter(
+                        (cat) =>
+                          cat.active &&
+                          !formData.categories.find((category) => category.id === cat.id)
+                      )
+                      .map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.title}
+                        </option>
+                      ))}
+                </select>
               </div>
-              {formData.category.length > 0 && (
+              {formData.categories && formData.categories.length > 0 && (
                 <div className='flex flex-wrap gap-2 mt-2'>
-                  {formData.category.map((cat, index) => (
+                  {formData.categories.map((categoryId, index) => (
                     <span
                       key={index}
                       className='inline-flex items-center gap-1 px-3 py-2 bg-primary/90 text-secondary rounded-md text-sm'
                     >
-                      {cat}
+                      {getCategoryTitle(categoryId.title)}
                       <button
                         type='button'
                         onClick={() => removeCategory(index)}
@@ -513,17 +544,6 @@ export function ProductDialog({
                               className='bg-background border-border text-foreground h-9'
                             />
                           </div>
-                          {/* <div className='space-y-1'>
-                            <Label className='text-sm text-foreground'>Stock</Label>
-                            <Input
-                              type='number'
-                              value={variant.stock}
-                              onChange={(e) =>
-                                updateVariant(variantIndex, "stock", Number(e.target.value))
-                              }
-                              className='bg-background border-border text-foreground h-9'
-                            />
-                          </div> */}
                         </div>
 
                         <div className='grid grid-cols-2 gap-3'>
@@ -612,7 +632,9 @@ export function ProductDialog({
             <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>
               Cancelar
             </Button>
-            <Button type='submit'>{product ? "Actualizar" : "Agregar"}</Button>
+            <Button type='submit' disabled={isLoading}>
+              {isLoading ? "Guardando..." : product ? "Actualizar" : "Agregar"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

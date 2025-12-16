@@ -41,7 +41,7 @@ export function Header() {
       {/* Header Principal */}
       <div className='bg-secondary'>
         <header className=' max-sm:rounded-bl-[30px] bg-primary/90 '>
-          <div className='max-w-7xl mx-auto px-4'>
+          <div className='max-w-screen-2xl mx-auto px-4'>
             <div className='flex items-center justify-between h-16 md:h-20'>
               <Link href='/' className='flex items-center space-x-2 group'>
                 <div className='w-8 h-8 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform'>
@@ -172,26 +172,26 @@ export function Header() {
       {state.isOpen && <ShoppingCart />}
 
       {/* Botón WhatsApp flotante con tooltip horizontal a la izquierda */}
-      <div className='fixed bottom-6 right-6 z-40 group'>
-        <Link
-          href='https://api.whatsapp.com/send?phone=+541159102865&text=Hola%20te%20hablo%20desde%20la%20p%C3%A1gina'
-          aria-label='Contactar por WhatsApp'
-          className='relative flex items-center'
-        >
-          {/* Tooltip en línea a la izquierda */}
-          <div className='absolute right-14 hidden group-hover:flex items-center space-x-1'>
-            <div className='bg-primary text-white  px-3 py-1 rounded-lg shadow-md whitespace-nowrap'>
-              Enviar un mensaje
+      {!pathname.includes("/admin/dashboard") ? (
+        <div className='fixed bottom-6 right-6 z-40 group'>
+          <Link
+            href='https://api.whatsapp.com/send?phone=+541159102865&text=Hola%20te%20hablo%20desde%20la%20p%C3%A1gina'
+            aria-label='Contactar por WhatsApp'
+            className='relative flex items-center'
+          >
+            <div className='absolute right-14 hidden group-hover:flex items-center space-x-1'>
+              <div className='bg-primary text-white  px-3 py-1 rounded-lg shadow-md whitespace-nowrap'>
+                Enviar un mensaje
+              </div>
+              <div className='w-2 h-2 bg-primary rotate-45'></div>
             </div>
-            <div className='w-2 h-2 bg-primary rotate-45'></div>
-          </div>
 
-          {/* Botón */}
-          <div className='bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-110'>
-            <MessageCircle className='w-6 h-6' />
-          </div>
-        </Link>
-      </div>
+            <div className='bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-110'>
+              <MessageCircle className='w-6 h-6' />
+            </div>
+          </Link>
+        </div>
+      ) : null}
     </>
   );
 }

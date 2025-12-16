@@ -15,9 +15,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     const formData = await req.formData();
     const data = await editProductController(id, formData);
     return NextResponse.json(data, { status: 200 });
-  } catch (e: any) {
+  } catch (e) {
+    const error = e as Error;
     console.error("Error in PATCH /api/admin/product/[id]:", e);
-    return NextResponse.json({ error: e.message || "Internal server error" }, { status: 500 });
+    return NextResponse.json({ message: error.message, success: false }, { status: 500 });
   }
 }
 
@@ -31,8 +32,10 @@ export async function DELETE(_: NextRequest, { params }: { params: Promise<{ id:
 
     const data = await deleteProductController(id);
     return NextResponse.json(data, { status: 200 });
-  } catch (e: any) {
+  } catch (e) {
+    const error = e as Error;
+
     console.error("Error in DELETE /api/admin/product/[id]:", e);
-    return NextResponse.json({ error: e.message || "Internal server error" }, { status: 500 });
+    return NextResponse.json({ message: error.message, success: false }, { status: 500 });
   }
 }

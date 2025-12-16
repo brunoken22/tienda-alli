@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import LayoutRecoilRoot from "@/components/layout";
+import LayoutRoot from "@/components/layout";
 import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -64,9 +64,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <meta name='color-scheme' content='only light' />
       </head>
-      <body className={`${inter.className} max-sm:bg-primary/90 `}>
+      <body className={`${inter.className} max-sm:bg-primary/90  `}>
         <Suspense fallback={<div>Loading...</div>}>
-          <LayoutRecoilRoot>{children}</LayoutRecoilRoot>
+          <LayoutRoot>{children}</LayoutRoot>
         </Suspense>
       </body>
     </html>

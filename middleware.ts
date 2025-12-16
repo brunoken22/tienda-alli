@@ -5,8 +5,8 @@ import type { NextRequest } from "next/server";
 const routingAdmin = [
   "/admin/dashboard",
   "/admin/dashboard/productos",
+  "/admin/dashboard/categorias",
   "/admin/dashboard/cambiar-contrasena",
-
   // "/admin/dashboard/orders",
   // "/admin/dashboard/information",
 ];

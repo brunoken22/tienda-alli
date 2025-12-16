@@ -6,10 +6,11 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   try {
-    const products = await getProductsController();
+    const products = await getProductsController(req);
     return NextResponse.json(products, { status: 200 });
   } catch (e) {
     const error = e as Error;
+
     return NextResponse.json({
       success: false,
       message: error.message,
@@ -23,6 +24,7 @@ export async function POST(req: Request) {
     const data = await createProductController(formData);
     return NextResponse.json(data, { status: 200 });
   } catch (e) {
-    return NextResponse.json(e, { status: 404 });
+    const error = e as Error;
+    return NextResponse.json({ message: error.message, success: false }, { status: 404 });
   }
 }

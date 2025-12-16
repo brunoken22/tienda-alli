@@ -1,0 +1,20 @@
+/* Para navegadores Webkit (Chrome, Safari, Edge) */
+.scroll-personalizado::-webkit-scrollbar {
+  width: 12px;
+  height: 10px;
+}
+
+.scroll-personalizado::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.scroll-personalizado::-webkit-scrollbar-thumb {
+  background: var(--secondary);
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
+}
+
+.scroll-personalizado::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}

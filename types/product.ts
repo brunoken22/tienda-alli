@@ -1,3 +1,5 @@
+import { CategoryType } from "./category";
+
 export type VariantType = {
   id: string;
   sizes: string[];
@@ -10,13 +12,31 @@ export type VariantType = {
 export type ProductType = {
   id: string;
   title: string;
+  description: string;
   price: number;
   priceOffer: number;
-  category: string[] | [];
-  images: (string | null | undefined)[];
-  imagesId: (string | null | undefined)[];
+  categoryFormData?: string[];
+  categories: CategoryType[];
+  images: string[];
+  imagesId: string[];
+  imagesFormData?: File[];
   // stock: number;
   sizes: string[];
   variant: VariantType[] | [];
-  description: string;
+  isActive: boolean;
 };
+
+export type ProductQueryParams = {
+  search?: string;
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  onSale?: boolean; // Para productos con oferta
+  isActive?: boolean;
+  page?: number;
+  limit?: number;
+  sortBy?: "title" | "price" | "priceOffer" | "createdAt";
+  sortOrder?: "asc" | "desc";
+};
+
+export type ResponseUpload = { public_id: string; url: string };

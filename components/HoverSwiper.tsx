@@ -1,6 +1,14 @@
 import { useState } from "react";
 
-export default function HoverImage({ imageUrls, title }: { imageUrls: string[]; title: string }) {
+export default function HoverImage({
+  imageUrls,
+  title,
+  classNameImg,
+}: {
+  imageUrls: string[];
+  title: string;
+  classNameImg?: string;
+}) {
   const [isHovered, setIsHovered] = useState(false);
 
   // Solo usamos las dos primeras imágenes del array
@@ -9,7 +17,7 @@ export default function HoverImage({ imageUrls, title }: { imageUrls: string[]; 
 
   return (
     <div
-      className='relative z-[1] w-full h-full overflow-hidden rounded-lg cursor-pointer group'
+      className='relative z-[1] w-full h-full overflow-hidden cursor-pointer group'
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -20,7 +28,7 @@ export default function HoverImage({ imageUrls, title }: { imageUrls: string[]; 
         title={title}
         className={`absolute inset-0 w-full h-full object-contain transition-all duration-500 ${
           isHovered ? "opacity-0 " : "opacity-100 "
-        }`}
+        } ${classNameImg ? classNameImg : ""}`}
       />
 
       {/* Imagen hover (solo la segunda del array) */}
@@ -30,7 +38,7 @@ export default function HoverImage({ imageUrls, title }: { imageUrls: string[]; 
         title={title}
         className={`absolute inset-0 w-full h-full object-contain transition-all duration-500 ${
           isHovered ? "opacity-100 " : "opacity-0"
-        }`}
+        } ${classNameImg ? classNameImg : ""}`}
       />
     </div>
   );

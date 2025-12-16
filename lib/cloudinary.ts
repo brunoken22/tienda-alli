@@ -1,3 +1,5 @@
+import { ResponseUpload } from "@/types/product";
+import isResponseUpload from "@/utils/isResponseUpload";
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 
 cloudinary.config({
@@ -6,15 +8,13 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-type ResponseUpload = { public_id: string; url: string };
-
 export async function uploadImages(
   files: File | File[],
   options?: {
     folder?: string;
     maxFiles?: number;
   }
-): Promise<(ResponseUpload | null | undefined)[]> {
+): Promise<ResponseUpload[]> {
   try {
     // Convertir a array
     const fileArray = Array.isArray(files) ? files : [files];
@@ -37,7 +37,7 @@ export async function uploadImages(
         const buffer = Buffer.from(await file.arrayBuffer());
 
         // Subir a Cloudinary
-        const result: UploadApiResponse | undefined = await new Promise((resolve, reject) => {
+        const result: UploadApiResponse = await new Promise((resolve, reject) => {
           const uploadStream = cloudinary.uploader.upload_stream(
             {
               format: "webp",
@@ -48,23 +48,22 @@ export async function uploadImages(
             },
             (error, result) => {
               if (error) reject(error);
+              if (!result) reject(error);
               else resolve(result);
             }
           );
           uploadStream.end(buffer);
         });
-        return { public_id: result?.public_id!, url: result?.secure_url! };
+        return { public_id: result.public_id, url: result.secure_url };
       } catch (error) {
         console.error(`Error subiendo ${file.name}:`, error);
         return null;
       }
     });
 
-    // Esperar todas las subidas
     const images = await Promise.all(uploadPromises);
-
-    // Filtrar nulos y retornar
-    return images;
+    const filterImages: ResponseUpload[] = images.filter(isResponseUpload);
+    return filterImages;
   } catch (error) {
     console.error("Error en uploadImages:", error);
     throw error;
@@ -72,10 +71,12 @@ export async function uploadImages(
 }
 
 export async function deleteImages(public_ids: string[]): Promise<void> {
+  console.log("Elimando estos public_ids: ", public_ids);
   return await cloudinary.api.delete_resources(public_ids, (error, result) => {
     if (error) {
       throw Error(error);
     }
+    console.log("Eliminando imagenes: ", result);
     return result;
   });
 }

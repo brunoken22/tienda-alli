@@ -1,104 +1,118 @@
-"use client"
+// components/ui/select.tsx - Versión actualizada
+"use client";
 
-import * as React from "react"
-import { ChevronDown } from "lucide-react"
+import * as React from "react";
+import * as SelectPrimitive from "@radix-ui/react-select";
+import { Check, ChevronDown } from "lucide-react";
 
-interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  placeholder?: string
-}
+const Select = SelectPrimitive.Root;
+const SelectGroup = SelectPrimitive.Group;
+const SelectValue = SelectPrimitive.Value;
 
-const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className = "", children, placeholder, ...props }, ref) => {
-    return (
-      <div className="relative">
-        <select
-          className={`flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none ${className}`}
-          ref={ref}
-          {...props}
-        >
-          {placeholder && <option value="">{placeholder}</option>}
-          {children}
-        </select>
-        <ChevronDown className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 opacity-50 pointer-events-none" />
-      </div>
-    )
-  },
-)
-Select.displayName = "Select"
-
-const SelectTrigger = ({ children, className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={`flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+const SelectTrigger = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <SelectPrimitive.Trigger
+    ref={ref}
+    className={`flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     {...props}
   >
     {children}
-  </div>
-)
+    <SelectPrimitive.Icon asChild>
+      <ChevronDown className='h-4 w-4 opacity-50' />
+    </SelectPrimitive.Icon>
+  </SelectPrimitive.Trigger>
+));
+SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
-const SelectContent = ({ children, className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={`relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border border-slate-200 bg-white text-slate-950 shadow-md ${className}`}
+const SelectContent = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
+>(({ className, children, position = "popper", ...props }, ref) => (
+  <SelectPrimitive.Portal>
+    <SelectPrimitive.Content
+      ref={ref}
+      className={`relative z-50 min-w-[8rem] overflow-hidden rounded-md border bg-primary/10 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2
+        ${
+          position === "popper" &&
+          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1"
+        }
+        ${className}`}
+      position={position}
+      {...props}
+    >
+      <SelectPrimitive.Viewport
+        className={` p-1 ${
+          position === "popper" &&
+          "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+        }`}
+      >
+        {children}
+      </SelectPrimitive.Viewport>
+    </SelectPrimitive.Content>
+  </SelectPrimitive.Portal>
+));
+SelectContent.displayName = SelectPrimitive.Content.displayName;
+
+const SelectItem = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
+>(({ className, children, value, ...props }, ref) => {
+  // Validar que el valor no sea vacío
+  if (value === "") {
+    console.warn(
+      'SelectItem received empty string value. Use "none" or another non-empty value instead.'
+    );
+  }
+
+  return (
+    <SelectPrimitive.Item
+      ref={ref}
+      value={value === "" ? "none" : value}
+      className={`relative bg-primary/10 flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 ${className}`}
+      {...props}
+    >
+      <span className='absolute border border-primary left-2 flex h-3.5 w-3.5 items-center justify-center'>
+        <SelectPrimitive.ItemIndicator>
+          <Check className='h-4 w-4' />
+        </SelectPrimitive.ItemIndicator>
+      </span>
+
+      <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+    </SelectPrimitive.Item>
+  );
+});
+SelectItem.displayName = SelectPrimitive.Item.displayName;
+
+// Nuevo componente para valores vacíos
+const SelectEmptyItem = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
+>(({ className, children, ...props }, ref) => (
+  <SelectPrimitive.Item
+    ref={ref}
+    // value=""
+    className={`relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 ${className}`}
     {...props}
   >
-    {children}
-  </div>
-)
+    <span className='absolute left-2 flex h-3.5 w-3.5 items-center justify-center'>
+      <SelectPrimitive.ItemIndicator>
+        <Check className='h-4 w-4' />
+      </SelectPrimitive.ItemIndicator>
+    </span>
 
-const SelectItem = ({ children, value, className = "", ...props }: React.OptionHTMLAttributes<HTMLOptionElement>) => (
-  <option
-    value={value}
-    className={`relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-slate-100 focus:text-slate-900 ${className}`}
-    {...props}
-  >
-    {children}
-  </option>
-)
-
-const SelectValue = ({ placeholder }: { placeholder?: string }) => <span className="text-slate-500">{placeholder}</span>
-
-const SelectGroup = ({ children, className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={`p-1 ${className}`} {...props}>
-    {children}
-  </div>
-)
-
-const SelectLabel = ({ children, className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={`px-2 py-1.5 text-sm font-semibold ${className}`} {...props}>
-    {children}
-  </div>
-)
-
-const SelectSeparator = ({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={`h-px w-full bg-slate-100 ${className}`} {...props} />
-)
-
-const SelectScrollUpButton = ({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={`flex items-center justify-center h-6 w-full cursor-default rounded-t-md bg-white text-slate-950 ${className}`}
-    {...props}
-  >
-    <ChevronDown className="h-4 w-4 opacity-50" />
-  </div>
-)
-
-const SelectScrollDownButton = ({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={`flex items-center justify-center h-6 w-full cursor-default rounded-b-md bg-white text-slate-950 ${className}`}
-    {...props}
-  >
-    <ChevronDown className="h-4 w-4 opacity-50 rotate-180" />
-  </div>
-)
+    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+  </SelectPrimitive.Item>
+));
+SelectEmptyItem.displayName = "SelectEmptyItem";
 
 export {
   Select,
+  SelectGroup,
+  SelectValue,
   SelectTrigger,
   SelectContent,
   SelectItem,
-  SelectValue,
-  SelectGroup,
-  SelectLabel,
-  SelectSeparator,
-  SelectScrollUpButton,
-  SelectScrollDownButton,
-}
+  SelectEmptyItem,
+};
