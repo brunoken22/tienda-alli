@@ -5,10 +5,13 @@ import {
   editProductService,
   getLatestAdditionsProductsService,
   getOfferProductsService,
+  getPriceFilterService,
   getProductIDService,
   getProductsService,
+  getShoppingCartService,
 } from "./product.service";
 import { deleteImages, uploadImages } from "@/lib/cloudinary";
+import { ShoppingCart } from "@/types/shopping-cart";
 
 export async function getProductsController(req: Request) {
   try {
@@ -119,9 +122,15 @@ export async function editProductController(id: string, formData: FormData) {
   try {
     const formDataImagesFilter = formData.getAll("images") as File[];
     const formDataImages = formDataImagesFilter.filter((img) => typeof img !== null);
+    const price = Number(formData.get("price"));
+    const priceOffer = Number(formData.get("priceOffer"));
 
     if (!formDataImages) {
       throw new Error("Se requieren imagenes");
+    }
+
+    if (priceOffer && priceOffer > price) {
+      throw new Error("El precio de oferta no debe ser mayor al precio de costo");
     }
 
     const options = {
@@ -146,8 +155,8 @@ export async function editProductController(id: string, formData: FormData) {
     });
     const product: Omit<ProductType, "id" | "categories"> = {
       title: formData.get("title") as string,
-      price: Number(formData.get("price")),
-      priceOffer: Number(formData.get("priceOffer")),
+      price: price,
+      priceOffer: priceOffer,
       description: formData.get("description") as string,
       // category: formData.getAll("category") as string[],
       images: generateImg.map((image) => image?.url),
@@ -224,6 +233,63 @@ export async function getOfferProductsController() {
     return { data: productsService, success: true };
   } catch (e) {
     const error = e as Error;
+    throw new Error(error.message);
+  }
+}
+
+export async function getShoppingCartController(shoppingCart: Omit<ShoppingCart, "variant">[]) {
+  try {
+    const shoppingCartIds: string[] = shoppingCart.map((item) => item.id);
+    const responseService = await getShoppingCartService(shoppingCartIds);
+    if (!responseService.length) return { data: [], success: true };
+    const data: (ShoppingCart | null)[] = shoppingCart.map((product) => {
+      const findProduct = responseService.find((p) => p.dataValues.id === product.id);
+      if (!findProduct) return null;
+      if (!product.variantId) {
+        return {
+          ...findProduct.dataValues,
+          quantity: product.quantity,
+          // variant: [],
+        };
+      }
+
+      const variant = (findProduct.dataValues.variant as VariantType[]).find(
+        (variantItem: VariantType) => variantItem.id === product.variantId
+      );
+      const size = variant?.sizes.find((size) => size === product.variantSize);
+
+      if (!variant && !size) {
+        return null;
+      }
+
+      return {
+        ...product,
+        title: findProduct.dataValues.title,
+        price: findProduct.dataValues.price,
+        priceOffer: findProduct.dataValues.priceOffer,
+        images: findProduct.dataValues.images,
+        quantity: product.quantity,
+        // variant,
+        // varinatSize: size,
+        // variant: filteredVariant,
+      };
+    });
+    const filteredData = data.filter((item) => item !== null) as ShoppingCart[];
+    return { data: filteredData, success: true };
+  } catch (e) {
+    const error = e as Error;
+    console.error("Esto es el error: ", error);
+    throw new Error(error.message);
+  }
+}
+
+export async function getPriceFilterController() {
+  try {
+    const response = await getPriceFilterService();
+    return { data: response, success: false };
+  } catch (e) {
+    const error = e as Error;
+    console.error("getPriceFilterController", e);
     throw new Error(error.message);
   }
 }

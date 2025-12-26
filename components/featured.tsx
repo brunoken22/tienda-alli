@@ -1,5 +1,4 @@
 "use client";
-import { TemplateProduct } from "@/components/templateProduct";
 import { useState } from "react";
 import { EsqueletonProduct } from "./esqueleton";
 import { ToastContainer, toast } from "react-toastify";
@@ -9,6 +8,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-context";
 import { ProductType } from "@/types/product";
+import TemplateProduct from "./templateProduct";
 
 export function ProductsFeatured({ featured }: { featured: any }) {
   const [openLinkProduct, setOpenLinkProduct] = useState<string[]>([]);
@@ -33,12 +33,10 @@ export function ProductsFeatured({ featured }: { featured: any }) {
                 document.body.style.overflow = "hidden";
               }}
               id={item.id}
-              Name={item.title}
-              Images={item.images}
+              title={item.title}
+              images={item.images}
               price={item.price}
-              priceOfert={item.priceOffer}
-              oferta={item.priceOffer ? true : false}
-              categories={item.categories}
+              priceOffer={item.priceOffer}
               size={item.sizes}
               addToast={() =>
                 toast.success("¡Se agregó al carrito!", {

@@ -3,7 +3,8 @@ import { CategoryType } from "./category";
 export type VariantType = {
   id: string;
   sizes: string[];
-  color: string;
+  colorName: string;
+  colorHex: string;
   // stock: number;
   price: number;
   priceOffer: number;

@@ -180,7 +180,7 @@ export default function CategoriasPage() {
             <Card key={category.id} className='overflow-hidden hover:shadow-lg transition-shadow'>
               <div className='relative h-48 bg-muted'>
                 <img
-                  src={category.image || "/placeholder.svg?height=200&width=400"}
+                  src={category.image || "/tienda-alli-webp?height=200&width=400"}
                   alt={category.title}
                   className='w-full h-full object-cover'
                 />
@@ -277,7 +277,7 @@ export default function CategoriasPage() {
                 {imagePreview ? (
                   <div className='relative w-full h-48 rounded-lg overflow-hidden border-2 border-primary'>
                     <img
-                      src={imagePreview || "/placeholder.svg"}
+                      src={imagePreview || "/tienda-alli-webp"}
                       alt='Preview'
                       className='w-full h-full object-cover'
                     />

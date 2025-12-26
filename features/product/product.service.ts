@@ -1,4 +1,4 @@
-import { ProductQueryParams, ProductType } from "@/types/product";
+import { ProductQueryParams, ProductType, VariantType } from "@/types/product";
 import Product from "./product.model";
 import { Op, Sequelize } from "sequelize";
 import Category from "../category/category.model";
@@ -74,7 +74,7 @@ export async function getProductsService(filters?: ProductQueryParams) {
       include: category ? includeConditions : [],
       distinct: true,
     });
-
+    console.log("Ordenar por: ", sortBy);
     // Obtener productos con paginación
     const products = await Product.findAll({
       where: whereConditions,
@@ -249,6 +249,62 @@ export async function getOfferProductsService() {
     return products;
   } catch (e) {
     const error = e as Error;
+    throw new Error(error.message);
+  }
+}
+
+export async function getShoppingCartService(shoppingCartIds: string[]) {
+  try {
+    const products = await Product.findAll({
+      where: {
+        id: shoppingCartIds,
+      },
+      attributes: ["id", "title", "price", "priceOffer", "variant", "images"],
+    });
+    return products;
+  } catch (e) {
+    const error = e as Error;
+    throw new Error(error.message);
+  }
+}
+
+export async function getPriceFilterService() {
+  try {
+    const products = await Product.findAll({
+      where: { isActive: true },
+      attributes: ["id", "price", "priceOffer", "variant"],
+      raw: true,
+    });
+
+    let allPrices: number[] = [];
+    let allPriceOffers: number[] = [];
+    products.forEach((product: any) => {
+      // Precio base del producto
+      if (product.price) allPrices.push(Number(product.price));
+      if (product.priceOffer) allPriceOffers.push(Number(product.priceOffer));
+
+      // Precios de variantes
+      if (product.variant && Array.isArray(product.variant)) {
+        product.variant.forEach((variant: VariantType) => {
+          if (variant.price) allPrices.push(Number(variant.price));
+          if (variant.priceOffer) allPriceOffers.push(Number(variant.priceOffer));
+        });
+      }
+    });
+
+    // Filtrar valores válidos (mayores a 0)
+    const validPrices = allPrices.filter((price) => price > 0);
+    const validPriceOffers = allPriceOffers.filter((price) => price > 0);
+
+    return {
+      minPrice: validPrices.length > 0 ? Math.min(...validPrices) : 0,
+      maxPrice: validPrices.length > 0 ? Math.max(...validPrices) : 0,
+      minPriceOffer: validPriceOffers.length > 0 ? Math.min(...validPriceOffers) : 0,
+      maxPriceOffer: validPriceOffers.length > 0 ? Math.max(...validPriceOffers) : 0,
+    };
+  } catch (e) {
+    const error = e as Error;
+    console.error("getPriceFilterService", e);
     throw new Error(error.message);
   }
 }

@@ -2,17 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Modal from "./modal";
-import { TemplateShopppingCartProduct } from "./templateProduct";
 import { Button } from "@/components/ui/button";
 import { X, ShoppingBag } from "lucide-react";
 import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-context";
+import TemplateShopppingCart from "./TemplateShopppingCart";
 
 export default function ShoppingCart() {
   const { closeCart } = useShoppingCartActions();
   const {
     state: { cart },
   } = useShoppingCart();
-  const [buysAll, setBuysAll] = useState<any>([]);
   const [openIsCompraLink, setOpenIsCompraLink] = useState(false);
 
   useEffect(() => {
@@ -21,26 +20,26 @@ export default function ShoppingCart() {
     let buysMod = "Hola, quisiera pedirte estas cosas";
     cart.map((item) => {
       buysMod += `
-      🛒*${item.title}* id:${item.id} precio:${item.price} cantidad:${item.cantidad}
+      🛒*${item.title}* id:${item.id} precio:${item.price} cantidad:${item.quantity}
       `;
       return {
         id: item.id,
-        cantidad: item.cantidad,
+        quantity: item.quantity,
         precio: item.price,
         nombre: item.title,
       };
     });
-    setBuysAll(buysMod);
   }, [cart]);
+
   const total = cart.reduce(
-    (acumulador, objeto) => acumulador + objeto.price * (objeto.cantidad || 1),
+    (acumulador, objeto) =>
+      acumulador + (objeto.priceOffer ? objeto.priceOffer : objeto.price) * (objeto.quantity || 1),
     0
   );
   return (
     <>
-      {/* Carrito */}
       <div className='fixed right-0 top-0 bottom-0 z-50 bg-white w-full max-w-md shadow-2xl transform transition-transform duration-300 ease-in-out'>
-        <div className='flex flex-col h-full'>
+        <div className='flex flex-col h-full shadow-lg shadow-black'>
           {/* Header */}
           <div className='flex items-center justify-between p-6 border-b bg-gradient-to-r from-primary to-primary/90 text-white'>
             <div className='flex items-center space-x-2'>
@@ -61,15 +60,19 @@ export default function ShoppingCart() {
           <div className='flex-1 overflow-y-auto p-4'>
             {cart.length > 0 ? (
               <div className='space-y-4'>
-                {cart.map((item, position) => (
-                  <TemplateShopppingCartProduct
-                    key={`${item.id}-${item.size}-${position}`}
-                    id={item.id}
-                    price={item.price}
-                    title={item.title}
-                    cantidad={item.cantidad}
-                    img={item.img}
-                    size={item.size}
+                {cart.map((cart, position) => (
+                  <TemplateShopppingCart
+                    key={`${cart.id}-${position}`}
+                    id={cart.id}
+                    title={cart.title}
+                    price={cart.price}
+                    priceOffer={cart.priceOffer}
+                    quantity={cart.quantity}
+                    images={cart.images}
+                    variantId={cart.variantId}
+                    variantColorName={cart.variantColorName}
+                    variantColorHex={cart.variantColorHex}
+                    variantSize={cart.variantSize}
                   />
                 ))}
               </div>

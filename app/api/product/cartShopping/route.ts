@@ -1,15 +1,14 @@
-export const dynamic = 'force-dynamic';
-
-import { getCartShopping } from '@/lib/controllers/product';
-import {NextResponse} from 'next/server';
+export const dynamic = "force-dynamic";
+import { getShoppingCartController } from "@/features/product/product.controller";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const {ids} = await req.json();
-
-    const data = await getCartShopping(JSON.parse(ids));
+    const shoppingCart = await req.json();
+    const data = await getShoppingCartController(shoppingCart);
     return NextResponse.json(data);
   } catch (e) {
-    return NextResponse.json(e);
+    const error = e as Error;
+    return NextResponse.json({ message: error.message, success: false }, { status: 500 });
   }
 }

@@ -72,8 +72,11 @@ const Product = sequelize.define(
             if (!Array.isArray(v.sizes)) {
               throw new Error(`variant[${index}].sizes debe ser un array`);
             }
-            if (!v.color || typeof v.color !== "string") {
+            if (!v.colorName || typeof v.colorName !== "string") {
               throw new Error(`variant[${index}].color debe ser un string`);
+            }
+            if (!v.colorHex || typeof v.colorHex !== "string") {
+              throw new Error(`variant[${index}].colorHex debe ser un string`);
             }
             // if (typeof v.stock !== "number") {
             //   throw new Error(`variant[${index}].stock debe ser un número`);

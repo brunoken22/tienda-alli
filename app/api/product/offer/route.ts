@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getOfferProductsController } from "@/features/product/product.controller";
 import { NextResponse } from "next/server";
 

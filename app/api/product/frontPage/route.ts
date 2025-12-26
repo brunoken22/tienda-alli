@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getLatestAdditionsProductsController } from "@/features/product/product.controller";
 
 export async function GET() {

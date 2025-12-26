@@ -1,7 +1,6 @@
 "use client";
 import useSWR from "swr";
-import { useMemo } from "react";
-import { TypeCompra } from "./atom";
+import { ShoppingCart } from "@/types/shopping-cart";
 
 async function fetcher(dataParams: any[]) {
   const option = dataParams[1] || {};
@@ -19,7 +18,9 @@ export function GetDataProduct(
   typePrice?: number[] | "",
   limit?: number,
   offset?: number,
-  order?: "asc" | "desc"
+  order?: "asc" | "desc",
+  onSale?: boolean,
+  sortBy?: string
 ) {
   const { data, isLoading } = useSWR(
     [
@@ -29,7 +30,7 @@ export function GetDataProduct(
           : "?price=" + JSON.stringify(typePrice)
       }${
         typeSearch?.length ? "&type=" + JSON.stringify(typeSearch) : "&type=[]"
-      }&limit=${limit}&offset=${offset}&order=${order}`,
+      }&limit=${limit}&offset=${offset}&sortBy=${sortBy}&order=${order}&onSale=${onSale}`,
     ],
     fetcher,
     {
@@ -40,36 +41,14 @@ export function GetDataProduct(
   return { data, isLoading };
 }
 
-export async function getDataCartShopping(ids: string | null) {
+export async function getDataCartShopping(shoppingCart: ShoppingCart[]) {
   const option = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ ids }),
+    body: JSON.stringify(shoppingCart),
   };
   const data = await fetcher([`/api/product/cartShopping`, option]);
-  return data.length ? data : [];
-}
-
-export function useCartCalculations(items: TypeCompra[]) {
-  return useMemo(() => {
-    const total = items.reduce(
-      (accumulator, item) => accumulator + item.price * (item.cantidad || 1),
-      0
-    );
-
-    const formattedTotal = total.toLocaleString("es-AR", {
-      style: "currency",
-      currency: "ARS",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-
-    const orderText = `Mi pedido:
-${items.map((item) => `🖌 ${item.cantidad} ${item.title}`).join("\n")}
-🛒 *Total: ${formattedTotal}*`;
-
-    return { total, formattedTotal, orderText };
-  }, [items]);
+  return data;
 }

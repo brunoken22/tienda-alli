@@ -1,6 +1,11 @@
 import { ProductType } from "@/types/product";
 import baseURL from "@/utils/baseUrl";
 
+// Verifica si estamos en tiempo de build
+const isBuildTime =
+  process.env.NEXT_PHASE === "phase-production-build" ||
+  process.env.npm_lifecycle_event === "build";
+
 export async function getProducts(queryParams?: {
   search?: string;
   category?: string;
@@ -46,6 +51,73 @@ export async function getProducts(queryParams?: {
 
   const data = await response.json();
   return data;
+}
+
+export async function getFrontPage(): Promise<ProductType[] | []> {
+  // Si estamos en build time, retorna array vacío
+  if (isBuildTime) {
+    console.log("Build time: omitiendo fetch de frontPage");
+    return [];
+  }
+
+  try {
+    const response = await fetch(`${baseURL}/api/product/frontPage`, {
+      // Agrega cache para producción
+      next: { revalidate: 3600 }, // Revalida cada hora
+    });
+    const data = await response.json();
+    console.log("ESTO ES LA DATA DE getFrontPage: ", data.data.length);
+    if (!data.success) {
+      return [];
+    }
+    return data.data;
+  } catch (e) {
+    console.log("Error en getFrontPage:", e);
+    return [];
+  }
+}
+
+export async function getOfferPage(): Promise<ProductType[] | []> {
+  // Si estamos en build time, retorna array vacío
+  if (isBuildTime) {
+    console.log("Build time: omitiendo fetch de offerPage");
+    return [];
+  }
+
+  try {
+    const response = await fetch(`${baseURL}/api/product/offer`, {
+      next: { revalidate: 3600 },
+    });
+    const data = await response.json();
+
+    if (!data.success) {
+      return [];
+    }
+    return data.data;
+  } catch (e) {
+    console.log("Error en getOfferPage:", e);
+    return [];
+  }
+}
+
+export async function getProductFeatured() {
+  // Si estamos en build time, retorna array vacío
+  if (isBuildTime) {
+    console.log("Build time: omitiendo fetch de productFeatured");
+    return { success: false, data: [] };
+  }
+
+  try {
+    const response = await fetch(`${baseURL}/api/product/featured`, {
+      next: { revalidate: 3600 },
+    });
+    const data = await response.json();
+    console.log("ESTO ES LA DATA DE getProductFeatured: ", data.data.length);
+    return data;
+  } catch (e) {
+    console.log("Error en getProductFeatured:", e);
+    return { success: false, data: [] };
+  }
 }
 
 export async function getProductID(id: string): Promise<ProductType> {

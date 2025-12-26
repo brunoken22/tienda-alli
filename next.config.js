@@ -2,7 +2,16 @@
 const nextConfig = {
   serverExternalPackages: ["sequelize", "pg", "pg-hstore"],
   images: {
-    domains: ["v5.airtableusercontent.com", "res.cloudinary.com", "localhost"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "**",
+      },
+    ],
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 

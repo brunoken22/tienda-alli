@@ -5,7 +5,7 @@ export async function getCategories(): Promise<CategoryType[]> {
   try {
     const response = await fetch(`${baseURL}/api/admin/category`);
     const data = await response.json();
-    return data.data;
+    return data?.data || [];
   } catch (e) {
     console.error("Este es el error del getCategories: ", e);
     return [];

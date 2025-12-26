@@ -7,7 +7,6 @@ import Link from "next/link";
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const product = await getProductID(id);
-  console.log("ESTE ES EL PRODUCTO: ", product);
   if (!product || !product.isActive) {
     return (
       <div className='min-h-screen bg-background'>

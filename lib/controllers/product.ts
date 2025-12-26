@@ -10,9 +10,6 @@ export async function searchProduct(req: Request) {
     const offset = Number(searchParams.get("offset") || 0);
     const order = searchParams.get("order") || "desc";
     const { finalLimit, finalOffset } = getOffsetAndLimitFom(limit, offset);
-    const cadenaDeBusquedaCategory = JSON.parse(typeCategory)
-      .map((item: string) => `type:${item}`)
-      .join(" OR ");
 
     const cadenaDeBusquedaPrice = `"Unit cost" >= ${typePrice[0]} AND "Unit cost" <= ${typePrice[1]}`;
 
@@ -29,22 +26,6 @@ export async function searchProduct(req: Request) {
   } catch (e: any) {
     return { success: false, message: e.message };
   }
-}
-
-export async function getCartShopping(dataParans: any[]) {
-  const newDataFinalPromises = dataParans.map(async (item) => {
-    return {
-      cantidad: item.cantidad,
-      id: item?.id,
-      title: item.title,
-      price: item.price,
-      size: item.size,
-      img: "/tienda-alli.webp",
-    };
-  });
-
-  const newDataFinal = await Promise.all(newDataFinalPromises);
-  return newDataFinal;
 }
 
 export function getOffsetAndLimitFom(

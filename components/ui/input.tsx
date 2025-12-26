@@ -1,57 +1,59 @@
-import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-context";
+import { useShoppingCartActions } from "@/contexts/product-context";
 import React, { useEffect, useState } from "react";
 
-function InputNumber({ cantidad, id, talla }: { cantidad: number; id: string; talla?: string }) {
-  const [cantidadState, setCantidadState] = useState(cantidad || 1);
-  const { setCart } = useShoppingCartActions();
-  const {
-    state: { cart },
-  } = useShoppingCart();
-  useEffect(() => {
-    setCantidadState(cantidad);
-  }, [cantidad]);
+function InputNumber({
+  id,
+  quantity,
+  variantId,
+  variantColorName,
+  variantColorHex,
+  variantSize,
+}: {
+  id: string;
+  quantity: number;
+  variantId: string;
+  variantColorName: string;
+  variantColorHex: string;
+  variantSize: string;
+}) {
+  const [quantityState, setQuantityState] = useState(quantity || 1);
+  const { updateQuantity } = useShoppingCartActions();
 
   useEffect(() => {
-    const newCart = cart.map((item) => {
-      if (item.id == id) {
-        if (talla && item.size !== talla) {
-          return item;
-        }
-        return { ...item, cantidad: cantidadState };
-      }
-
-      return item;
-    });
-    setCart(newCart);
-  }, [cantidadState]);
+    setQuantityState(quantity);
+  }, [quantity]);
 
   useEffect(() => {
-    if (cart.length) {
-      return localStorage.setItem("category", JSON.stringify(cart));
-    }
-  }, [cart]);
+    updateQuantity(id, variantId, variantSize, variantColorHex, variantColorName, quantityState);
+  }, [quantityState]);
 
   const handleCantidadChange = (e: React.ChangeEvent) => {
     e.preventDefault();
     const target = e.target as HTMLInputElement;
     if (Number(target.value) <= 0 || Number(target.value) >= 15) return;
-    setCantidadState(Number(target.value));
+    setQuantityState(Number(target.value));
   };
+
   const handleCountCantidad = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (cantidadState < 1) {
+    if (quantityState < 1) {
       return;
     }
     if (e.currentTarget.id == "min") {
-      setCantidadState(cantidadState - 1);
+      setQuantityState(quantityState - 1);
       return;
     }
-    setCantidadState(cantidadState + 1);
+    setQuantityState(quantityState + 1);
   };
+
   return (
     <div className='flex gap-2 text-primary  bg-white w-fit'>
-      {cantidadState >= 2 && (
-        <button className='font-bold text-2xl pr-2 pl-2' id='min' onClick={handleCountCantidad}>
+      {quantityState >= 2 && (
+        <button
+          className='font-bold hover:bg-primary hover:text-secondary  border border-primary/30 rounded-md text-2xl pr-2 pl-2'
+          id='min'
+          onClick={handleCountCantidad}
+        >
           -
         </button>
       )}
@@ -59,15 +61,19 @@ function InputNumber({ cantidad, id, talla }: { cantidad: number; id: string; ta
         type='number'
         name=''
         id={id}
-        value={cantidadState}
+        value={quantityState}
         min={1}
         max={15}
         maxLength={2}
         onChange={handleCantidadChange}
         className='w-[40px] focus-visible:outline-none text-center'
       />
-      {cantidadState <= 15 && (
-        <button className='font-bold text-2xl pr-2 pl-2' id='max' onClick={handleCountCantidad}>
+      {quantityState <= 15 && (
+        <button
+          className='font-bold hover:bg-primary hover:text-secondary  border border-primary/30 rounded-md text-2xl pr-2 pl-2'
+          id='max'
+          onClick={handleCountCantidad}
+        >
           +
         </button>
       )}

@@ -4,11 +4,17 @@ import Link from "next/link";
 import ShoppingCart from "./shoppingCart";
 import { usePathname } from "next/navigation";
 import { getDataCartShopping } from "@/lib/hook";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Search, ShoppingCartIcon as CartIcon, Menu, X, MessageCircle } from "lucide-react";
 import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-context";
+
+const navigationItems = [
+  { href: "/", label: "Inicio" },
+  { href: "/nosotros", label: "Nosotros" },
+  { href: "/productos", label: "Productos" },
+];
 
 export function Header() {
   const [openInput, setOpenInput] = useState(false);
@@ -19,25 +25,20 @@ export function Header() {
 
   useEffect(() => {
     (async () => {
-      const data = await getDataCartShopping(
-        typeof window !== "undefined" ? localStorage.getItem("category") : null
-      );
-      if (data) {
-        setCart(data);
+      const localStorageCart =
+        typeof window !== "undefined" ? localStorage.getItem("shoppingCart") : null;
+
+      const data = await getDataCartShopping(JSON.parse(localStorageCart || "[]"));
+      if (data.success) {
+        setCart(data.data);
       }
     })();
   }, []);
 
-  const navigationItems = [
-    { href: "/", label: "Inicio" },
-    { href: "/nosotros", label: "Nosotros" },
-    { href: "/productos", label: "Productos" },
-  ];
-
   const isActivePath = (path: string) => pathname === path;
 
   return (
-    <>
+    <Suspense>
       {/* Header Principal */}
       <div className='bg-secondary'>
         <header className=' max-sm:rounded-bl-[30px] bg-primary/90 '>
@@ -192,6 +193,6 @@ export function Header() {
           </Link>
         </div>
       ) : null}
-    </>
+    </Suspense>
   );
 }

@@ -108,7 +108,7 @@ export default function ProductCarousel({
                       )}
                     </div>
                     <Button size='sm'>
-                      <Link href={`/product/${product.id}`} className='flex gap-2 flex-row'>
+                      <Link href={`/productos/${product.id}`} className='flex gap-2 flex-row'>
                         Ver
                         <ChevronRight className='h-4 w-4' />
                       </Link>

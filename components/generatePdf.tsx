@@ -1,4 +1,4 @@
-import { TypeCompra } from "@/types/shopping-cart";
+import { ShoppingCart } from "@/types/shopping-cart";
 import { Document, Page, Text, View, Image, StyleSheet, Font } from "@react-pdf/renderer";
 
 // Registrar fuentes (opcional pero recomendado)
@@ -187,10 +187,10 @@ const formatCurrency = (value: number): string => {
   });
 };
 
-export function GeneratePdf({ data }: { data: TypeCompra[] }) {
+export function GeneratePdf({ data }: { data: Omit<ShoppingCart, "variant">[] }) {
   const date = formatDate();
-  const subtotal = data.reduce((sum, item) => sum + item.price * (item.cantidad || 1), 0);
-  const taxRate = 0.0; // 21% IVA
+  const subtotal = data.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+  const taxRate = 0.0; // 21% q
   const tax = subtotal * taxRate;
   const total = subtotal + tax;
 
@@ -255,17 +255,17 @@ export function GeneratePdf({ data }: { data: TypeCompra[] }) {
               >
                 <Text style={[styles.tableCell, { flex: 0.5 }]}>{index + 1}</Text>
                 <Image
-                  src={producto.img || "/placeholder.svg"}
+                  src={producto.images[0] || "/tienda-alli-webp"}
                   style={[styles.tableCell, styles.productImage]}
                 />
                 <Text style={[styles.tableCell, styles.productNameCell]}>
                   {producto.title}
-                  {producto.size && ` - Talle ${producto.size}`}
+                  {producto.variantSize && ` - Talle ${producto.variantSize}`}
                 </Text>
-                <Text style={styles.tableCell}>{producto.cantidad}</Text>
+                <Text style={styles.tableCell}>{producto.quantity}</Text>
                 <Text style={styles.tableCell}>{formatCurrency(producto.price)}</Text>
                 <Text style={styles.tableCell}>
-                  {formatCurrency(producto.cantidad * producto.price)}
+                  {formatCurrency(producto.quantity * producto.price)}
                 </Text>
               </View>
             ))}
