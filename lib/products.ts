@@ -82,6 +82,20 @@ export async function getOfferPage(): Promise<ProductType[] | []> {
   }
 }
 
+export async function getMetrics() {
+  try {
+    const response = await fetch(`${baseURL}/api/product/metrics`);
+    const data = await response.json();
+    if (!data.success) {
+      throw new Error("Error fetching metrics");
+    }
+    return data.data.metrics;
+  } catch (e) {
+    console.error("Error en getOfferPage:", e);
+    return { products: 0, categories: 0, variants: 0, offer: 0 };
+  }
+}
+
 // export async function getProductFeatured() {
 //   // Si estamos en build time, retorna array vacío
 //   if (isBuildTime) {

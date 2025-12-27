@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getProducts } from "@/lib/products";
+import { getMetrics, getProducts } from "@/lib/products";
 import { Package, Palette, Plus, Lock, ShoppingBag, Tag, Logs } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -13,48 +13,55 @@ export default function DashboardPage() {
     data: [],
     isLoading: true,
   });
+  const [metrics, setMetrics] = useState<{
+    products: number;
+    categories: number;
+    variants: number;
+    offer: number;
+  }>({
+    products: 0,
+    categories: 0,
+    variants: 0,
+    offer: 0,
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadProducts() {
       const data = await getProducts();
+      const metrics = await getMetrics();
       setProducts(data);
+      setMetrics(metrics);
       setLoading(false);
     }
     loadProducts();
   }, []);
 
-  const totalProducts = products.data.length;
-  const totalVariants = products.data.reduce((acc, p) => acc + p.variant.length, 0);
-  const productsWithOffers = products.data.filter((p) => p.priceOffer > 0).length;
-  const recentProducts = products.data.slice(0, 5);
-  const uniqueCategories = new Set(products.data.flatMap((p) => p.categories)).size;
-
   const stats = [
     {
       title: "Total Productos",
-      value: loading ? "..." : totalProducts.toString(),
-      description: `En ${uniqueCategories} categorías`,
+      value: loading ? "..." : metrics.products,
+      description: `En ${metrics.products} categorías`,
       icon: Package,
       gradient: "from-blue-500 to-cyan-500",
     },
     {
       title: "Modelos ",
-      value: loading ? "..." : totalVariants.toString(),
+      value: loading ? "..." : metrics.variants,
       description: "Combinaciones disponibles",
       icon: Palette,
       gradient: "from-purple-500 to-pink-500",
     },
     {
       title: "Ofertas",
-      value: loading ? "..." : productsWithOffers.toString(),
+      value: loading ? "..." : metrics.offer,
       description: "Productos en descuento",
       icon: Tag,
       gradient: "from-orange-500 to-red-500",
     },
     {
       title: "Categorías",
-      value: loading ? "..." : uniqueCategories.toString(),
+      value: loading ? "..." : metrics.categories,
       description: "Diferentes secciones",
       icon: ShoppingBag,
       gradient: "from-green-500 to-emerald-500",
@@ -91,6 +98,8 @@ export default function DashboardPage() {
       gradient: "from-pink-500 to-rose-500",
     },
   ];
+
+  const recentProducts = products.data.slice(0, 5);
 
   return (
     <div className='p-2 space-y-6'>

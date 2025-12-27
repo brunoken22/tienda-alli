@@ -307,3 +307,66 @@ export async function getPriceFilterService() {
     throw new Error(error.message);
   }
 }
+
+export async function getMetricsService() {
+  try {
+    // 1. Obtener total de productos activos
+    const totalProductos = await Product.count({
+      where: { isActive: true },
+    });
+
+    // 2. Obtener total de categorías activas
+    const categories = await Category.count({
+      where: { active: true },
+    });
+
+    // 3. Obtener todos los productos activos para calcular modelos y ofertas
+    const products = await Product.findAll({
+      where: { isActive: true },
+      attributes: ["id", "variant", "price", "priceOffer"],
+      raw: true, // Esto devuelve objetos planos en lugar de instancias
+    });
+
+    let variants = 0;
+    let offer = 0;
+
+    // Calcular modelos y ofertas
+    products.forEach((product: any) => {
+      // Contar variantes
+      if (product.variant && Array.isArray(product.variant)) {
+        variants += product.variant.length;
+
+        // Verificar si alguna variante tiene oferta
+        const tieneOfertaEnVariantes = product.variant.some(
+          (v: VariantType) => v.priceOffer && v.priceOffer > 0 && v.priceOffer < v.price
+        );
+
+        // Verificar si el producto principal tiene oferta
+        const tieneOfertaPrincipal =
+          product.priceOffer && product.priceOffer > 0 && product.price < product.priceOffer;
+
+        if (tieneOfertaEnVariantes || tieneOfertaPrincipal) {
+          offer++;
+        }
+      } else {
+        // Si no tiene variantes, verificar solo oferta principal
+        if (product.priceOffer && product.priceOffer > 0 && product.priceOffer < product.price) {
+          offer++;
+        }
+      }
+    });
+
+    return {
+      metrics: {
+        products: totalProductos,
+        categories,
+        variants,
+        offer,
+      },
+    };
+  } catch (e) {
+    const error = e as Error;
+    console.error("getMetricsService error:", e);
+    throw new Error(`Error al obtener métricas: ${error.message}`);
+  }
+}

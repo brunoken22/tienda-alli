@@ -4,6 +4,7 @@ import {
   deleteProductService,
   editProductService,
   getLatestAdditionsProductsService,
+  getMetricsService,
   getOfferProductsService,
   getPriceFilterService,
   getProductIDService,
@@ -289,6 +290,17 @@ export async function getPriceFilterController() {
   } catch (e) {
     const error = e as Error;
     console.error("getPriceFilterController", e);
+    throw new Error(error.message);
+  }
+}
+
+export async function getMetricsController() {
+  try {
+    const response = await getMetricsService();
+    return { data: response, success: true };
+  } catch (e) {
+    const error = e as Error;
+    console.error("getMetricsController", e);
     throw new Error(error.message);
   }
 }
