@@ -100,25 +100,25 @@ export async function getOfferPage(): Promise<ProductType[] | []> {
   }
 }
 
-export async function getProductFeatured() {
-  // Si estamos en build time, retorna array vacío
-  if (isBuildTime) {
-    console.log("Build time: omitiendo fetch de productFeatured");
-    return { success: false, data: [] };
-  }
+// export async function getProductFeatured() {
+//   // Si estamos en build time, retorna array vacío
+//   if (isBuildTime) {
+//     console.log("Build time: omitiendo fetch de productFeatured");
+//     return { success: false, data: [] };
+//   }
 
-  try {
-    const response = await fetch(`${baseURL}/api/product/featured`, {
-      next: { revalidate: 3600 },
-    });
-    const data = await response.json();
-    console.log("ESTO ES LA DATA DE getProductFeatured: ", data.data.length);
-    return data;
-  } catch (e) {
-    console.log("Error en getProductFeatured:", e);
-    return { success: false, data: [] };
-  }
-}
+//   try {
+//     const response = await fetch(`${baseURL}/api/product/featured`, {
+//       next: { revalidate: 3600 },
+//     });
+//     const data = await response.json();
+//     console.log("ESTO ES LA DATA DE getProductFeatured: ", data.data.length);
+//     return data;
+//   } catch (e) {
+//     console.log("Error en getProductFeatured:", e);
+//     return { success: false, data: [] };
+//   }
+// }
 
 export async function getProductID(id: string): Promise<ProductType> {
   try {

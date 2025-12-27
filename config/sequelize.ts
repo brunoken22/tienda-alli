@@ -3,7 +3,7 @@ import pg from "pg"; // Explicitly import the pg package
 
 const sequelize = new Sequelize(process.env.DB_URL!, {
   dialect: "postgres",
-  dialectModule: pg, // Add this line
+  dialectModule: pg,
 });
 
 export async function initDatabase() {

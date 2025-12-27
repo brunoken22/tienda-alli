@@ -1,15 +1,13 @@
-export const dynamic = "force-dynamic"; // Convierte a SSR
+export const dynamic = "force-dynamic";
 
 import dynamicLoader from "next/dynamic";
 import { CarouselHeader } from "@/components/carousel";
-import { ProductsFeatured } from "@/components/featured";
 import FeaturedFilter from "@/components/featuredFilter";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { getCategories } from "@/lib/category";
 import { ProductCardSkeletonGrid } from "@/components/ui/EsqueletonCardSwiper";
-import { getFrontPage, getOfferPage, getProductFeatured } from "@/lib/products";
+import { getFrontPage, getOfferPage } from "@/lib/products";
 
 const ProductCarousel = dynamicLoader(() => import("@/components/carouselProduct"), {
   ssr: true,
@@ -18,15 +16,12 @@ const ProductCarousel = dynamicLoader(() => import("@/components/carouselProduct
 const banner = ["/banner1.webp", "/banner2.webp", "/banner3.webp"];
 
 export default async function Home() {
-  const [data, featured, offer, categories] = await Promise.all([
+  const [data, offer, categories] = await Promise.all([
     getFrontPage(),
-    getProductFeatured(),
+    // getProductFeatured(),
     getOfferPage(),
     getCategories(),
   ]);
-
-  // Corrección: featured.lenght -> featured.length
-  const hasFeaturedProducts = featured?.data?.length > 0;
 
   return (
     <div className='flex flex-col gap-12 pb-8 max-md:px-2'>
@@ -65,7 +60,7 @@ export default async function Home() {
         </section>
       )}
 
-      {hasFeaturedProducts && (
+      {/* {hasFeaturedProducts && (
         <section className=''>
           <div className='container mx-auto px-4 max-w-7xl'>
             <div className='flex items-center justify-between mb-12'>
@@ -97,7 +92,7 @@ export default async function Home() {
             </div>
           </div>
         </section>
-      )}
+      )} */}
 
       {/* CTA Section - siempre visible */}
       <section className='p-12 max-md:p-4 rounded-md bg-gradient-to-r from-primary/80 to-primary text-white'>
