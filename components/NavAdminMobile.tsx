@@ -1,11 +1,20 @@
 import { LayoutDashboard, Package, LogOut, LockKeyhole, Logs } from "lucide-react";
 import { navItemsAdmin } from "./admin/sidebar";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button } from "./ui/button";
+import { logout } from "@/lib/serverAdmin";
 
 export default function NavAdminMobile() {
+  const { push } = useRouter();
   const pathname = usePathname();
 
+  const handleLogout = async () => {
+    const response = await logout();
+    if (response) {
+      push("/admin/login");
+    }
+  };
   return (
     <div className='grid grid-cols-5  items-center justify-center'>
       <Link
@@ -33,12 +42,12 @@ export default function NavAdminMobile() {
         {navItemsAdmin[1].title}
       </Link>
       <div className='flex justify-center'>
-        <Link
-          href={navItemsAdmin[1].href}
-          className={`flex text-sm max-sm:text-[11px]  justify-center items-center p-5  bg-primary text-secondary hover:bg-primary/50 hover:text-primary rounded-full h-full transition-colors`}
+        <Button
+          onClick={handleLogout}
+          className={`w-12 h-12 flex justify-center items-center p-5  bg-primary text-secondary hover:bg-primary/50  !rounded-full  transition-colors`}
         >
           <LogOut className='w-4 h-4' />
-        </Link>
+        </Button>
       </div>
       <Link
         href={navItemsAdmin[2].href}
