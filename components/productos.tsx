@@ -182,7 +182,6 @@ export default function ProductosPage() {
   // Verificar si hay filtros activos
   const hasActiveFilters =
     search || category || minPrice > 0 || maxPrice < priceFilter.maxPrice || typeSearch.length > 0;
-  console.log(priceFilter.minPrice);
   return (
     <Suspense>
       <div className='min-h-screen max-md:p-3 py-8 px-2'>

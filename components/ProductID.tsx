@@ -134,16 +134,6 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
       });
       return;
     }
-
-    console.log("Adding to cart:", {
-      productId: product.id,
-      variantId: selectedVariant?.id,
-      size: selectedSize,
-      quantity,
-      product: product.title,
-      variant: selectedVariant,
-      price: currentPrice,
-    });
   };
 
   const handleQuantityChange = (delta: number) => {
@@ -184,7 +174,6 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
       },
     },
   };
-  console.log(product);
 
   return (
     <>

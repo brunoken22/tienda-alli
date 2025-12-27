@@ -27,7 +27,6 @@ export async function signinAdminService(email: string, password: string): Promi
 export async function resetPasswordService(id: string, password: string, newPassword: string) {
   try {
     const admin = await Admin.scope("withPassword").findByPk(id);
-    console.log("Este es el usuario: ", admin);
     if (!admin?.dataValues.id) throw new Error("Este usuario no existe");
     const isValid = await bcrypt.compare(password, admin?.dataValues.password);
     if (!isValid) throw new Error("No tienes permiso para cambiar la contraseña");

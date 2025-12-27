@@ -174,16 +174,12 @@ export default function ForgotPasswordPage() {
     const code = searchParams.get("code");
     const email = searchParams.get("email");
 
-    console.log("Parámetros actuales:", { code, email });
-
     if (email) {
       setEmailSent(true);
-      console.log("Email detectado en URL");
     }
 
     if (code) {
       setCodeVerified(true);
-      console.log("código detectado en URL");
     }
   }, [searchParams]);
 

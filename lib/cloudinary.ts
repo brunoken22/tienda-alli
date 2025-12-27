@@ -71,12 +71,10 @@ export async function uploadImages(
 }
 
 export async function deleteImages(public_ids: string[]): Promise<void> {
-  console.log("Elimando estos public_ids: ", public_ids);
   return await cloudinary.api.delete_resources(public_ids, (error, result) => {
     if (error) {
       throw Error(error);
     }
-    console.log("Eliminando imagenes: ", result);
     return result;
   });
 }

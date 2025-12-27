@@ -31,7 +31,6 @@ export default function LoginPage() {
     });
 
     const data = await response.json();
-    console.log("respuesta: ", data);
     if (data?.data?.signin) {
       router.push("/admin/dashboard");
     } else {

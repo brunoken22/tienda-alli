@@ -74,7 +74,6 @@ export async function getProductsService(filters?: ProductQueryParams) {
       include: category ? includeConditions : [],
       distinct: true,
     });
-    console.log("Ordenar por: ", sortBy);
     // Obtener productos con paginación
     const products = await Product.findAll({
       where: whereConditions,
@@ -190,7 +189,7 @@ export async function editProductService(
   } catch (e) {
     await transaction.rollback();
     const error = e as Error;
-    console.log("Error en editProductService: ", error);
+    console.error("Error en editProductService: ", error);
     throw new Error(error.message);
   }
 }

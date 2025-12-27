@@ -55,13 +55,12 @@ export async function getFrontPage(): Promise<ProductType[] | []> {
       next: { revalidate: 3600 }, // Revalida cada hora
     });
     const data = await response.json();
-    console.log("ESTO ES LA DATA DE getFrontPage: ", data.data.length);
     if (!data.success) {
       return [];
     }
     return data.data;
   } catch (e) {
-    console.log("Error en getFrontPage:", e);
+    console.error("Error en getFrontPage:", e);
     return [];
   }
 }
@@ -78,7 +77,7 @@ export async function getOfferPage(): Promise<ProductType[] | []> {
     }
     return data.data;
   } catch (e) {
-    console.log("Error en getOfferPage:", e);
+    console.error("Error en getOfferPage:", e);
     return [];
   }
 }

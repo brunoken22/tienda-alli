@@ -278,7 +278,6 @@ export default function ProductsPage() {
         formData.append("category", category.trim()[0].toUpperCase() + category.trim().slice(1))
       );
     }
-    console.log("DATOS A SUBIR: ", formData);
     if (editingProduct) {
       const productUpdate = await updateProduct(editingProduct.id, formData);
       if (productUpdate.success) {

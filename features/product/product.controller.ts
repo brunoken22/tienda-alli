@@ -94,7 +94,6 @@ export async function createProductController(formData: FormData) {
       isActive: true,
       // stock: Number(formData.get("stock")),
     };
-    console.log("Datos a guardar: ", product);
     if (
       !product.title ||
       !product.price ||
@@ -188,7 +187,7 @@ export async function editProductController(id: string, formData: FormData) {
     return { data: { id, product: productService }, success: true };
   } catch (e) {
     const error = e as Error;
-    console.log("Esto es el error rel controller: ", error);
+    console.error("Esto es el error rel controller: ", error);
     throw new Error(error.message);
   }
 }
