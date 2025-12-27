@@ -1,11 +1,6 @@
 import { ProductType } from "@/types/product";
 import baseURL from "@/utils/baseUrl";
 
-// Verifica si estamos en tiempo de build
-const isBuildTime =
-  process.env.NEXT_PHASE === "phase-production-build" ||
-  process.env.npm_lifecycle_event === "build";
-
 export async function getProducts(queryParams?: {
   search?: string;
   category?: string;
@@ -54,12 +49,6 @@ export async function getProducts(queryParams?: {
 }
 
 export async function getFrontPage(): Promise<ProductType[] | []> {
-  // Si estamos en build time, retorna array vacío
-  if (isBuildTime) {
-    console.log("Build time: omitiendo fetch de frontPage");
-    return [];
-  }
-
   try {
     const response = await fetch(`${baseURL}/api/product/frontPage`, {
       // Agrega cache para producción
@@ -78,12 +67,6 @@ export async function getFrontPage(): Promise<ProductType[] | []> {
 }
 
 export async function getOfferPage(): Promise<ProductType[] | []> {
-  // Si estamos en build time, retorna array vacío
-  if (isBuildTime) {
-    console.log("Build time: omitiendo fetch de offerPage");
-    return [];
-  }
-
   try {
     const response = await fetch(`${baseURL}/api/product/offer`, {
       next: { revalidate: 3600 },
