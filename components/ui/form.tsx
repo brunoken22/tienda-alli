@@ -22,7 +22,7 @@ export function FormSearch({
   }, [value]);
   return (
     <form
-      className='flex justify-center items-center bg-gray-200  gap-3 rounded-md'
+      className='flex justify-center items-center bg-secondary  gap-3 rounded-md'
       onSubmit={(e: any) => {
         e.preventDefault();
         modValue(e.target?.search.value);
@@ -34,7 +34,7 @@ export function FormSearch({
         id='search'
         onChange={debounced}
         placeholder='Mochila'
-        className='bg-transparent text-black focus-visible:outline-none placeholder-white-500 w-[80%] py-3 px-4 text-base rounded-md'
+        className='bg-secondary text-black focus-visible:outline-none placeholder-white-500 w-[80%] py-3 px-4 text-base rounded-md'
         defaultValue={value || ""}
         ref={inputSearch}
       />
@@ -55,7 +55,7 @@ export function FormSearch({
 
       <button
         type='submit'
-        className='p-3 min-w-[48px] min-h-[48px] flex items-center justify-center'
+        className='p-3 min-w-[48px] min-h-[48px] flex items-center justify-center bg-secondary'
         aria-label='Buscar'
       >
         <img src='/search.svg' alt='Buscar' width={24} height={24} />
