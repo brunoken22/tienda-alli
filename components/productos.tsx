@@ -7,7 +7,6 @@ import { FormSearch } from "@/components/ui/form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CarouselProduct } from "@/components/carousel";
-import { useDebouncedCallback } from "use-debounce";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -44,7 +43,7 @@ export default function ProductosPage() {
 
   // Estados para filtros
   const [order, setOrder] = useState<"asc" | "desc">("desc");
-  const [search, setSearch] = useState(searchParams.get("q") || "");
+  const [search, setSearch] = useState(searchParams.get("search") || "");
   const [offset, setOffset] = useState(Number(searchParams.get("offset")) || 0);
   const [typeSearch, setTypeSearch] = useState<string[]>(
     JSON.parse(searchParams.get("type") || "[]")

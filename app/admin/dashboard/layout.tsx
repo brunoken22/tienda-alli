@@ -23,10 +23,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return <Loading />;
   }
 
-  if (!user) {
-    return null;
-  }
-
   return (
     <div className='relative'>
       {/* Mobile sidebar overlay */}

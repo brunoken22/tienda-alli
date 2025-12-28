@@ -64,7 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <meta name='color-scheme' content='only light' />
       </head>
-      <body className={`${inter.className} max-sm:bg-primary/90  `}>
+      <body className={`${inter.className} max-sm:bg-primary/90   `}>
         <LayoutRoot>{children}</LayoutRoot>
       </body>
     </html>

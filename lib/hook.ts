@@ -28,7 +28,7 @@ export function GetDataProduct(
   }
   const { data, isLoading } = useSWR(
     [
-      `/api/admin/product${search ? "?q=" + search : ""}${
+      `/api/admin/product${search ? "?search=" + search : ""}${
         typePrice?.length && search
           ? "&price=" + JSON.stringify(typePrice)
           : "?price=" + JSON.stringify(typePrice)

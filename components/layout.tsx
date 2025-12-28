@@ -13,8 +13,8 @@ export default function LayoutRoot({ children }: { children: React.ReactNode }) 
       <Suspense>
         <main
           className={`${
-            pathname.includes("/admin/dashboard") ? "" : "max-w-screen-2xl "
-          }  m-auto  bg-secondary rounded-tr-[30px]  py-2  `}
+            pathname.includes("/admin/dashboard") ? "" : "max-w-screen-2xl w-full"
+          }  m-auto  bg-secondary rounded-tr-[30px]  py-2 min-h-[53dvh]`}
         >
           {children}
         </main>

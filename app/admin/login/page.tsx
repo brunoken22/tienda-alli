@@ -44,7 +44,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className='w-full max-w-md m-auto py-20'>
+    <div className='w-full max-w-md m-auto py-12'>
       <div>
         <CardHeader className='space-y-1'>
           <CardTitle className='text-2xl text-center'>Iniciar Sesión</CardTitle>

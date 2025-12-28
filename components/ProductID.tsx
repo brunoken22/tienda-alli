@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Minus, Plus, ShoppingCart, Maximize2, Check, X, Eye } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Maximize2, Check, X } from "lucide-react";
 import { ProductType, VariantType } from "@/types/product";
 
 // Import Swiper
@@ -19,7 +19,9 @@ import "swiper/css/thumbs";
 import "swiper/css/zoom";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
-import { log } from "console";
+import { ShoppingCart as ShoppingCartType } from "@/types/shopping-cart";
+import { useShoppingCartActions } from "@/contexts/product-context";
+import { toast, ToastContainer } from "react-toastify";
 
 // Componente Modal simplificado
 function DescriptionModal({
@@ -74,6 +76,7 @@ function DescriptionModal({
 }
 
 export default function ProductTemplate({ product }: { product: ProductType }) {
+  const { addItem } = useShoppingCartActions();
   const [selectedVariant, setSelectedVariant] = useState<VariantType | null>(
     product.variant.length > 0 ? product.variant[0] : null
   );
@@ -132,7 +135,28 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
         behavior: "smooth",
         block: "center",
       });
+
       return;
+    }
+    if (selectedVariant !== null) {
+      const newAddItem: Omit<ShoppingCartType, "variant"> = {
+        id: product.id,
+        title: product.title,
+        price: currentPrice,
+        priceOffer: product.priceOffer,
+        quantity: quantity,
+        images: product.images,
+        variantColorName: selectedVariant.colorName,
+        variantColorHex: selectedVariant.colorHex,
+        variantSize: selectedSize,
+        variantId: selectedVariant.id,
+      };
+
+      addItem(newAddItem);
+      toast.success("¡Producto agregado al carrito!", {
+        position: "bottom-right",
+        autoClose: 3000,
+      });
     }
   };
 
@@ -467,6 +491,18 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
         </div>
       </div>
 
+      <ToastContainer
+        position='bottom-right'
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='light'
+      />
       {/* Modal para descripción completa */}
       <DescriptionModal
         isOpen={showDescriptionModal}
