@@ -3,17 +3,13 @@ import { CategoryType } from "@/types/category";
 export async function getCategories(): Promise<CategoryType[]> {
   try {
     // Obtener la URL base desde las variables de entorno
-    const baseUrl =
-      process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_API || "http://localhost:3000";
 
     const response = await fetch(`${baseUrl}/api/admin/category`, {
-      // Añadir headers para SSR
       headers: {
         "Content-Type": "application/json",
       },
-      // Configurar cache según necesites
       cache: "no-store", // Para datos dinámicos
-      // next: { revalidate: 3600 } // Para ISR
     });
 
     if (!response.ok) {
