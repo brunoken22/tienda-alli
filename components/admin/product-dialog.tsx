@@ -653,7 +653,7 @@ export function ProductDialog({
                       <div
                         className={`${
                           formData.sizes.length
-                            ? ""
+                            ? "hidden"
                             : "absolute inset-0 backdrop-blur-lg flex justify-center items-center z-10"
                         }`}
                       >
