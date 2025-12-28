@@ -168,12 +168,6 @@ export default function ProductosPage() {
     setOrder("desc");
   };
 
-  // Manejar cambio de precio con debounce
-  const handlePriceChange = useDebouncedCallback((values: number[]) => {
-    setMinPrice(values[0]);
-    setMaxPrice(values[1]);
-  }, 500);
-
   const totalResults = data?.pagination?.total || 0;
   const currentResults = data?.results?.length || 0;
   const currentPage = Math.floor(offset / limit) + 1;
@@ -182,6 +176,8 @@ export default function ProductosPage() {
   // Verificar si hay filtros activos
   const hasActiveFilters =
     search || category || minPrice > 0 || maxPrice < priceFilter.maxPrice || typeSearch.length > 0;
+  console.log(priceFilter);
+
   return (
     <Suspense>
       <div className='min-h-screen max-md:p-3 py-8 px-2'>
@@ -265,7 +261,10 @@ export default function ProductosPage() {
                     min={priceFilter.minPrice}
                     max={priceFilter.maxPrice}
                     value={[minPrice, maxPrice]}
-                    onValueChange={handlePriceChange}
+                    onValueChange={(value: any) => {
+                      setMinPrice(value[0]);
+                      setMaxPrice(value[1]);
+                    }}
                     className='w-full bg-red-500'
                   />
                   <div className='flex justify-between text-sm'>
@@ -611,7 +610,10 @@ export default function ProductosPage() {
                     max={priceFilter.maxPrice}
                     step={1000}
                     value={[minPrice, maxPrice]}
-                    onValueChange={handlePriceChange}
+                    onValueChange={(value: any) => {
+                      setMinPrice(value[0]);
+                      setMaxPrice(value[1]);
+                    }}
                   />
                   <div className='flex justify-between text-sm'>
                     <span>${minPrice.toLocaleString()}</span>

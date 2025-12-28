@@ -14,23 +14,25 @@ async function fetcher(dataParams: any[]) {
 
 export function GetDataProduct(
   search?: string,
-  typeSearch?: string[] | "",
-  typePrice?: number[] | "",
+  category?: string[] | [],
+  typePrice?: number[] | [],
   limit?: number,
   offset?: number,
   order?: "asc" | "desc",
   onSale?: boolean,
   sortBy?: string
 ) {
+  let categoryParam = "";
+  if (category && category.length > 0) {
+    category.map((cat) => (categoryParam += `&category=${cat}`));
+  }
   const { data, isLoading } = useSWR(
     [
       `/api/admin/product${search ? "?q=" + search : ""}${
         typePrice?.length && search
           ? "&price=" + JSON.stringify(typePrice)
           : "?price=" + JSON.stringify(typePrice)
-      }${
-        typeSearch?.length ? "&type=" + JSON.stringify(typeSearch) : "&type=[]"
-      }&limit=${limit}&offset=${offset}&sortBy=${sortBy}&order=${order}&onSale=${onSale}`,
+      }${categoryParam}&limit=${limit}&offset=${offset}&sortBy=${sortBy}&order=${order}&onSale=${onSale}`,
     ],
     fetcher,
     {

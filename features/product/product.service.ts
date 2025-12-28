@@ -231,19 +231,15 @@ export async function getLatestAdditionsProductsService() {
 
 export async function getOfferProductsService() {
   try {
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     const products = await Product.findAll({
       where: {
-        updatedAt: { [Op.gte]: oneWeekAgo },
         priceOffer: {
           [Op.not]: null,
           [Op.gt]: 0,
-          [Op.lt]: 1000,
         },
       },
       order: [["updatedAt", "DESC"]],
-      limit: 50,
+      limit: 10,
     });
     return products;
   } catch (e) {

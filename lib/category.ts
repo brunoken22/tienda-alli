@@ -1,17 +1,32 @@
 import { CategoryType } from "@/types/category";
-import baseURL from "@/utils/baseUrl";
 
 export async function getCategories(): Promise<CategoryType[]> {
   try {
-    const response = await fetch(`${baseURL}/api/admin/category`);
+    // Obtener la URL base desde las variables de entorno
+    const baseUrl =
+      process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || "http://localhost:3000";
+
+    const response = await fetch(`${baseUrl}/api/admin/category`, {
+      // Añadir headers para SSR
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Configurar cache según necesites
+      cache: "no-store", // Para datos dinámicos
+      // next: { revalidate: 3600 } // Para ISR
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const data = await response.json();
     return data?.data || [];
   } catch (e) {
-    console.error("Este es el error del getCategories: ", e);
+    console.error("Error en getCategories: ", e);
     return [];
   }
 }
-
 export async function createCategory(
   category: Omit<CategoryType, "id" | "createdAt" | "updatedAt">,
   image: File

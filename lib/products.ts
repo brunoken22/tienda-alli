@@ -50,10 +50,7 @@ export async function getProducts(queryParams?: {
 
 export async function getFrontPage(): Promise<ProductType[] | []> {
   try {
-    const response = await fetch(`${baseURL}/api/product/frontPage`, {
-      // Agrega cache para producción
-      next: { revalidate: 3600 }, // Revalida cada hora
-    });
+    const response = await fetch(`${baseURL}/api/product/frontPage`);
     const data = await response.json();
     if (!data.success) {
       return [];
@@ -67,11 +64,8 @@ export async function getFrontPage(): Promise<ProductType[] | []> {
 
 export async function getOfferPage(): Promise<ProductType[] | []> {
   try {
-    const response = await fetch(`${baseURL}/api/product/offer`, {
-      next: { revalidate: 3600 },
-    });
+    const response = await fetch(`${baseURL}/api/product/offer`);
     const data = await response.json();
-
     if (!data.success) {
       return [];
     }
@@ -84,7 +78,7 @@ export async function getOfferPage(): Promise<ProductType[] | []> {
 
 export async function getMetrics() {
   try {
-    const response = await fetch(`${baseURL}/api/product/metrics`);
+    const response = await fetch(`/api/product/metrics`);
     const data = await response.json();
     if (!data.success) {
       throw new Error("Error fetching metrics");

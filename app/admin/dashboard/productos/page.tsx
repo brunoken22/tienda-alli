@@ -51,7 +51,6 @@ export default function ProductsPage() {
     (searchParams.get("sortOrder") as any) || "asc"
   );
 
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [alertForm, setAlertForm] = useState({
     success: false,
     message: "",
@@ -331,24 +330,6 @@ export default function ProductsPage() {
             <p className='text-muted-foreground'>Administra tu catálogo de productos</p>
           </div>
           <div className='flex gap-4 items-center'>
-            <div className='flex border rounded-lg overflow-hidden'>
-              <Button
-                variant={viewMode === "grid" ? "default" : "ghost"}
-                size='sm'
-                onClick={() => setViewMode("grid")}
-                className='rounded-none'
-              >
-                <Grid3X3 className='w-4 h-4' />
-              </Button>
-              <Button
-                variant={viewMode === "list" ? "default" : "ghost"}
-                size='sm'
-                onClick={() => setViewMode("list")}
-                className='rounded-none'
-              >
-                <List className='w-4 h-4' />
-              </Button>
-            </div>
             <Button onClick={handleAddProduct} className='gap-2'>
               <Plus className='w-4 h-4' />
               Agregar Producto
@@ -537,24 +518,14 @@ export default function ProductsPage() {
           <ProductCardSkeletonGrid />
         ) : products.data.length ? (
           <>
-            <div
-              className={
-                viewMode === "grid"
-                  ? "grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-                  : "flex flex-col gap-5"
-              }
-            >
+            <div className={"grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}>
               {products.data.map((product: ProductType) => (
                 <div
                   key={product.id}
-                  className={`bg-secondary/10 border border-border/60 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl hover:scale-[1.02] hover:border-primary/30 transition-all duration-500 group ${
-                    viewMode === "list" ? "flex flex-row" : "flex flex-col"
-                  }`}
+                  className={`bg-secondary/10 border border-border/60 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl hover:scale-[1.02] hover:border-primary/30 transition-all duration-500 group ${"flex flex-col"}`}
                 >
                   <div
-                    className={`relative overflow-hidden bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 ${
-                      viewMode === "list" ? "w-80 flex-shrink-0" : "aspect-square"
-                    } h-[200px]`}
+                    className={`relative overflow-hidden bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 ${"w-full flex-shrink-0"} h-[200px]`}
                   >
                     <div className='absolute top-4 right-4 z-10 flex flex-col gap-2.5 items-end'>
                       {product.priceOffer > 1 && (
@@ -584,11 +555,7 @@ export default function ProductsPage() {
                     <div className='absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
                   </div>
 
-                  <div
-                    className={`p-2 flex flex-col ${
-                      viewMode === "list" ? "flex-1 justify-between" : ""
-                    }`}
-                  >
+                  <div className={`p-2 flex flex-col ${"flex-1 justify-between"}`}>
                     <div className='flex-1 space-y-4'>
                       <div className='space-y-3'>
                         <Link href={`/productos/${product.id}`}>
@@ -608,12 +575,6 @@ export default function ProductsPage() {
                             ))}
                         </div>
                       </div>
-
-                      {viewMode === "list" && product.description && (
-                        <p className='text-sm text-muted-foreground/90 line-clamp-2 leading-relaxed'>
-                          {product.description}
-                        </p>
-                      )}
 
                       <div className='flex items-baseline gap-3 '>
                         {product.priceOffer && product.priceOffer > 1 ? (

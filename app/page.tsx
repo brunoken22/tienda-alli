@@ -18,13 +18,11 @@ const banner = ["/banner1.webp", "/banner2.webp", "/banner3.webp"];
 export default async function Home() {
   const [data, offer, categories] = await Promise.all([
     getFrontPage(),
-    // getProductFeatured(),
     getOfferPage(),
     getCategories(),
   ]);
-
   return (
-    <div className='flex flex-col gap-12 pb-8 max-md:px-2'>
+    <div className='flex flex-col gap-12 pb-8 px-2'>
       {/* Hero Section */}
       <section className='relative overflow-hidden '>
         <div className='relative rounded-2xl overflow-hidden shadow-2xl '>

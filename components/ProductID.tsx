@@ -287,7 +287,7 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
 
             {/* Description - Con botón para abrir modal */}
             <div className='space-y-3'>
-              <div className='flex items-center justify-between'>
+              {/* <div className='flex items-center justify-between'>
                 <h2 className='text-lg font-semibold md:text-xl'>Descripción</h2>
                 <Button
                   variant='ghost'
@@ -298,7 +298,7 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
                   <Eye className='h-4 w-4' />
                   Ver completa
                 </Button>
-              </div>
+              </div> */}
 
               {/* Vista previa de la descripción (limitada a 3 líneas) */}
               <div className='relative'>
@@ -374,7 +374,7 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
                 </label>
 
                 {!isSizeSelected && selectedSize === "" && (
-                  <div className='rounded-lg bg-amber-50 p-2 text-sm text-amber-800 md:p-3'>
+                  <div className='rounded-lg bg-amber-100 p-2 text-sm text-amber-800 md:p-3'>
                     ⚠️ Por favor, selecciona una talla antes de agregar al carrito
                   </div>
                 )}
@@ -384,10 +384,10 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
                     <button
                       key={size}
                       onClick={() => handleSizeSelect(size)}
-                      className={`relative rounded-lg border-2 py-3 text-sm font-semibold transition-all md:py-3 md:text-base ${
+                      className={`relative rounded-lg border-2 py-3 text-sm font-semibold transition-all md:py-3 md:text-base  ${
                         selectedSize === size
-                          ? "border-primary bg-primary text-secondary shadow-md"
-                          : "border-muted bg-background hover:border-primary/50 hover:bg-accent"
+                          ? " border-primary bg-primary text-secondary shadow-md"
+                          : "border-primary/30 bg-background hover:border-primary/80 hover:bg-accent"
                       }`}
                     >
                       {size}

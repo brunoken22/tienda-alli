@@ -36,7 +36,7 @@ export function CarouselHeader({ data }: { data: string[] }) {
                 src={product || "/tienda-alli.webp"}
                 alt={"Banner"}
                 fill
-                className='object-contain relative z-20'
+                className='object-cover object-top relative z-20'
                 priority={index === 0}
               />
             </Link>

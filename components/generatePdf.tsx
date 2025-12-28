@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   },
   tableHeader: {
     flexDirection: "row",
-    backgroundColor: "#3498db",
+    backgroundColor: "#3c006c",
     color: "#FFFFFF",
     paddingVertical: 8,
   },
@@ -189,7 +189,12 @@ const formatCurrency = (value: number): string => {
 
 export function GeneratePdf({ data }: { data: Omit<ShoppingCart, "variant">[] }) {
   const date = formatDate();
-  const subtotal = data.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+
+  const subtotal = data.reduce(
+    (sum, item) =>
+      sum + (item.priceOffer > 0 ? item.priceOffer : item.price) * (item.quantity || 1),
+    0
+  );
   const taxRate = 0.0; // 21% q
   const tax = subtotal * taxRate;
   const total = subtotal + tax;
@@ -240,10 +245,10 @@ export function GeneratePdf({ data }: { data: Omit<ShoppingCart, "variant">[] })
             {/* Encabezados de la tabla */}
             <View style={styles.tableHeader}>
               <Text style={[styles.tableHeaderCell, { flex: 0.5 }]}>#</Text>
-              <Text style={[styles.tableHeaderCell, { flex: 1 }]}>Imagen</Text>
               <Text style={[styles.tableHeaderCell, { flex: 2 }]}>Producto</Text>
               <Text style={styles.tableHeaderCell}>Cantidad</Text>
               <Text style={styles.tableHeaderCell}>P. Unitario</Text>
+              <Text style={styles.tableHeaderCell}>P. oferta</Text>
               <Text style={styles.tableHeaderCell}>Total</Text>
             </View>
 
@@ -254,18 +259,20 @@ export function GeneratePdf({ data }: { data: Omit<ShoppingCart, "variant">[] })
                 key={producto.id}
               >
                 <Text style={[styles.tableCell, { flex: 0.5 }]}>{index + 1}</Text>
-                <Image
-                  src={producto.images[0] || "/tienda-alli-webp"}
-                  style={[styles.tableCell, styles.productImage]}
-                />
+
                 <Text style={[styles.tableCell, styles.productNameCell]}>
                   {producto.title}
-                  {producto.variantSize && ` - Talle ${producto.variantSize}`}
+                  {producto.variantSize && ` - Talle ${producto.variantSize} `}
+                  {producto.variantColorName && ` - Color ${producto.variantColorName} `}
                 </Text>
                 <Text style={styles.tableCell}>{producto.quantity}</Text>
                 <Text style={styles.tableCell}>{formatCurrency(producto.price)}</Text>
+                <Text style={styles.tableCell}>{formatCurrency(producto.priceOffer)}</Text>
                 <Text style={styles.tableCell}>
-                  {formatCurrency(producto.quantity * producto.price)}
+                  {formatCurrency(
+                    producto.quantity *
+                      (producto.priceOffer > 0 ? producto.priceOffer : producto.price)
+                  )}
                 </Text>
               </View>
             ))}
@@ -278,10 +285,10 @@ export function GeneratePdf({ data }: { data: Omit<ShoppingCart, "variant">[] })
             <Text style={styles.totalLabel}>Subtotal:</Text>
             <Text style={styles.totalValue}>{formatCurrency(subtotal)}</Text>
           </View>
-          <View style={styles.totalRow}>
+          {/* <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>IVA (0%):</Text>
             <Text style={styles.totalValue}>{formatCurrency(tax)}</Text>
-          </View>
+          </View> */}
           <View style={[styles.totalRow, { marginTop: 10 }]}>
             <Text style={[styles.totalLabel, { fontWeight: "bold" }]}>Total:</Text>
             <Text style={[styles.totalValue, styles.grandTotal]}>{formatCurrency(total)}</Text>

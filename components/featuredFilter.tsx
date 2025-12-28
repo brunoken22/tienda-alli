@@ -53,7 +53,7 @@ export default function FeaturedFilter({ categories }: { categories: CategoryTyp
           <TemplateFeaturedFilter
             name={item.title}
             img={item.image}
-            url={"/productos?category=" + item.title.toLowerCase()}
+            url={"/productos?category=" + item.title}
             alt={item.title}
           />
         </SwiperSlide>

@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { X, Plus, TriangleAlert, Upload, Palette, Check } from "lucide-react";
+import { X, Plus, TriangleAlert, Upload, Palette, Check, AlertCircle } from "lucide-react";
 import convertUrlsToFiles from "@/utils/convertFilesImg";
 import type { CategoryType } from "@/types/category";
 import { ProductType, VariantType } from "@/types/product";
@@ -119,7 +119,6 @@ export function ProductDialog({
     isActive: false,
   });
   const [sizeInput, setSizeInput] = useState("");
-  const [sizeVariantInput, setSizeVariantInput] = useState("");
   const [imagesUrl, setImagesUrl] = useState<string[]>([]);
   const [showColorPicker, setShowColorPicker] = useState<number | null>(null);
   const [customColorInput, setCustomColorInput] = useState<string>("#000000");
@@ -185,6 +184,11 @@ export function ProductDialog({
     setIsLoading(true);
     const images = formData.imagesFormData;
     try {
+      // if(formData.sizes.length===0){
+      // document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" });
+      // setIsLoading(false);
+      // return
+      // }
       const repsonseOnSave = await onSave(formData, images as File[]);
       setIsLoading(false);
       if (repsonseOnSave) {
@@ -219,7 +223,7 @@ export function ProductDialog({
 
   const addSize = () => {
     if (sizeInput.trim() && !formData.sizes.includes(sizeInput.trim())) {
-      setFormData({ ...formData, sizes: [...formData.sizes, sizeInput.trim()] });
+      setFormData({ ...formData, sizes: [...formData.sizes, sizeInput.trim().toUpperCase()] });
       setSizeInput("");
     }
   };
@@ -301,24 +305,6 @@ export function ProductDialog({
     });
   };
 
-  const addVariantSize = (variantIndex: number, size: string) => {
-    if (size.trim()) {
-      const updatedVariants = [...formData.variant];
-      if (!updatedVariants[variantIndex].sizes.includes(size.trim())) {
-        updatedVariants[variantIndex].sizes.push(size.trim());
-        setFormData({ ...formData, variant: updatedVariants });
-      }
-    }
-  };
-
-  const removeVariantSize = (variantIndex: number, sizeIndex: number) => {
-    const updatedVariants = [...formData.variant];
-    updatedVariants[variantIndex].sizes = updatedVariants[variantIndex].sizes.filter(
-      (_, i) => i !== sizeIndex
-    );
-    setFormData({ ...formData, variant: updatedVariants });
-  };
-
   const getCategoryTitle = (categoryId: string) => {
     const category = categories.find((cat) => cat.id === categoryId);
     return category?.title || categoryId;
@@ -373,11 +359,6 @@ export function ProductDialog({
     if (isValidHex(colorHexInput)) {
       const fullHex = expandShortHex(colorHexInput);
       updateVariant(variantIndex, "colorHex", fullHex);
-      // updateVariant(
-      //   variantIndex,
-      //   "colorName",
-      //   colorNameInput.trim() || getColorNameFromHex(fullHex)
-      // );
       setCustomColorInput(fullHex);
     }
   };
@@ -649,7 +630,14 @@ export function ProductDialog({
             <div className='space-y-3'>
               <div className='flex items-center justify-between'>
                 <Label className='text-foreground'>Modelos del Producto</Label>
-                <Button type='button' onClick={addVariant} size='sm' variant='outline'>
+                <Button
+                  type='button'
+                  onClick={addVariant}
+                  size='sm'
+                  variant='outline'
+                  className={`${formData.sizes.length ? "" : "bg-slate-200"}`}
+                  disabled={formData.sizes.length ? false : true}
+                >
                   <Plus className='h-4 w-4 mr-2' />
                   Agregar modelo
                 </Button>
@@ -658,8 +646,23 @@ export function ProductDialog({
               {formData.variant.length > 0 && (
                 <div className='space-y-3'>
                   {formData.variant.map((variant, variantIndex) => (
-                    <Card key={variant.id} className='p-4 bg-primary/20 border border-primary/50'>
-                      <div className='flex items-center justify-between mb-3'>
+                    <Card
+                      key={variant.id}
+                      className={`relative p-4 bg-primary/20 border border-primary/50`}
+                    >
+                      <div
+                        className={`${
+                          formData.sizes.length
+                            ? ""
+                            : "absolute inset-0 backdrop-blur-lg flex justify-center items-center z-10"
+                        }`}
+                      >
+                        <p className='text-2xl text-primary'>
+                          Tienes que añadir tallas para desbloquear
+                        </p>
+                      </div>
+
+                      <div className='flex items-center justify-between mb-3 '>
                         <h4 className='text-sm font-medium text-foreground'>
                           Modelo {variantIndex + 1}
                         </h4>
@@ -668,7 +671,7 @@ export function ProductDialog({
                           onClick={() => removeVariant(variantIndex)}
                           size='sm'
                           variant='ghost'
-                          className='text-destructive hover:text-destructive'
+                          className='backdrop-blur-3xl bg-white/50  hover:bg-white'
                         >
                           <X className='h-4 w-4' />
                         </Button>
@@ -875,47 +878,94 @@ export function ProductDialog({
                         </div>
 
                         {/* Tallas */}
-                        <div className='space-y-2'>
-                          <Label className='text-foreground'>
-                            Tallas Disponibles <span className='text-red-500'>*</span>
-                          </Label>
-                          <div className='flex gap-2'>
-                            <Input
-                              value={sizeVariantInput}
-                              onChange={(e) => setSizeVariantInput(e.target.value)}
-                              onKeyDown={(e) =>
-                                e.key === "Enter" &&
-                                (e.preventDefault(), addVariantSize(variantIndex, sizeVariantInput))
-                              }
-                              placeholder='Ej: S, M, L, XL...'
-                              className='bg-background border-border text-foreground'
-                            />
-                            <Button
-                              type='button'
-                              onClick={() => addVariantSize(variantIndex, sizeVariantInput)}
-                              size='icon'
-                              variant='outline'
-                            >
-                              <Plus className='h-4 w-4' />
-                            </Button>
+                        <div className='space-y-3'>
+                          <div className='space-y-2'>
+                            <div className='flex items-center justify-between'>
+                              <Label className='text-foreground'>
+                                Tallas Disponibles <span className='text-red-500'>*</span>
+                              </Label>
+                              <div className='flex items-center gap-2'>
+                                <button
+                                  type='button'
+                                  onClick={() => {
+                                    // Seleccionar todas las tallas
+                                    updateVariant(variantIndex, "sizes", [...formData.sizes]);
+                                  }}
+                                  className='text-xs hover:text-primary transition-colors px-2 py-1 hover:bg-primary/10 rounded'
+                                >
+                                  Seleccionar todas
+                                </button>
+                                <span className='text-muted-foreground'>|</span>
+                                <button
+                                  type='button'
+                                  onClick={() => updateVariant(variantIndex, "sizes", [])}
+                                  className='text-xs hover:text-destructive transition-colors px-2 py-1 hover:bg-destructive/10 rounded'
+                                >
+                                  Limpiar
+                                </button>
+                              </div>
+                            </div>
+
+                            <p className='text-sm text-muted-foreground'>
+                              Haz clic en cada talla para seleccionarla/deseleccionarla
+                            </p>
                           </div>
-                          {formData.variant[variantIndex]?.sizes?.length > 0 && (
-                            <div className='flex flex-wrap gap-2 mt-2'>
-                              {formData.variant[variantIndex].sizes.map((size, index) => (
-                                <span
-                                  key={index}
-                                  className='inline-flex items-center gap-1 px-3 py-2 bg-primary/90 text-secondary rounded-md text-sm'
+
+                          {/* Grid de tallas seleccionables */}
+                          <div className='flex flex-wrap gap-2 p-3 border border-primary rounded-md bg-background min-h-[60px]'>
+                            {formData.sizes.map((size) => {
+                              const isSelected =
+                                formData.variant[variantIndex]?.sizes?.includes(size);
+                              return (
+                                <button
+                                  key={size}
+                                  type='button'
+                                  onClick={() => {
+                                    const currentSizes =
+                                      formData.variant[variantIndex]?.sizes || [];
+                                    let newSizes;
+
+                                    if (isSelected) {
+                                      // Quitar la talla
+                                      newSizes = currentSizes.filter((s) => s !== size);
+                                    } else {
+                                      // Agregar la talla
+                                      newSizes = [...currentSizes, size];
+                                    }
+
+                                    updateVariant(variantIndex, "sizes", newSizes);
+                                  }}
+                                  className={`
+            relative px-3 py-2 rounded-md text-sm font-medium transition-all duration-200
+            flex items-center justify-center min-w-[44px]
+            ${
+              isSelected
+                ? "bg-primary text-secondary shadow-sm ring-2 ring-primary ring-offset-1"
+                : "bg-muted hover:bg-muted/80 text-foreground border border-primary/30 hover:border-primary hover:bg-secondary "
+            }
+          `}
                                 >
                                   {size}
-                                  <button
-                                    type='button'
-                                    onClick={() => removeVariantSize(variantIndex, index)}
-                                    className='hover:bg-red-500 bg-secondary text-red-500 hover:text-secondary rounded-full p-0.5'
-                                  >
-                                    <X className='h-3 w-3' />
-                                  </button>
-                                </span>
-                              ))}
+                                  {isSelected && (
+                                    <div className='absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border border-background flex items-center justify-center'>
+                                      <Check className='h-2.5 w-2.5 text-primary-foreground' />
+                                    </div>
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
+
+                          {/* Validación */}
+                          {!formData.variant[variantIndex]?.sizes?.length && (
+                            <div className='flex items-start gap-2 text-destructive text-sm bg-yellow-100 p-3 rounded-md'>
+                              <AlertCircle className='h-4 w-4 mt-0.5 flex-shrink-0' />
+                              <div>
+                                <p className='font-medium'>Atención</p>
+                                <p>
+                                  Debes seleccionar al menos una talla disponible para este modelo.
+                                </p>
+                              </div>
                             </div>
                           )}
                         </div>

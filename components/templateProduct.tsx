@@ -272,6 +272,7 @@ export default function TemplateProduct({
           </Link>
 
           {/* Selector de colores */}
+
           {hasColors && (
             <div className='mt-3'>
               <div className='flex items-center gap-2 mb-2'>
