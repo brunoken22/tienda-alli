@@ -176,7 +176,6 @@ export default function ProductosPage() {
   // Verificar si hay filtros activos
   const hasActiveFilters =
     search || category || minPrice > 0 || maxPrice < priceFilter.maxPrice || typeSearch.length > 0;
-  console.log(priceFilter);
 
   return (
     <Suspense>
@@ -493,7 +492,7 @@ export default function ProductosPage() {
             </div>
 
             {/* Estado vacío */}
-            {data?.results?.length === 0 && !isLoading && (
+            {data?.data?.length === 0 && !isLoading && (
               <div className='text-center py-16'>
                 <div className='w-24 h-24 mx-auto mb-4 bg-muted rounded-full flex items-center justify-center'>
                   <Search className='w-12 h-12 text-muted-foreground' />
@@ -513,7 +512,7 @@ export default function ProductosPage() {
             )}
 
             {/* Paginación */}
-            {data?.results?.length && totalPages > 1 ? (
+            {data?.data?.length && totalPages > 1 ? (
               <div className='flex items-center justify-between mt-8 p-4 bg-card rounded-lg border'>
                 <div className='text-sm text-muted-foreground'>
                   Página {currentPage} de {totalPages}
