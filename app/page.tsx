@@ -13,7 +13,7 @@ const ProductCarousel = dynamicLoader(() => import("@/components/carouselProduct
   ssr: true,
   loading: () => <ProductCardSkeletonGrid />,
 });
-const banner = ["/banner1.webp", "/banner2.webp", "/banner3.webp"];
+const banner = ["/banner1.webp", "/banner2.webp", "/banner3.webp", "/banner4.webp"];
 
 export default async function Home() {
   const [data, offer, categories] = await Promise.all([
