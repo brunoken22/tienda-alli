@@ -58,6 +58,7 @@ export async function getProductIDController(id: string) {
 }
 
 export async function createProductController(formData: FormData) {
+  let generateImg: ResponseUpload[] = [];
   try {
     const formDataImages = formData.getAll("images") as File[];
     const price = Number(formData.get("price"));
@@ -69,9 +70,8 @@ export async function createProductController(formData: FormData) {
     if (priceOffer && priceOffer > price) {
       throw new Error("El precio de oferta no debe ser mayor al precio de costo");
     }
-    const generateImg = await uploadImages(formDataImages);
-    const filterImg: ResponseUpload[] = [];
-    generateImg.filter((img) => (img?.url && img.public_id ? filterImg.push(img) : null));
+    generateImg = await uploadImages(formDataImages);
+
     const variantFormData = formData.getAll("variant");
     const variant: VariantType[] = variantFormData.map((variantData) => {
       const convertVariant = JSON.parse(variantData.toString());
@@ -88,8 +88,8 @@ export async function createProductController(formData: FormData) {
       priceOffer: priceOffer,
       description: (formData.get("description") as string)?.trim(),
       // category: formData.getAll("category") as string[],
-      images: filterImg.map((image) => image.url),
-      imagesId: filterImg.map((image) => image.public_id),
+      images: generateImg.map((image) => image.url),
+      imagesId: generateImg.map((image) => image.public_id),
       variant: variant.length ? variant : [],
       sizes: formData.getAll("sizes") as string[],
       isActive: true,
@@ -113,12 +113,17 @@ export async function createProductController(formData: FormData) {
 
     return { data: productService, success: true };
   } catch (e) {
+    if (generateImg.length) {
+      deleteImages(generateImg.map((img) => img.public_id));
+    }
     const error = e as Error;
     throw new Error(error.message);
   }
 }
 
 export async function editProductController(id: string, formData: FormData) {
+  let generateImg: ResponseUpload[] = [];
+
   try {
     const formDataImagesFilter = formData.getAll("images") as File[];
     const formDataImages = formDataImagesFilter.filter((img) => typeof img !== null);
@@ -141,7 +146,7 @@ export async function editProductController(id: string, formData: FormData) {
       throw new Error("Esta producto no existe");
     }
 
-    const generateImg = await uploadImages(formDataImages);
+    generateImg = await uploadImages(formDataImages);
 
     const variantFormData = formData.getAll("variant");
 
@@ -158,7 +163,6 @@ export async function editProductController(id: string, formData: FormData) {
       price: price,
       priceOffer: priceOffer,
       description: formData.get("description") as string,
-      // category: formData.getAll("category") as string[],
       images: generateImg.map((image) => image?.url),
       imagesId: generateImg.map((image) => image?.public_id),
       variant: variant,
@@ -182,12 +186,14 @@ export async function editProductController(id: string, formData: FormData) {
     const productService = await editProductService(id, product, categories);
 
     if (productService) {
-      const public_ids = productSearch.imagesId.filter((id: void) => typeof id === "string");
-      await deleteImages(public_ids);
+      await deleteImages(productSearch.imagesId);
     }
     return { data: { id, product: productService }, success: true };
   } catch (e) {
     const error = e as Error;
+    if (generateImg.length) {
+      deleteImages(generateImg.map((img) => img.public_id));
+    }
     console.error("Esto es el error rel controller: ", error);
     throw new Error(error.message);
   }
@@ -207,8 +213,7 @@ export async function deleteProductController(id: string) {
     const productService = await deleteProductService(id);
 
     if (productService > 0 && productSearch.imagesId.length) {
-      const public_ids = productSearch.imagesId.filter((id: void) => typeof id === "string");
-      await deleteImages(public_ids);
+      await deleteImages(productSearch.imagesId);
     }
     return { data: { delete: true }, success: true };
   } catch (e) {
@@ -265,8 +270,8 @@ export async function getShoppingCartController(shoppingCart: Omit<ShoppingCart,
       return {
         ...product,
         title: findProduct.dataValues.title,
-        price: findProduct.dataValues.price,
-        priceOffer: findProduct.dataValues.priceOffer,
+        price: variant?.price || findProduct.dataValues.price,
+        priceOffer: variant?.priceOffer || findProduct.dataValues.priceOffer,
         images: findProduct.dataValues.images,
         quantity: product.quantity,
         // variant,

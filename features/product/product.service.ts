@@ -102,7 +102,7 @@ export async function getProductsService(filters?: ProductQueryParams) {
   }
 }
 
-export async function getProductIDService(id: string, options?: object) {
+export async function getProductIDService(id: string, options?: object): Promise<ProductType> {
   try {
     const product = await Product.findByPk(id, {
       include: [
@@ -129,12 +129,17 @@ export async function createProductService(
   categories: string[]
 ) {
   try {
-    const productResponse = await Product.create(product);
-    if (productResponse.dataValues) {
-      const productWithRelations = productResponse as any;
+    const productCreate = await Product.create(product);
+    if (productCreate.dataValues) {
+      const productWithRelations = productCreate as any;
       await productWithRelations.setCategories(categories);
     }
-
+    const productResponse = await Product.findByPk(productCreate.dataValues.id, {
+      include: [{ model: Category, as: "categories", through: { attributes: [] } }],
+    });
+    if (!productResponse || !productResponse.dataValues.id) {
+      throw new Error("Error al crear el producto");
+    }
     return productResponse.dataValues;
   } catch (e) {
     const error = e as Error;
