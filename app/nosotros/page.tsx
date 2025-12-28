@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Package, Users, Award, Heart } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Nosotros | Tienda Alli",
+  title: "Nosotros",
   description: "Conoce más sobre nosotros y nuestra historia en Tienda Alli",
   openGraph: {
     title: "Nosotros | Tienda Alli",

@@ -67,7 +67,7 @@ export default function TemplateShopppingCart({
           </div>
 
           <h3 className=' font-semibold text-foreground mt-2'>
-            {priceOffer ? (
+            {priceOffer > 0 ? (
               <>
                 <span className=' font-bold text-green-600 mr-4'>
                   ${priceOffer.toLocaleString()}

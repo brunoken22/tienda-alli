@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ProductosComponent from "@/components/productos";
 
 export const metadata: Metadata = {
-  title: "Productos | Tienda Alli",
+  title: "Productos ",
   description: "Los productos (Tienda Alli)",
   alternates: {
     canonical: "https://tienda-alli.vercel.app/productos",
