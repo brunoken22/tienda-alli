@@ -177,9 +177,10 @@ export default function DashboardPage() {
             ) : (
               <div className='divide-y divide-border/30 overflow-hidden rounded-lg flex flex-col gap-2'>
                 {recentProducts.map((product) => (
-                  <Card
+                  <Link
+                    href={`/productos/${product.id}`}
                     key={product.id}
-                    className='bg-secondary flex items-center justify-between p-3 rounded-lg border hover:bg-accent/50 transition-colors'
+                    className='bg-secondary hover:opacity-80 flex items-center justify-between p-3 rounded-lg border hover:bg-accent/50 transition-colors'
                   >
                     <div className='flex items-center gap-3 flex-1 '>
                       <div className='flex gap-1.5 flex-wrap'>
@@ -208,7 +209,7 @@ export default function DashboardPage() {
                         ${product.priceOffer || product.price}
                       </p>
                     </div>
-                  </Card>
+                  </Link>
                 ))}
               </div>
             )}

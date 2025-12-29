@@ -130,9 +130,9 @@ export default function ProductsPage() {
         queryParams.limit = limit;
         queryParams.sortBy = sortBy;
         queryParams.sortOrder = sortOrder;
+        console.log("Datos a enviar: ", queryParams);
 
         const response = await getProducts(queryParams);
-
         if (response.success) {
           setProducts({
             isLoading: false,

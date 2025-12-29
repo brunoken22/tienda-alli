@@ -333,7 +333,7 @@ export default function ProductosPage() {
                 <Button
                   variant='outline'
                   onClick={clearFilters}
-                  className='w-full mt-4 border-red-300 text-red-100 hover:bg-red-50 hover:text-red-700'
+                  className='w-full mt-4 border-red-300 text-red-100 hover:bg-red-50 hover:!text-red-700'
                 >
                   <X className='w-4 h-4 mr-2' />
                   Limpiar filtros
@@ -667,11 +667,14 @@ export default function ProductosPage() {
                 <Button
                   variant='outline'
                   onClick={clearFilters}
-                  className='flex-1 border-red-300 text-red-600 hover:bg-red-50'
+                  className='flex-1 !bg-red-300 !border-red-500 text-red-500 hover:!bg-red-500'
                 >
                   Limpiar
                 </Button>
-                <Button onClick={() => setIsOpenFilter(false)} className='flex-1'>
+                <Button
+                  onClick={() => setIsOpenFilter(false)}
+                  className='flex-1 bg-secondary !text-primary hover:!bg-secondary/70'
+                >
                   Aplicar
                 </Button>
               </div>

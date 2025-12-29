@@ -64,7 +64,7 @@ export default function ProductCarousel({
       >
         {products.map((product) => (
           <SwiperSlide key={product.id}>
-            <Card className='bg-primary/20 transition-all duration-300 hover:-translate-y-1'>
+            <Card className='bg-secondary/90  transition-all duration-300 hover:-translate-y-1'>
               <CardContent className='p-0'>
                 <div className='h-56 overflow-hidden rounded-lg bg-muted pt-2'>
                   {product.priceOffer ? (

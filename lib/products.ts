@@ -14,38 +14,47 @@ export async function getProducts(queryParams?: {
   sortOrder?: "asc" | "desc";
 }) {
   // Construir la URL con parámetros
-  let url = "/api/admin/product";
+  try {
+    let url = "/api/admin/product";
 
-  if (queryParams) {
-    const params = new URLSearchParams();
+    if (queryParams) {
+      const params = new URLSearchParams();
 
-    if (queryParams.search) params.append("search", queryParams.search);
-    if (queryParams.category) params.append("category", queryParams.category);
-    if (queryParams.minPrice !== undefined)
-      params.append("minPrice", queryParams.minPrice.toString());
-    if (queryParams.maxPrice !== undefined)
-      params.append("maxPrice", queryParams.maxPrice.toString());
-    if (queryParams.onSale) params.append("onSale", "true");
-    if (queryParams.isActive !== undefined)
-      params.append("isActive", queryParams.isActive.toString());
-    if (queryParams.page !== undefined) params.append("page", queryParams.page.toString());
-    if (queryParams.limit !== undefined) params.append("limit", queryParams.limit.toString());
-    if (queryParams.sortBy) params.append("sortBy", queryParams.sortBy);
-    if (queryParams.sortOrder) params.append("sortOrder", queryParams.sortOrder);
+      if (queryParams.search) params.append("search", queryParams.search);
+      if (queryParams.category) params.append("category", queryParams.category);
+      if (queryParams.minPrice !== undefined)
+        params.append("minPrice", queryParams.minPrice.toString());
+      if (queryParams.maxPrice !== undefined)
+        params.append("maxPrice", queryParams.maxPrice.toString());
+      if (queryParams.onSale) params.append("onSale", "true");
+      if (queryParams.isActive !== undefined)
+        params.append("isActive", queryParams.isActive.toString());
+      if (queryParams.page !== undefined) params.append("page", queryParams.page.toString());
+      if (queryParams.limit !== undefined) params.append("limit", queryParams.limit.toString());
+      if (queryParams.sortBy) params.append("sortBy", queryParams.sortBy);
+      if (queryParams.sortOrder) params.append("sortOrder", queryParams.sortOrder);
 
-    if (params.toString()) {
-      url += `?${params.toString()}`;
+      if (params.toString()) {
+        url += `?${params.toString()}`;
+      }
     }
+    console.log("PARAMS: ", url);
+
+    const response = await fetch(url);
+    //  {
+    //       method: "GET",
+    //       credentials: "include",
+    //     }
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (e) {
+    console.error("Error en el getProducts", e);
+    return { success: false, message: e };
   }
-
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`Error ${response.status}: ${response.statusText}`);
-  }
-
-  const data = await response.json();
-  return data;
 }
 
 export async function getFrontPage(): Promise<ProductType[] | []> {

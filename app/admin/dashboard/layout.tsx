@@ -46,7 +46,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </aside>
 
         {/* Slider mobile */}
-        <div className='max-lg:block fixed bottom-2 left-2 right-2   bg-secondary text-black border-t  border-primary/50 rounded-xl  overflow-hidden hidden z-50 '>
+        <div className='max-lg:block fixed bottom-2 left-2 right-2   bg-secondary text-black shadow-secondary  shadow-[0px_0px_20px_white] rounded-xl  overflow-hidden hidden z-50 '>
           <NavAdminMobile />
         </div>
 
