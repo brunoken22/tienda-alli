@@ -522,7 +522,7 @@ export default function ProductsPage() {
               {products.data.map((product: ProductType) => (
                 <div
                   key={product.id}
-                  className={`bg-secondary/10 border border-border/60 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl hover:scale-[1.02] hover:border-primary/30 transition-all duration-500 group ${"flex flex-col"}`}
+                  className={` rounded-md overflow-hidden shadow-md  hover:shadow-lg hover:scale-[1.02] hover:border-primary/30 transition-all duration-500 group ${"flex flex-col"}`}
                 >
                   <div
                     className={`relative overflow-hidden bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 ${"w-full flex-shrink-0"} h-[200px]`}

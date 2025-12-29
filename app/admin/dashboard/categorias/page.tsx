@@ -177,9 +177,9 @@ export default function CategoriasPage() {
       ) : (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {categories.data.map((category) => (
-            <Card
+            <div
               key={category.id}
-              className='p-2 overflow-hidden hover:shadow-lg transition-shadow'
+              className='p-2 rounded-md overflow-hidden shadow-md hover:shadow-lg transition-shadow'
             >
               <div className='relative h-48 bg-muted'>
                 <img
@@ -223,7 +223,7 @@ export default function CategoriasPage() {
                   <Trash2 className='h-4 w-4' />
                 </Button>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       )}

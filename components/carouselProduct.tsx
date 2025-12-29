@@ -61,10 +61,11 @@ export default function ProductCarousel({
         pagination={false}
         modules={[Autoplay, Navigation]}
         className='!overflow-y-visible'
+        wrapperClass='pb-4'
       >
         {products.map((product) => (
           <SwiperSlide key={product.id}>
-            <Card className='bg-secondary/90  transition-all duration-300 hover:-translate-y-1'>
+            <Card className='bg-secondary/90 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1'>
               <CardContent className='p-0'>
                 <div className='h-56 overflow-hidden rounded-lg bg-muted pt-2'>
                   {product.priceOffer ? (

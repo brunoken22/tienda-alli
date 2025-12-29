@@ -185,7 +185,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <Suspense>
-      <div className='flex items-center justify-center border-2 !py-24'>
+      <div className='flex items-center justify-center  !py-24'>
         <div className='w-full max-w-md'>
           {/* STEP 1: Email */}
           {currentStep === "email" && (
