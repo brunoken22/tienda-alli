@@ -177,7 +177,10 @@ export default function CategoriasPage() {
       ) : (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {categories.data.map((category) => (
-            <Card key={category.id} className='overflow-hidden hover:shadow-lg transition-shadow'>
+            <Card
+              key={category.id}
+              className='p-2 overflow-hidden hover:shadow-lg transition-shadow'
+            >
               <div className='relative h-48 bg-muted'>
                 <img
                   src={category.image || "/tienda-alli-webp?height=200&width=400"}

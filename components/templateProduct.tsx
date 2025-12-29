@@ -223,7 +223,7 @@ export default function TemplateProduct({
   const hasSizes = sizesToShow.length > 0;
 
   return (
-    <div className='bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group hover:-translate-y-1 flex flex-col h-full'>
+    <div className=' rounded-md overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group hover:-translate-y-1 flex flex-col h-full'>
       <div className='relative aspect-square overflow-hidden bg-muted flex-shrink-0'>
         {/* Badges de oferta y descuento */}
         {currentPriceOffer ? (
