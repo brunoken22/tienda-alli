@@ -22,7 +22,7 @@ export default async function Home() {
     getCategories(),
   ]);
   return (
-    <div className='flex flex-col gap-12 pb-8 px-2'>
+    <div className='flex flex-col gap-12 max-sm:gap-8 pb-8 px-2'>
       {/* Hero Section */}
       <section className='relative overflow-hidden '>
         <div className='relative rounded-2xl overflow-hidden shadow-2xl '>
@@ -34,7 +34,7 @@ export default async function Home() {
 
       {/* Solo mostrar secciones si hay datos (excepto en build) */}
       {data.length > 0 && (
-        <section className='-mt-44 max-md:mt-4'>
+        <section className='-mt-44 max-md:mt-0'>
           <ProductCarousel products={data} />
         </section>
       )}
