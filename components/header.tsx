@@ -180,13 +180,6 @@ export function Header() {
             aria-label='Contactar por WhatsApp'
             className='relative flex items-center'
           >
-            <div className='absolute right-14 hidden group-hover:flex items-center space-x-1'>
-              <div className='bg-primary text-white  px-3 py-1 rounded-lg shadow-md whitespace-nowrap'>
-                Enviar un mensaje
-              </div>
-              <div className='w-2 h-2 bg-primary rotate-45'></div>
-            </div>
-
             <div className='bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-110'>
               <MessageCircle className='w-6 h-6' />
             </div>

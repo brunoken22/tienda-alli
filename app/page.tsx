@@ -58,40 +58,6 @@ export default async function Home() {
         </section>
       )}
 
-      {/* {hasFeaturedProducts && (
-        <section className=''>
-          <div className='container mx-auto px-4 max-w-7xl'>
-            <div className='flex items-center justify-between mb-12'>
-              <div>
-                <h2 className='text-3xl md:text-4xl font-bold mb-2'>Productos Destacados</h2>
-                <p className='text-muted-foreground'>Los favoritos de nuestros clientes</p>
-              </div>
-              <div className='hidden md:block'>
-                <Link href='/productos'>
-                  <Button variant='outline' className='group'>
-                    Ver todos
-                    <ArrowRight className='w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform' />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-              <ProductsFeatured featured={featured} />
-            </div>
-
-            <div className='md:hidden text-center mt-8'>
-              <Link href='/productos'>
-                <Button variant='outline' className='group'>
-                  Ver todos los productos
-                  <ArrowRight className='w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform' />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
-      )} */}
-
       {/* CTA Section - siempre visible */}
       <section className='p-12 max-md:p-4 rounded-md bg-gradient-to-r from-primary/80 to-primary text-white'>
         <div className='container mx-auto px-4 max-w-7xl text-center'>

@@ -434,10 +434,10 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
                     variant='outline'
                     onClick={() => handleQuantityChange(-1)}
                     disabled={quantity <= 1}
-                    className='h-10 w-10 md:h-12 md:w-12'
+                    className='h-10 w-10 md:h-12 md:w-12 !p-1'
                     aria-label='Reducir cantidad'
                   >
-                    <Minus className='h-4 w-4' />
+                    <Minus className='h-6 w-6' />
                   </Button>
                   <span className='min-w-[40px] text-center text-lg font-bold md:text-xl'>
                     {quantity}
@@ -446,10 +446,10 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
                     variant='outline'
                     onClick={() => handleQuantityChange(1)}
                     disabled={quantity >= 99}
-                    className='h-10 w-10 md:h-12 md:w-12'
+                    className='h-10 w-10 md:h-12 md:w-12 !p-1'
                     aria-label='Aumentar cantidad'
                   >
-                    <Plus className='h-4 w-4' />
+                    <Plus className='h-6 w-6' />
                   </Button>
                 </div>
                 <div className='text-right'>
