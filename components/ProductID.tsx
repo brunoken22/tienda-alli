@@ -22,6 +22,7 @@ import "swiper/css/pagination";
 import { ShoppingCart as ShoppingCartType } from "@/types/shopping-cart";
 import { useShoppingCartActions } from "@/contexts/product-context";
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Componente Modal simplificado
 function DescriptionModal({
@@ -128,6 +129,7 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
     : 0;
 
   const handleAddToCart = () => {
+    console.log(hasSizes, selectedSize);
     if (hasSizes && !selectedSize) {
       setIsSizeSelected(false);
       // Scroll a las tallas si no hay selección
@@ -138,26 +140,25 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
 
       return;
     }
-    if (selectedVariant !== null) {
-      const newAddItem: Omit<ShoppingCartType, "variant"> = {
-        id: product.id,
-        title: product.title,
-        price: currentPrice,
-        priceOffer: product.priceOffer,
-        quantity: quantity,
-        images: product.images,
-        variantColorName: selectedVariant.colorName,
-        variantColorHex: selectedVariant.colorHex,
-        variantSize: selectedSize,
-        variantId: selectedVariant.id,
-      };
+    let newAddItem: Omit<ShoppingCartType, "variant">;
+    newAddItem = {
+      id: product.id,
+      title: product.title,
+      price: currentPrice,
+      priceOffer: product.priceOffer,
+      quantity: quantity,
+      images: product.images,
+      variantColorName: selectedVariant?.colorName || "",
+      variantColorHex: selectedVariant?.colorHex || "",
+      variantSize: selectedSize || "",
+      variantId: selectedVariant?.id || "",
+    };
 
-      addItem(newAddItem);
-      toast.success("¡Producto agregado al carrito!", {
-        position: "bottom-right",
-        autoClose: 3000,
-      });
-    }
+    addItem(newAddItem);
+    toast.success("¡Producto agregado al carrito!", {
+      position: "bottom-right",
+      autoClose: 3000,
+    });
   };
 
   const handleQuantityChange = (delta: number) => {
