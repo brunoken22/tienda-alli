@@ -14,7 +14,7 @@ export default function LayoutRoot({ children }: { children: React.ReactNode }) 
         <main
           className={`${
             pathname.includes("/admin/dashboard") ? "" : "max-w-screen-2xl w-full"
-          }  m-auto  bg-[#d3d3d3] rounded-tr-[30px]  py-2 min-h-[53dvh]`}
+          }  m-auto  bg-[#eeeeee] rounded-tr-[30px]  py-2 min-h-[53dvh]`}
         >
           {children}
         </main>

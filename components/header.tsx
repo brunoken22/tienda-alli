@@ -40,7 +40,7 @@ export function Header() {
   return (
     <Suspense>
       {/* Header Principal */}
-      <div className='bg-secondary'>
+      <div className='bg-[#eeeeee]'>
         <header className=' max-sm:rounded-bl-[30px] bg-primary/90 '>
           <div className='max-w-screen-2xl mx-auto px-4'>
             <div className='flex items-center justify-between h-16 md:h-20'>
