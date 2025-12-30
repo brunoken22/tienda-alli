@@ -19,6 +19,7 @@ import { X, Plus, TriangleAlert, Upload, Palette, Check, AlertCircle } from "luc
 import convertUrlsToFiles from "@/utils/convertFilesImg";
 import type { CategoryType } from "@/types/category";
 import { ProductType, VariantType } from "@/types/product";
+import Image from "next/image";
 
 interface ProductDialogProps {
   open: boolean;
@@ -601,9 +602,12 @@ export function ProductDialog({
                       key={index}
                       className={`relative aspect-square overflow-hidden rounded-lg border-2 cursor-pointer transition-all ${"border-border hover:border-primary/50"}`}
                     >
-                      <img
+                      <Image
                         src={img || "/tienda-alli-webp"}
                         alt={`Imagen ${index + 1}`}
+                        title={`Imagen ${index + 1}`}
+                        width={200}
+                        height={200}
                         className='w-full h-full object-cover transition-transform hover:scale-105'
                       />
 

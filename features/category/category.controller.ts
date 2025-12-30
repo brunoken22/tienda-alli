@@ -13,7 +13,7 @@ import { ResponseUpload } from "@/types/product";
 
 export async function getCategoriesController(req: Request) {
   try {
-    const isActive = req.headers.get("referer")?.includes("/admin/dashboard/category")
+    const isActive = req.headers.get("referer")?.includes("/admin/dashboard/categorias")
       ? undefined
       : true;
     const categoriesController = await getCategoriesService(isActive);

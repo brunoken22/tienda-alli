@@ -63,16 +63,23 @@ export async function getProductsService(filters?: ProductQueryParams) {
       },
     ];
 
+    if (isActive !== undefined) {
+      includeConditions[0].where = {
+        isActive: true,
+      };
+    }
+
     if (category) {
       includeConditions[0].where = {
         title: category,
+        ...includeConditions[0].where,
       };
     }
 
     // Obtener total de productos para paginación
     const total = await Product.count({
       where: whereConditions,
-      include: category ? includeConditions : [],
+      include: includeConditions,
       distinct: true,
     });
     // Obtener productos con paginación
@@ -98,7 +105,6 @@ export async function getProductsService(filters?: ProductQueryParams) {
   } catch (e) {
     const error = e as Error;
     console.error("getProductsService ", error);
-
     throw new Error(error.message);
   }
 }

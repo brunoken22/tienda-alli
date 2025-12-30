@@ -6,6 +6,7 @@ import { InputNumber } from "./ui/input";
 import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-context";
 import Link from "next/link";
 import { ShoppingCart } from "@/types/shopping-cart";
+import Image from "next/image";
 
 export default function TemplateShopppingCart({
   id,
@@ -39,9 +40,12 @@ export default function TemplateShopppingCart({
     <div className='flex justify-between items-center gap-4 border-b border-border py-4 px-3 hover:bg-accent/50 transition-colors rounded-lg w-full'>
       <div className='flex gap-4 items-center w-full'>
         <Link href={`/productos/${id}`} className='hover:opacity-90'>
-          <img
+          <Image
             src={images?.[0] || "/tienda-alli-webp"}
             alt={title}
+            title={title}
+            width={64}
+            height={64}
             loading='lazy'
             className='h-full w-24 object-cover rounded-lg shadow-sm border border-border'
           />

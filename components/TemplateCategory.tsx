@@ -5,6 +5,7 @@ import { CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Switch } from "./ui/switch";
+import Image from "next/image";
 
 export default function TemplateCategory({
   category,
@@ -26,9 +27,12 @@ export default function TemplateCategory({
   return (
     <div className='relative p-2 rounded-md overflow-hidden shadow-md hover:shadow-lg transition-shadow'>
       <div className='relative h-48 bg-muted'>
-        <img
-          src={category.image || "/tienda-alli-webp?height=200&width=400"}
+        <Image
+          src={category.image || "/tienda-alli-webp"}
           alt={category.title}
+          title={category.title}
+          width={200}
+          height={400}
           className='w-full h-full object-cover'
         />
         {category.featured && (

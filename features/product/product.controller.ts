@@ -18,6 +18,9 @@ import { ShoppingCart } from "@/types/shopping-cart";
 export async function getProductsController(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
+    const refererIncludeAdmin = req.headers.get("referer")?.includes("/admin/dashboard/productos")
+      ? undefined
+      : true;
     // Extraer parámetros de la query string
     const queryParams: ProductQueryParams = {
       search: searchParams.get("search") || undefined,
@@ -25,9 +28,7 @@ export async function getProductsController(req: Request) {
       minPrice: searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : undefined,
       maxPrice: searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : undefined,
       onSale: searchParams.get("onSale") === "true",
-      isActive: req.headers.get("referer")?.includes("/admin/dashboard/productos")
-        ? undefined
-        : true,
+      isActive: refererIncludeAdmin,
       page: searchParams.get("page") ? Number(searchParams.get("page")) : 1,
       limit: searchParams.get("limit") ? Number(searchParams.get("limit")) : 10,
       sortBy:

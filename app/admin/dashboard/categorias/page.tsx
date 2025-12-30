@@ -28,6 +28,7 @@ import { ProductCardSkeletonGrid } from "@/components/ui/EsqueletonCardSwiper";
 import TemplateCategory from "@/components/TemplateCategory";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Image from "next/image";
 
 export default function CategoriasPage() {
   const [categories, setCategories] = useState<{ isLoading: boolean; data: CategoryType[] }>({
@@ -167,6 +168,14 @@ export default function CategoriasPage() {
     id: string,
     setIsActive: Dispatch<SetStateAction<boolean>>
   ) => {
+    if (
+      active === false &&
+      confirm(
+        "¿Desactivar esta categoría? Los productos relacionados dejarán de aparecer en la tienda."
+      ) === false
+    ) {
+      return;
+    }
     setIsActive((prev) => !prev);
     const updatePublished = await publishedCategory(id, active);
     if (updatePublished.success) {
@@ -266,9 +275,12 @@ export default function CategoriasPage() {
 
                 {imagePreview ? (
                   <div className='relative w-full h-48 rounded-lg overflow-hidden border-2 border-primary'>
-                    <img
+                    <Image
                       src={imagePreview || "/tienda-alli-webp"}
                       alt='Preview'
+                      title='Preview'
+                      width={200}
+                      height={200}
                       className='w-full h-full object-cover'
                     />
                     <Button

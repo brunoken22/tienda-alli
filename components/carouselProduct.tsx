@@ -12,6 +12,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Badge } from "./ui/badge";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function ProductCarousel({
   products,
@@ -81,9 +82,12 @@ export default function ProductCarousel({
                     </div>
                   ) : null}
 
-                  <img
+                  <Image
                     src={product.images[0] || "/tienda.svg"}
                     alt={product.title}
+                    title={product.title}
+                    width={200}
+                    height={200}
                     className='h-full w-full object-cover transition-transform duration-500 hover:scale-110'
                   />
                 </div>

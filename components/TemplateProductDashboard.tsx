@@ -25,7 +25,6 @@ export default function TemplateProductDashboard({
   const [isActive, setIsActive] = useState(product.isActive);
   return (
     <div
-      key={product.id}
       className={`relative rounded-md overflow-hidden shadow-md  hover:shadow-lg hover:scale-[1.02] hover:border-primary/30 transition-all duration-500 group ${"flex flex-col"}`}
     >
       {!isActive && <div className='absolute z-20 inset-0 bg-black/10 backdrop-blur-[1px]' />}
@@ -72,9 +71,11 @@ export default function TemplateProductDashboard({
         <div className='flex-1 space-y-4'>
           <div className='space-y-3'>
             <div className='flex items-start justify-between gap-3 mb-3'>
-              <h3 className='text-lg font-semibold  leading-tight flex-1 truncate'>
-                {product.title}
-              </h3>
+              <Link href={`/productos/${product.id}`} className='truncate hover:text-primary'>
+                <h3 className='text-lg font-semibold  leading-tight flex-1 truncate'>
+                  {product.title}
+                </h3>
+              </Link>
 
               <div className='flex items-center gap-2 shrink-0 '>
                 <span

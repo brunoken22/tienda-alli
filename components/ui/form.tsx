@@ -49,7 +49,7 @@ export function FormSearch({
           }}
           aria-label='Limpiar búsqueda'
         >
-          <img src='/close.svg' alt='Limpiar' width={16} height={16} />
+          <X width={16} height={16} />
         </button>
       )}
 
@@ -58,7 +58,7 @@ export function FormSearch({
         className='p-3 min-w-[48px] min-h-[48px] flex items-center justify-center bg-secondary'
         aria-label='Buscar'
       >
-        <img src='/search.svg' alt='Buscar' width={24} height={24} />
+        <Search width={24} height={24} />
       </button>
     </form>
   );

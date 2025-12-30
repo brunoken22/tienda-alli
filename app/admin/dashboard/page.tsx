@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ProductType } from "@/types/product";
 import Loading from "@/components/loading";
+import Image from "next/image";
 
 export default function DashboardPage() {
   const [products, setProducts] = useState<{ data: ProductType[]; isLoading: boolean }>({
@@ -185,9 +186,12 @@ export default function DashboardPage() {
                     <div className='flex items-center gap-3 flex-1 '>
                       <div className='flex gap-1.5 flex-wrap'>
                         <div>
-                          <img
+                          <Image
                             src={product.images[0]}
-                            alt=''
+                            alt={product.title}
+                            title={product.title}
+                            width={300}
+                            height={200}
                             className='h-12 w-12  rounded-full object-fill'
                           />
                         </div>
