@@ -517,7 +517,7 @@ export function ProductDialog({
                     categories
                       .filter(
                         (cat) =>
-                          cat.active &&
+                          cat.isActive &&
                           !formData.categories.find((category) => category.id === cat.id)
                       )
                       .map((cat) => (

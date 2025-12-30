@@ -12,7 +12,7 @@ export async function getProductsService(filters?: ProductQueryParams) {
       minPrice,
       maxPrice,
       onSale,
-      isActive = true,
+      isActive,
       page = 1,
       limit = 10,
       sortBy = "title",
@@ -30,9 +30,10 @@ export async function getProductsService(filters?: ProductQueryParams) {
         [Op.iLike]: `%${search}%`,
       };
     }
-
     // Filtrar por estado activo
-    whereConditions.isActive = isActive;
+    if (isActive !== undefined) {
+      whereConditions.isActive = isActive;
+    }
 
     // Filtrar por precio
     if (minPrice !== undefined || maxPrice !== undefined) {
@@ -317,13 +318,10 @@ export async function getMetricsService() {
     });
 
     // 2. Obtener total de categorías activas
-    const categories = await Category.count({
-      where: { active: true },
-    });
+    const categories = await Category.count();
 
     // 3. Obtener todos los productos activos para calcular modelos y ofertas
     const products = await Product.findAll({
-      where: { isActive: true },
       attributes: ["id", "variant", "price", "priceOffer"],
       raw: true, // Esto devuelve objetos planos en lugar de instancias
     });
@@ -369,5 +367,24 @@ export async function getMetricsService() {
     const error = e as Error;
     console.error("getMetricsService error:", e);
     throw new Error(`Error al obtener métricas: ${error.message}`);
+  }
+}
+
+export async function publishedProductService(id: string, published: boolean) {
+  try {
+    const [productUpdate] = await Product.update(
+      {
+        isActive: published,
+      },
+      {
+        where: {
+          id,
+        },
+      }
+    );
+    return { update: productUpdate };
+  } catch (e) {
+    const error = e as Error;
+    throw new Error(error.message);
   }
 }

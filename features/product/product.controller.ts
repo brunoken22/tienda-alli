@@ -10,6 +10,7 @@ import {
   getProductIDService,
   getProductsService,
   getShoppingCartService,
+  publishedProductService,
 } from "./product.service";
 import { deleteImages, uploadImages } from "@/lib/cloudinary";
 import { ShoppingCart } from "@/types/shopping-cart";
@@ -17,7 +18,6 @@ import { ShoppingCart } from "@/types/shopping-cart";
 export async function getProductsController(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-
     // Extraer parámetros de la query string
     const queryParams: ProductQueryParams = {
       search: searchParams.get("search") || undefined,
@@ -25,7 +25,9 @@ export async function getProductsController(req: Request) {
       minPrice: searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : undefined,
       maxPrice: searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : undefined,
       onSale: searchParams.get("onSale") === "true",
-      isActive: searchParams.get("isActive") !== "false",
+      isActive: req.headers.get("referer")?.includes("/admin/dashboard/productos")
+        ? undefined
+        : true,
       page: searchParams.get("page") ? Number(searchParams.get("page")) : 1,
       limit: searchParams.get("limit") ? Number(searchParams.get("limit")) : 10,
       sortBy:
@@ -302,6 +304,17 @@ export async function getPriceFilterController() {
 export async function getMetricsController() {
   try {
     const response = await getMetricsService();
+    return { data: response, success: true };
+  } catch (e) {
+    const error = e as Error;
+    console.error("getMetricsController", e);
+    throw new Error(error.message);
+  }
+}
+
+export async function publishedProductController(id: string, published: boolean) {
+  try {
+    const response = await publishedProductService(id, published);
     return { data: response, success: true };
   } catch (e) {
     const error = e as Error;

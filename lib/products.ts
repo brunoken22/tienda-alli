@@ -38,13 +38,9 @@ export async function getProducts(queryParams?: {
         url += `?${params.toString()}`;
       }
     }
-    console.log("PARAMS: ", url);
 
     const response = await fetch(url);
-    //  {
-    //       method: "GET",
-    //       credentials: "include",
-    //     }
+
     if (!response.ok) {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
@@ -168,4 +164,25 @@ export async function deleteProduct(id: string) {
   });
   const data = await response.json();
   return data;
+}
+
+export async function publishedProduct(id: string, published: boolean) {
+  try {
+    const response = await fetch(`/api/admin/product/${id}/published`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id, published }),
+    });
+    const data = await response.json();
+    if (!data.success) {
+      throw new Error(data.message);
+    }
+    return data;
+  } catch (e) {
+    const error = e as Error;
+    console.error("Error en getFrontPage:", e);
+    return { message: error.message, success: false };
+  }
 }

@@ -1,18 +1,22 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, SetStateAction, Dispatch } from "react";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { ProductDialog } from "@/components/admin/product-dialog";
-import { getProducts, addProduct, updateProduct, deleteProduct } from "@/lib/products";
-import { Plus, Pencil, Trash2, Package, Grid3X3, List, Search, Filter, X } from "lucide-react";
+import {
+  getProducts,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+  publishedProduct,
+} from "@/lib/products";
+import { Plus, Package, Search, Filter, X } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import SimpleHoverSwiper from "@/components/HoverSwiper";
 import { ProductType } from "@/types/product";
 import { ProductCardSkeletonGrid } from "@/components/ui/EsqueletonCardSwiper";
 import "./styles.css";
-import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -26,6 +30,9 @@ import { getCategories } from "@/lib/category";
 import { CategoryType } from "@/types/category";
 import { getPriceFilter } from "@/lib/price";
 import { PriceFilterType } from "@/types/price-filter";
+import TemplateProductDashboard from "@/components/TemplateProductDashboard";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
@@ -130,7 +137,6 @@ export default function ProductsPage() {
         queryParams.limit = limit;
         queryParams.sortBy = sortBy;
         queryParams.sortOrder = sortOrder;
-        console.log("Datos a enviar: ", queryParams);
 
         const response = await getProducts(queryParams);
         if (response.success) {
@@ -319,6 +325,27 @@ export default function ProductsPage() {
 
       return false;
     }
+  };
+
+  const handleActiveProduct = async (
+    active: boolean,
+    id: string,
+    setIsActive: Dispatch<SetStateAction<boolean>>
+  ) => {
+    setIsActive((prev) => !prev);
+    const updatePublished = await publishedProduct(id, active);
+    if (updatePublished.success) {
+      toast.success(active ? "¡Se activo el producto!" : "¡Se desactivo el producto!", {
+        position: "bottom-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+    setIsActive((prev) => !prev);
+    toast.error(updatePublished.message || "¡Algo salio mal!", {
+      position: "bottom-right",
+      autoClose: 3000,
+    });
   };
 
   return (
@@ -520,102 +547,13 @@ export default function ProductsPage() {
           <>
             <div className={"grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}>
               {products.data.map((product: ProductType) => (
-                <div
+                <TemplateProductDashboard
                   key={product.id}
-                  className={` rounded-md overflow-hidden shadow-md  hover:shadow-lg hover:scale-[1.02] hover:border-primary/30 transition-all duration-500 group ${"flex flex-col"}`}
-                >
-                  <div
-                    className={`relative overflow-hidden bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 ${"w-full flex-shrink-0"} h-[200px]`}
-                  >
-                    <div className='absolute top-4 right-4 z-10 flex flex-col gap-2.5 items-end'>
-                      {product.priceOffer > 1 && (
-                        <Badge className='bg-gradient-to-r from-rose-500 via-pink-500 to-red-500 hover:from-rose-600 hover:via-pink-600 hover:to-red-600 border-0 shadow-2xl backdrop-blur-xl text-white text-xs font-bold px-3 py-1.5 rounded-full animate-in slide-in-from-right-5'>
-                          AHORRA{" "}
-                          {Math.round(((product.price - product.priceOffer) / product.price) * 100)}
-                          %
-                        </Badge>
-                      )}
-                      {product.variant.length > 0 && (
-                        <Badge className='backdrop-blur-xl bg-gradient-to-r from-violet-500/90 to-purple-500/90 border-0 shadow-xl text-white text-xs font-semibold px-3 py-1.5 rounded-full'>
-                          {product.variant.length}{" "}
-                          {product.variant.length === 1 ? "Modelo" : "Modelos"}
-                        </Badge>
-                      )}
-                    </div>
-
-                    <div className='h-full'>
-                      <Link href={`/productos/${product.id}`}>
-                        <SimpleHoverSwiper
-                          classNameImg='object-cover'
-                          imageUrls={product.images.filter((img) => typeof img === "string")}
-                          title={product.title}
-                        />
-                      </Link>
-                    </div>
-                    <div className='absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
-                  </div>
-
-                  <div className={`p-2 flex flex-col ${"flex-1 justify-between"}`}>
-                    <div className='flex-1 space-y-4'>
-                      <div className='space-y-3'>
-                        <Link href={`/productos/${product.id}`}>
-                          <h3 className='font-bold  leading-tight line-clamp-2 text-balance bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text'>
-                            {product.title[0].toUpperCase() + product.title.slice(1)}
-                          </h3>
-                        </Link>
-                        <div className='flex flex-row overflow-x-auto gap-2 scroll-personalizado pb-1'>
-                          {product.categories &&
-                            product.categories.map((cat, i) => (
-                              <p
-                                key={i}
-                                className='text-xs font-semibold border-2 border-primary/20 bg-gradient-to-r from-primary/10 to-primary/5 text-primary hover:border-primary/40 hover:bg-primary/15 transition-all px-3 py-1 rounded-xl whitespace-nowrap'
-                              >
-                                {cat.title}
-                              </p>
-                            ))}
-                        </div>
-                      </div>
-
-                      <div className='flex items-baseline gap-3 '>
-                        {product.priceOffer && product.priceOffer > 1 ? (
-                          <>
-                            <span className='text-lg text-green-600  font-black bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent drop-shadow-sm'>
-                              ${product.priceOffer.toLocaleString()}
-                            </span>
-                            <span className='text-base text-primary line-through font-semibold'>
-                              ${product.price.toLocaleString()}
-                            </span>
-                          </>
-                        ) : (
-                          <span className='text-lg font-black bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-primary'>
-                            ${product.price.toLocaleString()}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className='flex gap-3 pt-5 '>
-                      <Button
-                        variant='primary'
-                        className='flex-1 gap-2 transition-all font-semibold border-2'
-                        size='md'
-                        onClick={() => handleEditProduct(product)}
-                      >
-                        <Pencil className='w-4 h-4' />
-                        <span className='max-sm:hidden'>Editar</span>
-                      </Button>
-                      <Button
-                        variant='outline'
-                        size='md'
-                        className='flex-1 gap-2 bg-secondary border-red-400 hover:bg-red-600 shadow-lg hover:shadow-xl transition-all font-semibold  border-2'
-                        onClick={() => handleDeleteProduct(product.id)}
-                      >
-                        <Trash2 className='w-4 h-4' />
-                        <span className='max-sm:hidden'>Eliminar</span>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                  product={product}
+                  handleActiveProduct={handleActiveProduct}
+                  handleDeleteProduct={handleDeleteProduct}
+                  handleEditProduct={handleEditProduct}
+                />
               ))}
             </div>
 
@@ -706,6 +644,19 @@ export default function ProductsPage() {
           product={editingProduct}
           onSave={handleSaveProduct}
           categories={categories}
+        />
+
+        <ToastContainer
+          position='bottom-right'
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme='light'
         />
       </main>
     </Suspense>

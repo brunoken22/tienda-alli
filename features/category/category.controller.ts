@@ -4,15 +4,19 @@ import {
   deleteCategoryService,
   getCategoriesService,
   getCategoryIdService,
+  publishedCategoryService,
   updateCategoryService,
 } from "./category.service";
 import { deleteImages, uploadImages } from "@/lib/cloudinary";
 import isResponseUpload from "@/utils/isResponseUpload";
 import { ResponseUpload } from "@/types/product";
 
-export async function getCategoriesController() {
+export async function getCategoriesController(req: Request) {
   try {
-    const categoriesController = await getCategoriesService();
+    const isActive = req.headers.get("referer")?.includes("/admin/dashboard/category")
+      ? undefined
+      : true;
+    const categoriesController = await getCategoriesService(isActive);
     return { data: categoriesController, success: true };
   } catch (e) {
     const error = e as Error;
@@ -39,7 +43,7 @@ export async function createCategoryController(formData: FormData) {
       image: generateImg.length ? imgFilter[0].url : "",
       imageId: generateImg.length ? imgFilter[0].public_id : "",
       featured: formData.get("featured") === "true" ? true : false,
-      active: formData.get("active") === "true" ? true : false,
+      isActive: formData.get("isActive") === "true" ? true : false,
     };
     if (
       !data.title ||
@@ -47,7 +51,7 @@ export async function createCategoryController(formData: FormData) {
       !data.image ||
       !data.imageId ||
       typeof data.featured !== "boolean" ||
-      typeof data.active !== "boolean"
+      typeof data.isActive !== "boolean"
     ) {
       throw new Error("Es necesario llenaron todo los campos.");
     }
@@ -92,7 +96,7 @@ export async function updateCategoryController(id: string, formData: FormData) {
       image: generateImg.length ? imgFilter[0].url : category.image,
       imageId: generateImg.length ? imgFilter[0].public_id : category.imageId,
       featured: formData.get("featured") === "true" ? true : false,
-      active: formData.get("active") === "true" ? true : false,
+      isActive: formData.get("isActive") === "true" ? true : false,
     };
     if (
       !data.title ||
@@ -100,7 +104,7 @@ export async function updateCategoryController(id: string, formData: FormData) {
       !data.image ||
       !data.imageId ||
       typeof data.featured !== "boolean" ||
-      typeof data.active !== "boolean"
+      typeof data.isActive !== "boolean"
     ) {
       throw new Error("Es necesario llenaron todo los campos.");
     }
@@ -139,6 +143,17 @@ export async function deleteCategoryController(id: string) {
     return { data: { delete: categoriesController }, success: true };
   } catch (e) {
     const error = e as Error;
+    throw new Error(error.message);
+  }
+}
+
+export async function publishedCategoryController(id: string, published: boolean) {
+  try {
+    const response = await publishedCategoryService(id, published);
+    return { data: response, success: true };
+  } catch (e) {
+    const error = e as Error;
+    console.error("publishedProductController", e);
     throw new Error(error.message);
   }
 }

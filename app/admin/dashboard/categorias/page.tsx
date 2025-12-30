@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,12 +15,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Pencil, Trash2, Star, Upload, X } from "lucide-react";
+import { Plus, Upload, X } from "lucide-react";
 import type { CategoryType } from "@/types/category";
-import { getCategories, createCategory, updateCategory, deleteCategory } from "@/lib/category";
+import {
+  getCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  publishedCategory,
+} from "@/lib/category";
 import { ProductCardSkeletonGrid } from "@/components/ui/EsqueletonCardSwiper";
+import TemplateCategory from "@/components/TemplateCategory";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function CategoriasPage() {
   const [categories, setCategories] = useState<{ isLoading: boolean; data: CategoryType[] }>({
@@ -41,7 +48,7 @@ export default function CategoriasPage() {
     image: "",
     imageId: "",
     featured: false,
-    active: true,
+    isActive: true,
   });
 
   useEffect(() => {
@@ -62,7 +69,7 @@ export default function CategoriasPage() {
         featured: category.featured,
         image: category.image,
         imageId: category.imageId,
-        active: category.active,
+        isActive: category.isActive,
       });
       setImagePreview(category.image);
     } else {
@@ -73,7 +80,7 @@ export default function CategoriasPage() {
         featured: false,
         image: "",
         imageId: "",
-        active: true,
+        isActive: true,
       });
       setImagePreview("");
     }
@@ -155,6 +162,26 @@ export default function CategoriasPage() {
     }
   };
 
+  const handleActiveCategory = async (
+    active: boolean,
+    id: string,
+    setIsActive: Dispatch<SetStateAction<boolean>>
+  ) => {
+    setIsActive((prev) => !prev);
+    const updatePublished = await publishedCategory(id, active);
+    if (updatePublished.success) {
+      toast.success(active ? "¡Se activo la categoria!" : "¡Se desactivo la categoria!", {
+        position: "bottom-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+    setIsActive((prev) => !prev);
+    toast.error(updatePublished.message || "¡Algo salio mal!", {
+      position: "bottom-right",
+      autoClose: 3000,
+    });
+  };
   return (
     <div className='container mx-auto py-8 px-4'>
       <div className='flex max-sm:flex-col max-sm:text-center max-md:gap-4 items-center justify-between mb-8'>
@@ -177,53 +204,13 @@ export default function CategoriasPage() {
       ) : (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {categories.data.map((category) => (
-            <div
+            <TemplateCategory
               key={category.id}
-              className='p-2 rounded-md overflow-hidden shadow-md hover:shadow-lg transition-shadow'
-            >
-              <div className='relative h-48 bg-muted'>
-                <img
-                  src={category.image || "/tienda-alli-webp?height=200&width=400"}
-                  alt={category.title}
-                  className='w-full h-full object-cover'
-                />
-                {category.featured && (
-                  <Badge className='absolute top-2 right-2 bg-yellow-500 text-yellow-950'>
-                    <Star className='h-3 w-3 mr-1 fill-current' />
-                    Destacada
-                  </Badge>
-                )}
-              </div>
-
-              <CardHeader>
-                <div className='flex items-start justify-between'>
-                  <div className='flex-1'>
-                    <CardTitle className='text-xl'>{category.title}</CardTitle>
-                    <CardDescription className='mt-1 truncate'>
-                      {category.description}
-                    </CardDescription>
-                  </div>
-                  <Badge variant={category.active ? "default" : "secondary"}>
-                    {category.active ? "Activa" : "Inactiva"}
-                  </Badge>
-                </div>
-              </CardHeader>
-
-              <div className='flex gap-2 pt-4 border-t'>
-                <Button
-                  variant='primary'
-                  size='sm'
-                  onClick={() => handleOpenDialog(category)}
-                  className='flex-1'
-                >
-                  <Pencil className='h-4 w-4 mr-2' />
-                  Editar
-                </Button>
-                <Button variant='danger' size='sm' onClick={() => handleDeleteClick(category)}>
-                  <Trash2 className='h-4 w-4' />
-                </Button>
-              </div>
-            </div>
+              category={category}
+              handleDeleteClick={handleDeleteClick}
+              handleOpenDialog={handleOpenDialog}
+              handleActiveCategory={handleActiveCategory}
+            />
           ))}
         </div>
       )}
@@ -342,8 +329,8 @@ export default function CategoriasPage() {
                   </div>
                   <Switch
                     id='active'
-                    checked={formData.active}
-                    onCheckedChange={(checked) => setFormData({ ...formData, active: checked })}
+                    checked={formData.isActive}
+                    onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
                   />
                 </div>
               </div>
@@ -448,6 +435,18 @@ export default function CategoriasPage() {
           </button>
         </div>
       </div>
+      <ToastContainer
+        position='bottom-right'
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='light'
+      />
     </div>
   );
 }

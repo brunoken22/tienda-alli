@@ -1,9 +1,15 @@
 import { CategoryType } from "@/types/category";
 import Category from "./category.model";
 
-export async function getCategoriesService() {
+export async function getCategoriesService(isActive: boolean | undefined) {
   try {
-    const categories = await Category.findAll();
+    const whereConditions: any = {};
+    if (isActive !== undefined) {
+      whereConditions.isActive = isActive;
+    }
+    const categories = await Category.findAll({
+      where: whereConditions,
+    });
     return categories;
   } catch (e) {
     const error = e as Error;
@@ -56,6 +62,25 @@ export async function deleteCategoryService(id: string) {
   } catch (e) {
     const error = e as Error;
     console.error("deleteCategoryService: ", error);
+    throw new Error(error.message);
+  }
+}
+
+export async function publishedCategoryService(id: string, published: boolean) {
+  try {
+    const [categoryUpdate] = await Category.update(
+      {
+        isActive: published,
+      },
+      {
+        where: {
+          id,
+        },
+      }
+    );
+    return { update: categoryUpdate };
+  } catch (e) {
+    const error = e as Error;
     throw new Error(error.message);
   }
 }

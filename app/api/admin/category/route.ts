@@ -4,9 +4,9 @@ import {
 } from "@/features/category/category.controller";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const response = await getCategoriesController();
+    const response = await getCategoriesController(req);
     return NextResponse.json(response, { status: 200 });
   } catch (e) {
     const error = e as Error;

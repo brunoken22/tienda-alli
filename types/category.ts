@@ -5,7 +5,7 @@ export type CategoryType = {
   image: string;
   imageId: string;
   featured: boolean;
-  active: boolean;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 };
