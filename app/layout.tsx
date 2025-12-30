@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import LayoutRoot from "@/components/layout";
-import { Suspense } from "react";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -67,6 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.className} max-sm:bg-primary/90 bg-[#fcfcfc]`}>
         <LayoutRoot>{children}</LayoutRoot>
       </body>
+      <GoogleAnalytics gaId='G-Q715Q9GQCN' />
     </html>
   );
 }

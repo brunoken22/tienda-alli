@@ -394,54 +394,34 @@ export default function ProductosPage() {
             {/* Header de resultados */}
             {data?.data?.length ? (
               <div className='rounded-lg border border-primary/30 mb-6 shadow-sm'>
-                <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4'>
-                  <div className='flex items-center gap-4'>
-                    <p className='text-sm text-muted-foreground'>
-                      Mostrando{" "}
-                      <span className='font-medium text-foreground'>
-                        {offset + 1}-{Math.min(offset + currentResults, totalResults)}
-                      </span>{" "}
-                      de <span className='font-medium text-foreground'>{totalResults}</span>{" "}
-                      productos
-                    </p>
-                  </div>
+                <div className='flex flex-col sm:flex-row items-center max-sm:justify-center justify-between sm:gap-4 gap-2  p-4'>
+                  <p className='text-sm text-muted-foreground'>
+                    Mostrando{" "}
+                    <span className='font-medium text-foreground'>
+                      {offset + 1}-{Math.min(offset + currentResults, totalResults)}
+                    </span>{" "}
+                    de <span className='font-medium text-foreground'>{totalResults}</span> productos
+                  </p>
 
-                  <div className='flex items-center gap-4'>
-                    {/* Selector de vista */}
-                    <div className='hidden sm:flex items-center border rounded-lg p-1'>
-                      <Button
-                        aria-label='Vista en grid'
-                        variant={viewMode === "grid" ? "default" : "ghost"}
-                        size='sm'
-                        onClick={() => setViewMode("grid")}
-                        className='h-8 w-8 p-0'
-                      >
-                        <Grid3X3 className='w-4 h-4' />
-                      </Button>
-                      <Button
-                        aria-label='Vista en lista'
-                        variant={viewMode === "list" ? "default" : "ghost"}
-                        size='sm'
-                        onClick={() => setViewMode("list")}
-                        className='h-8 w-8 p-0'
-                      >
-                        <List className='w-4 h-4' />
-                      </Button>
-                    </div>
-
-                    {/* Ordenamiento */}
-                    {/*<div className='flex items-center gap-2'>
-                      <ArrowUpDown className='w-4 h-4 text-muted-foreground' />
-                      <select
-                        value={order}
-                        onChange={(e) => setOrder(e.target.value as "asc" | "desc")}
-                        aria-label='Ordenar por precio'
-                        className='text-sm border rounded-md px-3 py-1 bg-background focus:outline-none focus:ring-2 focus:ring-primary'
-                      >
-                        <option value='desc'>Precio: Mayor a menor</option>
-                        <option value='asc'>Precio: Menor a mayor</option>
-                      </select>
-                    </div> */}
+                  <div className='flex items-center border rounded-lg p-1'>
+                    <Button
+                      aria-label='Vista en grid'
+                      variant={viewMode === "grid" ? "default" : "ghost"}
+                      size='sm'
+                      onClick={() => setViewMode("grid")}
+                      className='h-8 w-8 p-0'
+                    >
+                      <Grid3X3 className='w-4 h-4' />
+                    </Button>
+                    <Button
+                      aria-label='Vista en lista'
+                      variant={viewMode === "list" ? "default" : "ghost"}
+                      size='sm'
+                      onClick={() => setViewMode("list")}
+                      className='h-8 w-8 p-0'
+                    >
+                      <List className='w-4 h-4' />
+                    </Button>
                   </div>
                 </div>
               </div>
