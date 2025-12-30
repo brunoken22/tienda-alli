@@ -4,6 +4,47 @@ import { getProductID } from "@/lib/products";
 import { ArrowLeft, Package } from "lucide-react";
 import Link from "next/link";
 
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const product = await getProductID(id);
+  if (!product) {
+    return {
+      title: "Post not found",
+    };
+  }
+
+  return {
+    title: product.title,
+    description: product.description,
+    alternates: {
+      canonical: "/productos/" + product.id,
+    },
+    openGraph: {
+      title: product.title,
+      description: product.description,
+      url: "https://tienda-alli.vercel.app/productos/" + product.id,
+      siteName: "Tienda Alli",
+      images: [
+        {
+          url: product.images[0],
+          width: 1200,
+          height: 630,
+          alt: product.title,
+        },
+      ],
+      locale: "es_EC",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.title,
+      description: product.description,
+      images: product.images,
+      creator: "@BrunoKen",
+    },
+  };
+}
+
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const product = await getProductID(id);

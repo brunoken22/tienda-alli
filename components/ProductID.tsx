@@ -224,6 +224,7 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
                         height={600}
                         alt={`${product.title} - Vista ${index + 1}`}
                         className='h-full w-full object-cover'
+                        fetchPriority={index === 0 ? "high" : "low"}
                         priority={index === 0}
                       />
                     </div>
