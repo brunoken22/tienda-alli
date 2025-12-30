@@ -288,7 +288,7 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
                   <Badge
                     key={category.id}
                     variant='outline'
-                    className='whitespace-nowrap text-xs !bg-primary/40 !text-secondary md:text-sm'
+                    className='whitespace-nowrap text-xs !bg-primary/80 !text-secondary md:text-sm'
                   >
                     {category.title}
                   </Badge>

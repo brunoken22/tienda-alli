@@ -64,7 +64,7 @@ export default function TemplateCategory({
               <div className='flex items-center gap-2 shrink-0 '>
                 <span
                   className={`text-xs font-medium", ${
-                    isActive ? "text-green-600" : "text-gray-400  relative z-50"
+                    isActive ? "text-green-700" : "text-gray-400  relative z-50"
                   }`}
                 >
                   {isActive ? "Activo" : "Inactivo"}

@@ -99,7 +99,7 @@ export default function ProductCarousel({
                     <div className='flex items-baseline gap-2'>
                       {product.priceOffer ? (
                         <>
-                          <span className='text-2xl font-bold text-green-600'>
+                          <span className='text-2xl font-bold text-green-700'>
                             ${product.priceOffer.toLocaleString()}
                           </span>
                           <span className='text-sm text-muted-foreground line-through'>
@@ -114,7 +114,7 @@ export default function ProductCarousel({
                     </div>
                     <Button size='sm'>
                       <Link href={`/productos/${product.id}`} className='flex gap-2 flex-row'>
-                        Ver
+                        Ver producto
                         <ChevronRight className='h-4 w-4' />
                       </Link>
                     </Button>

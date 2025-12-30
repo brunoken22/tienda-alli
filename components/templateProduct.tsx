@@ -359,7 +359,7 @@ export default function TemplateProduct({
           <div className='flex items-baseline gap-2 min-h-[2rem]'>
             {currentPriceOffer ? (
               <>
-                <span className='text-2xl font-bold text-green-600'>
+                <span className='text-2xl font-bold text-green-700'>
                   ${currentPriceOffer.toLocaleString("es-ES")}
                 </span>
                 <span className='text-sm text-muted-foreground line-through'>

@@ -50,7 +50,7 @@ export function Footer() {
 
           {/* Quick Links */}
           <div className='space-y-4'>
-            <h3 className='text-lg font-semibold'>Enlaces Rápidos</h3>
+            <h4 className='text-lg font-semibold'>Enlaces Rápidos</h4>
             <ul className='space-y-2 text-sm'>
               <li>
                 <Link
@@ -89,7 +89,7 @@ export function Footer() {
 
           {/* Contact Info */}
           <div className='space-y-4'>
-            <h3 className='text-lg font-semibold'>Contacto</h3>
+            <h4 className='text-lg font-semibold'>Contacto</h4>
             <ul className='space-y-3 text-sm'>
               <li className='flex items-start gap-3'>
                 <MapPin className='w-4 h-4 mt-1 text-muted-foreground flex-shrink-0' />
