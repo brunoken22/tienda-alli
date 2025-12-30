@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getMetrics, getProducts } from "@/lib/products";
-import { Package, Palette, Plus, Lock, ShoppingBag, Tag, Logs } from "lucide-react";
+import { Package, Palette, Plus, Lock, ShoppingBag, Tag, Logs, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ProductType } from "@/types/product";
@@ -172,7 +172,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {loading ? (
-              <Loading />
+              <Loader2 className='animate-spin' />
             ) : recentProducts.length === 0 ? (
               <p className='text-sm text-muted-foreground'>No hay productos aún</p>
             ) : (

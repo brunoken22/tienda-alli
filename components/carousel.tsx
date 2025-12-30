@@ -4,7 +4,6 @@ import { Autoplay, Pagination, EffectFade } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
-import Link from "next/link";
 import Image from "next/image";
 
 export function CarouselHeader({ data }: { data: string[] }) {
@@ -28,18 +27,16 @@ export function CarouselHeader({ data }: { data: string[] }) {
       >
         {data?.map((product, index) => (
           <SwiperSlide key={product || index}>
-            <Link href={`/productos`} className='block relative w-full h-full group'>
-              {/* Overlay con gradiente para mejor legibilidad */}
-              <div className=' absolute  inset-0 bg-gradient-to-t from-black/90  to-primary/60 group-hover:opacity-90 transition-opacity z-10' />
+            {/* Overlay con gradiente para mejor legibilidad */}
+            <div className=' absolute  inset-0 bg-gradient-to-t from-black/90  to-primary/60 group-hover:opacity-90 transition-opacity z-10' />
 
-              <Image
-                src={product || "/tienda-alli.webp"}
-                alt={"Banner"}
-                fill
-                className='object-cover object-top relative z-20'
-                priority={index === 0}
-              />
-            </Link>
+            <Image
+              src={product || "/tienda-alli.webp"}
+              alt={"Banner"}
+              fill
+              className='object-cover object-top relative z-20'
+              priority={index === 0}
+            />
           </SwiperSlide>
         ))}
       </Swiper>

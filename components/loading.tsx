@@ -1,11 +1,24 @@
-import { Loader2 } from "lucide-react";
+import Image from "next/image";
 
 export default function LoadingComponent() {
   return (
-    <div className='min-h-[50dvh] inset-0 bg-background flex items-center justify-center z-50'>
-      <div className='flex flex-col items-center gap-4'>
-        <Loader2 className='h-12 w-12 animate-spin text-primary' />
-        <p className='text-xl font-medium text-foreground'>Cargando...</p>
+    <div
+      className='
+      fixed inset-0 bg-primary flex items-center justify-center z-50
+      opacity-100 transition-all duration-1000 delay-1000
+      hover:opacity-0 focus:opacity-0
+      group
+    '
+    >
+      <div className='flex flex-col items-center gap-4 group-hover:scale-95 transition-transform duration-700'>
+        <Image
+          src='/tienda-alli.webp'
+          height={400}
+          width={400}
+          alt='TIENDA ALLI'
+          title='TIENDA ALLI'
+          className='transition-all duration-500 delay-300 group-hover:opacity-0'
+        />
       </div>
     </div>
   );

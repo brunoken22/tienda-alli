@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { Sidebar } from "@/components/admin/sidebar";
 import { AuthContext } from "@/contexts/auth-context";
 import NavAdminMobile from "@/components/NavAdminMobile";
-import Loading from "@/components/loading";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useContext(AuthContext);
@@ -18,10 +17,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       router.push("/admin/login");
     }
   }, [user, isLoading, router]);
-
-  if (isLoading) {
-    return <Loading />;
-  }
 
   return (
     <div className='relative'>
