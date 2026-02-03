@@ -22,7 +22,7 @@ export function FormSearch({
   }, [value]);
   return (
     <form
-      className='flex justify-center items-center bg-secondary  gap-3 rounded-md'
+      className='flex justify-center items-center bg-secondary  border border-secondary  gap-3 rounded-md'
       onSubmit={(e: any) => {
         e.preventDefault();
         modValue(e.target?.search.value);
@@ -34,7 +34,7 @@ export function FormSearch({
         id='search'
         onChange={debounced}
         placeholder='Mochila'
-        className='bg-secondary text-black focus-visible:outline-none placeholder-white-500 w-[80%] py-3 px-4 text-base rounded-md'
+        className='bg-secondary w-full text-black focus-visible:outline-none placeholder-white-500  py-3 px-4 text-base rounded-md'
         defaultValue={value || ""}
         ref={inputSearch}
       />
@@ -42,7 +42,7 @@ export function FormSearch({
       {value && (
         <button
           type='button'
-          className='p-3 min-w-[48px] min-h-[48px] flex items-center justify-center'
+          className='p-2 mr-2 flex items-center justify-center text-secondary  bg-red-500 rounded-lg'
           onClick={() => {
             inputSearch.current.value = "";
             modValue("");
@@ -52,14 +52,6 @@ export function FormSearch({
           <X width={16} height={16} />
         </button>
       )}
-
-      <button
-        type='submit'
-        className='p-3 min-w-[48px] min-h-[48px] flex items-center justify-center bg-secondary'
-        aria-label='Buscar'
-      >
-        <Search width={24} height={24} />
-      </button>
     </form>
   );
 }
@@ -101,7 +93,7 @@ export function FormSearchHome() {
           variant='ghost'
           aria-label='Elminar producto'
           size='icon'
-          className='text-white/70 hover:text-white hover:bg-white/10 h-8 w-8'
+          className='text-white/70 hover:text-white hover:bg-white/10  '
           onClick={() => {
             setSearch("");
             inputSearch.current.value = "";
@@ -115,7 +107,7 @@ export function FormSearchHome() {
         type='submit'
         variant='ghost'
         size='icon'
-        className='text-white/70 hover:text-white hover:bg-white/10 h-8 w-8'
+        className='text-white/70 hover:text-white hover:bg-white/10  '
       >
         <Search className='w-4 h-4' />
       </Button>

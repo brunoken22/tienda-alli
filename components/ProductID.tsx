@@ -79,7 +79,7 @@ function DescriptionModal({
 export default function ProductTemplate({ product }: { product: ProductType }) {
   const { addItem } = useShoppingCartActions();
   const [selectedVariant, setSelectedVariant] = useState<VariantType | null>(
-    product.variant.length > 0 ? product.variant[0] : null
+    product.variant.length > 0 ? product.variant[0] : null,
   );
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [quantity, setQuantity] = useState(1);
@@ -465,7 +465,7 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
             {/* Add to Cart Button - Sticky en mobile */}
             <div
               className={`${
-                isMobile ? "sticky bottom-0 left-0 right-0 z-50 bg-background pt-4 pb-6" : ""
+                isMobile ? "sticky bottom-0 left-0 right-0 z-40 bg-background pt-4 pb-6" : ""
               }`}
             >
               <Button

@@ -128,12 +128,14 @@ export default function ProductCarousel({
         <div className='custom-navigation'>
           <button
             aria-label='Ir a la Izquierda'
+            name='Ir a la Izquierda'
             className='custom-prev absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-primary/80 text-secondary hover:text-primary hover:bg-white  w-10 h-10 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110'
           >
             <ArrowLeftIcon />
           </button>
           <button
             aria-label='Ir a la Derecha'
+            name='Ir a la Derecha'
             className='custom-next absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-primary/80 text-secondary hover:text-primary hover:bg-white  w-10 h-10 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110'
           >
             <ArrowRightIcon />

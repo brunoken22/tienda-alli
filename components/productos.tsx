@@ -46,14 +46,14 @@ export default function ProductosPage() {
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [offset, setOffset] = useState(Number(searchParams.get("offset")) || 0);
   const [typeSearch, setTypeSearch] = useState<string[]>(
-    JSON.parse(searchParams.get("type") || "[]")
+    JSON.parse(searchParams.get("type") || "[]"),
   );
   const [onSale, setOnSale] = useState(searchParams.get("onSale") === "true");
 
   // Estados para el nuevo sistema de filtros
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [minPrice, setMinPrice] = useState(
-    searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : 0
+    searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : 0,
   );
   const [priceFilter, setPriceFilter] = useState<PriceFilterType>({
     maxPrice: 1000000,
@@ -63,11 +63,11 @@ export default function ProductosPage() {
   });
 
   const [maxPrice, setMaxPrice] = useState(
-    searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : priceFilter.maxPrice
+    searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : priceFilter.maxPrice,
   );
   const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 12);
   const [sortBy, setSortBy] = useState<"title" | "price" | "createdAt">(
-    (searchParams.get("sortBy") as any) || "price"
+    (searchParams.get("sortBy") as any) || "price",
   );
 
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -91,7 +91,7 @@ export default function ProductosPage() {
     offset,
     order,
     onSale,
-    sortBy
+    sortBy,
   );
 
   // Actualizar URL con todos los parámetros
@@ -183,13 +183,20 @@ export default function ProductosPage() {
         {openInput && (
           <div className='fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden'>
             <div className='bg-white m-4 mt-24 rounded-lg p-4 shadow-xl'>
+              <div className='flex justify-end items-end'>
+                <Button
+                  variant='ghost'
+                  size='icon'
+                  onClick={() => setOpenInput(false)}
+                  className='hover:bg-red-400 hover:text-secondary'
+                >
+                  <X className='w-5 h-5 ' />
+                </Button>
+              </div>
               <div className='flex items-center space-x-2 mb-4'>
                 <div className='flex-1'>
                   <FormSearch value={search} modValue={handleModValueFormSearch} />
                 </div>
-                <Button variant='ghost' size='icon' onClick={() => setOpenInput(false)}>
-                  <X className='w-5 h-5' />
-                </Button>
               </div>
               <Button
                 variant='outline'
