@@ -38,10 +38,6 @@ export default function ShoppingCart() {
     0,
   );
 
-  console.log("MI CARRITO: ", cart);
-
-  console.log("TOTAL DE CARRITO: ", total);
-
   return (
     <>
       <div className='fixed right-0 top-0 bottom-0 z-50 bg-white w-full max-w-md shadow-2xl transform transition-transform duration-300 ease-in-out'>
