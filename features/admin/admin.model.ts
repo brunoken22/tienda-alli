@@ -80,21 +80,25 @@ const Admin = sequelize.define(
     // Hook para hashear la contraseña antes de guardar
     hooks: {
       beforeCreate: async (admin) => {
+        console.log("Admin antes de crear:", admin.dataValues);
         if (admin.dataValues.password) {
           const bcrypt = await import("bcrypt");
           const salt = await bcrypt.genSalt(10);
+          console.log("beforeCreate: Contraseña actualizada, hasheando nueva contraseña...");
           admin.dataValues.password = await bcrypt.hash(admin.dataValues.password, salt);
         }
       },
       beforeUpdate: async (admin) => {
-        if (admin.previous("password") && admin.dataValues.password) {
+        console.log("Admin antes de actualizar:", admin.dataValues);
+        if (admin.changed("password" as keyof typeof admin) && admin.dataValues.password) {
           const bcrypt = await import("bcrypt");
           const salt = await bcrypt.genSalt(10);
+          console.log("beforeUpdate: Contraseña actualizada, hasheando nueva contraseña...");
           admin.dataValues.password = await bcrypt.hash(admin.dataValues.password, salt);
         }
       },
     },
-  }
+  },
 );
 
 export default Admin;

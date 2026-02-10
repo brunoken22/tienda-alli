@@ -34,8 +34,9 @@ export default function ShoppingCart() {
   const total = cart.reduce(
     (acumulador, objeto) =>
       acumulador + (objeto.priceOffer ? objeto.priceOffer : objeto.price) * (objeto.quantity || 1),
-    0
+    0,
   );
+
   return (
     <>
       <div className='fixed right-0 top-0 bottom-0 z-50 bg-white w-full max-w-md shadow-2xl transform transition-transform duration-300 ease-in-out'>

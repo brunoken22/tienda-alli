@@ -39,7 +39,7 @@ export async function signinAdminController(email: string, password: string) {
 
 export async function resetPasswordController(id: string, password: string, newPassword: string) {
   try {
-    if (!id || !password || !newPassword) {
+    if (!id || !password?.trim() || !newPassword?.trim()) {
       throw new Error("Se necesitan todos los datos.");
     }
     const responseResetPasswordService = await resetPasswordService(id, password, newPassword);
