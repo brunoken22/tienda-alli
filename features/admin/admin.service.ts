@@ -31,13 +31,13 @@ export async function resetPasswordService(id: string, password: string, newPass
     const isValid = await bcrypt.compare(password, admin?.dataValues.password);
     if (!isValid) throw new Error("No tienes permiso para cambiar la contraseña");
 
-    const [updatePassword] = await Admin.update(
+    const [updatePassword] = await admin.update(
       {
         password: newPassword.trim(),
       },
       {
         where: { id },
-      }
+      },
     );
     return updatePassword;
   } catch (e) {
@@ -67,7 +67,7 @@ export async function sendEmailPasswordService(email: string) {
         recoverPassword: code,
         recoverPasswordExpires: expiryDate,
       },
-      { where: { id: admin.dataValues.id } }
+      { where: { id: admin.dataValues.id } },
     );
     if (updateAdminRecover) {
       await sendCodeEmail(email, code, admin.dataValues.name);
@@ -153,7 +153,7 @@ export async function recoverPasswordService(email: string, code: string, passwo
         recoverPassword: null,
         recoverPasswordExpires: null,
       },
-      { where: { id: admin.dataValues.id } }
+      { where: { id: admin.dataValues.id } },
     );
     if (updateAdminRecover.dataValues.password !== oldPassword) {
       return { message: "Se cambia la contraseña exitosamente.", update: updateAdminRecover };
