@@ -31,7 +31,7 @@ export async function resetPasswordService(id: string, password: string, newPass
     const isValid = await bcrypt.compare(password, admin?.dataValues.password);
     if (!isValid) throw new Error("No tienes permiso para cambiar la contraseña");
 
-    const [updatePassword] = await admin.update(
+    const updatePassword = await admin.update(
       {
         password: newPassword.trim(),
       },
