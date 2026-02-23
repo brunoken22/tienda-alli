@@ -2,11 +2,20 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getMetrics, getProducts } from "@/lib/products";
-import { Package, Palette, Plus, Lock, ShoppingBag, Tag, Logs, Loader2 } from "lucide-react";
+import {
+  Package,
+  Palette,
+  Plus,
+  Lock,
+  ShoppingBag,
+  Tag,
+  Logs,
+  Loader2,
+  LayoutTemplate,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ProductType } from "@/types/product";
-import Loading from "@/components/loading";
 import Image from "next/image";
 
 export default function DashboardPage() {
@@ -19,11 +28,13 @@ export default function DashboardPage() {
     categories: number;
     variants: number;
     offer: number;
+    banners: number;
   }>({
     products: 0,
     categories: 0,
     variants: 0,
     offer: 0,
+    banners: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -61,6 +72,13 @@ export default function DashboardPage() {
       gradient: "from-orange-500 to-red-500",
     },
     {
+      title: "Banners",
+      value: loading ? "..." : metrics.banners,
+      description: "Banners ",
+      icon: LayoutTemplate,
+      gradient: "from-primary to-secondary",
+    },
+    {
       title: "Categorías",
       value: loading ? "..." : metrics.categories,
       description: "Diferentes secciones",
@@ -91,6 +109,14 @@ export default function DashboardPage() {
       href: "/admin/dashboard/categorrias",
       gradient: "from-blue-500 to-indigo-500",
     },
+    {
+      title: "Ver Todos las banners",
+      description: "Gestiona tus banners.",
+      icon: LayoutTemplate,
+      href: "/admin/dashboard/banners",
+      gradient: "from-blue-500 to-indigo-500",
+    },
+
     {
       title: "Cambiar Contraseña",
       description: "Actualiza tu contraseña de acceso",

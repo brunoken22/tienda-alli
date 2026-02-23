@@ -129,7 +129,6 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
     : 0;
 
   const handleAddToCart = () => {
-    console.log(hasSizes, selectedSize);
     if (hasSizes && !selectedSize) {
       setIsSizeSelected(false);
       // Scroll a las tallas si no hay selección

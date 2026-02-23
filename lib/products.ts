@@ -1,5 +1,8 @@
+import { CategoryType } from "@/types/category";
 import { ProductType } from "@/types/product";
 import baseURL from "@/utils/baseUrl";
+
+type ProductsCategory = CategoryType & { products: ProductType[] };
 
 export async function getProducts(queryParams?: {
   search?: string;
@@ -95,25 +98,15 @@ export async function getMetrics() {
   }
 }
 
-// export async function getProductFeatured() {
-//   // Si estamos en build time, retorna array vacío
-//   if (isBuildTime) {
-//     console.log("Build time: omitiendo fetch de productFeatured");
-//     return { success: false, data: [] };
-//   }
-
-//   try {
-//     const response = await fetch(`${baseURL}/api/product/featured`, {
-//       next: { revalidate: 3600 },
-//     });
-//     const data = await response.json();
-//     console.log("ESTO ES LA DATA DE getProductFeatured: ", data.data.length);
-//     return data;
-//   } catch (e) {
-//     console.log("Error en getProductFeatured:", e);
-//     return { success: false, data: [] };
-//   }
-// }
+export async function getProductsCategory() {
+  try {
+    const response = await fetch(`${baseURL}/api/product/category`);
+    const data = await response.json();
+    return data as { success: boolean; data: ProductsCategory[]; message?: string };
+  } catch (e) {
+    return { success: false, data: [], message: (e as Error).message };
+  }
+}
 
 export async function getProductID(id: string): Promise<ProductType> {
   try {
@@ -139,7 +132,7 @@ export async function getProductID(id: string): Promise<ProductType> {
 }
 
 export async function addProduct(
-  formData: FormData
+  formData: FormData,
 ): Promise<{ data: ProductType | {}; message: string; success: boolean }> {
   const response = await fetch("/api/admin/product", {
     method: "POST",

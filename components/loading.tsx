@@ -4,7 +4,7 @@ export default function LoadingComponent() {
   return (
     <div
       className='
-      fixed inset-0 bg-primary flex items-center justify-center z-50
+      fixed inset-0 bg-secondary flex items-center justify-center z-50
       opacity-100 transition-all duration-1000 delay-1000
       hover:opacity-0 focus:opacity-0
       group

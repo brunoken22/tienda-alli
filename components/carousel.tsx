@@ -25,20 +25,32 @@ export function CarouselHeader({ data }: { data: string[] }) {
         modules={[Autoplay, Pagination, EffectFade]}
         className='w-full h-full rounded-2xl overflow-hidden'
       >
-        {data?.map((product, index) => (
-          <SwiperSlide key={product || index}>
-            {/* Overlay con gradiente para mejor legibilidad */}
-            <div className=' absolute  inset-0 bg-gradient-to-t from-black/90  to-primary/60 group-hover:opacity-90 transition-opacity z-10' />
+        {data.length ? (
+          data.map((product, index) => (
+            <SwiperSlide key={product || index}>
+              {/* Overlay con gradiente para mejor legibilidad */}
+              <div className=' absolute  inset-0 bg-gradient-to-t from-black/90  to-primary/60 group-hover:opacity-90 transition-opacity z-10' />
 
+              <Image
+                src={product || "/tienda-alli.webp"}
+                alt={"Banner"}
+                fill
+                className='object-cover object-top relative z-20'
+                priority={index === 0}
+              />
+            </SwiperSlide>
+          ))
+        ) : (
+          <SwiperSlide>
             <Image
-              src={product || "/tienda-alli.webp"}
-              alt={"Banner"}
-              fill
-              className='object-cover object-top relative z-20'
-              priority={index === 0}
+              src='/tienda-alli.webp'
+              alt='No hay productos'
+              width={1510}
+              height={600}
+              className='w-full h-full object-contain'
             />
           </SwiperSlide>
-        ))}
+        )}
       </Swiper>
     </div>
   );

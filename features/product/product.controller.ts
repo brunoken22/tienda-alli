@@ -3,6 +3,7 @@ import {
   createProductService,
   deleteProductService,
   editProductService,
+  getCategoryProductsService,
   getLatestAdditionsProductsService,
   getMetricsService,
   getOfferProductsService,
@@ -262,7 +263,7 @@ export async function getShoppingCartController(shoppingCart: Omit<ShoppingCart,
       }
 
       const variant = (findProduct.dataValues.variant as VariantType[]).find(
-        (variantItem: VariantType) => variantItem.id === product.variantId
+        (variantItem: VariantType) => variantItem.id === product.variantId,
       );
       const size = variant?.sizes.find((size) => size === product.variantSize);
 
@@ -320,6 +321,18 @@ export async function publishedProductController(id: string, published: boolean)
   } catch (e) {
     const error = e as Error;
     console.error("getMetricsController", e);
+    throw new Error(error.message);
+  }
+}
+
+export async function getCategoryProductsController() {
+  try {
+    const responseService = await getCategoryProductsService();
+
+    return { data: responseService, success: true };
+  } catch (e) {
+    const error = e as Error;
+    console.error("Esto es el error: ", error);
     throw new Error(error.message);
   }
 }

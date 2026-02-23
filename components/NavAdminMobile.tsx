@@ -1,4 +1,6 @@
-import { LayoutDashboard, Package, LogOut, LockKeyhole, Logs } from "lucide-react";
+"use client";
+
+import { LayoutDashboard, Package, LogOut, LockKeyhole, Logs, LayoutTemplate } from "lucide-react";
 import { navItemsAdmin } from "./admin/sidebar";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -11,68 +13,51 @@ export default function NavAdminMobile() {
 
   const handleLogout = async () => {
     const response = await logout();
-    if (response) {
-      push("/admin/login");
-    }
+    if (response) push("/admin/login");
   };
+
+  const icons = [
+    <LayoutDashboard key='dashboard' className='w-4 h-4' />,
+    <Package key='products' className='w-4 h-4' />,
+    <Logs key='orders' className='w-4 h-4' />,
+    <LayoutTemplate key='templates' className='w-4 h-4' />,
+    <LockKeyhole key='security' className='w-4 h-4' />,
+  ];
+
   return (
-    <div className='grid grid-cols-5  items-center justify-center'>
-      <Link
-        href={navItemsAdmin[0].href}
-        className={` flex flex-col items-center justify-center gap-1 px-2 py-3 h-full  text-sm max-sm:text-[11px]  font-medium transition-colors",
-                ${
-                  pathname === navItemsAdmin[0].href
-                    ? "bg-primary/90 text-secondary"
-                    : "text-muted-foreground hover:bg-primary/90 hover:text-secondary"
-                }`}
-      >
-        <LayoutDashboard className='w-4 h-4' />
-        {navItemsAdmin[0].title}
-      </Link>
-      <Link
-        href={navItemsAdmin[1].href}
-        className={` flex flex-col items-center justify-center gap-1 px-2 py-3 h-full  text-sm max-sm:text-[11px]  font-medium transition-colors",
-                ${
-                  pathname === navItemsAdmin[1].href
-                    ? "bg-primary/90 text-secondary"
-                    : "text-muted-foreground hover:bg-primary/90 hover:text-secondary"
-                }`}
-      >
-        <Package className='w-4 h-4' />
-        {navItemsAdmin[1].title}
-      </Link>
-      <div className='flex justify-center'>
-        <Button
-          onClick={handleLogout}
-          className={`w-12 h-12 flex justify-center items-center p-5  bg-primary text-secondary hover:bg-primary/50  !rounded-full  transition-colors`}
-        >
-          <LogOut className='w-4 h-4' />
-        </Button>
+    <div className='md:hidden fixed bottom-0 left-0 right-0 z-50'>
+      <div className='relative bg-white border-t shadow-sm'>
+        {/* Burbuja flotante logout */}
+        <div className='absolute -top-12 left-[90%]'>
+          <Button
+            onClick={handleLogout}
+            className=' rounded-full shadow-md bg-red-500 text-white hover:bg-primary/90'
+          >
+            <LogOut className='w-4 h-4' />
+          </Button>
+        </div>
+
+        {/* Navegación */}
+        <div className='grid grid-cols-5 h-14 text-xs'>
+          {navItemsAdmin.slice(0, 5).map((item, index) => {
+            const isActive = pathname === item.href;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`
+                  flex flex-col items-center justify-center gap-1 transition-colors
+                  ${isActive ? "text-primary font-bold bg-secondary/20" : "hover:text-primary"}
+                `}
+              >
+                {icons[index]}
+                <span>{item.title}</span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
-      <Link
-        href={navItemsAdmin[2].href}
-        className={` flex flex-col items-center justify-center gap-1 px-2 py-3 h-full  text-sm max-sm:text-[11px]  font-medium transition-colors",
-                ${
-                  pathname === navItemsAdmin[2].href
-                    ? "bg-primary/90 text-secondary"
-                    : "text-muted-foreground hover:bg-primary/90 hover:text-secondary"
-                }`}
-      >
-        <Logs className='w-4 h-4' />
-        {navItemsAdmin[2].title}
-      </Link>
-      <Link
-        href={navItemsAdmin[3].href}
-        className={` flex flex-col items-center justify-center gap-1 px-2 py-3 h-full  text-sm max-sm:text-[11px]  font-medium transition-colors",
-                ${
-                  pathname === navItemsAdmin[3].href
-                    ? "bg-primary/90 text-secondary"
-                    : "text-muted-foreground hover:bg-primary/90 hover:text-secondary"
-                }`}
-      >
-        <LockKeyhole className='w-4 h-4' />
-        {navItemsAdmin[3].title}
-      </Link>
     </div>
   );
 }

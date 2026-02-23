@@ -133,7 +133,7 @@ export async function getProductIDService(id: string, options?: object): Promise
 
 export async function createProductService(
   product: Omit<ProductType, "id" | "categories">,
-  categories: string[]
+  categories: string[],
 ) {
   try {
     const productCreate = await Product.create(product);
@@ -157,7 +157,7 @@ export async function createProductService(
 export async function editProductService(
   id: string,
   product: Omit<ProductType, "id" | "categories">,
-  categories: string[]
+  categories: string[],
 ) {
   const transaction = await sequelize.transaction();
 
@@ -343,7 +343,7 @@ export async function getMetricsService() {
 
         // Verificar si alguna variante tiene oferta
         const tieneOfertaEnVariantes = product.variant.some(
-          (v: VariantType) => v.priceOffer && v.priceOffer > 0 && v.priceOffer < v.price
+          (v: VariantType) => v.priceOffer && v.priceOffer > 0 && v.priceOffer < v.price,
         );
 
         // Verificar si el producto principal tiene oferta
@@ -386,9 +386,42 @@ export async function publishedProductService(id: string, published: boolean) {
         where: {
           id,
         },
-      }
+      },
     );
     return { update: productUpdate };
+  } catch (e) {
+    const error = e as Error;
+    throw new Error(error.message);
+  }
+}
+
+export async function getCategoryProductsService() {
+  try {
+    const categories = await Category.findAll({
+      where: {
+        isActive: true,
+      },
+      attributes: ["id", "title", "updatedAt"],
+      order: [["updatedAt", "DESC"]],
+      limit: 10,
+
+      include: [
+        {
+          model: Product,
+          as: "products",
+          attributes: ["id", "title", "price", "priceOffer", "images"],
+
+          where: {
+            isActive: true,
+          },
+        },
+      ],
+    });
+    return categories.map((category) => {
+      const plainCategory = category.get({ plain: true });
+      plainCategory.products = plainCategory.products?.slice(0, 8) || [];
+      return plainCategory;
+    });
   } catch (e) {
     const error = e as Error;
     throw new Error(error.message);

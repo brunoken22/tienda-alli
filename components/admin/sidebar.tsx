@@ -2,7 +2,15 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Package, LogOut, UserCircle, LockKeyhole, Logs } from "lucide-react";
+import {
+  LayoutDashboard,
+  Package,
+  LogOut,
+  UserCircle,
+  LockKeyhole,
+  Logs,
+  LayoutTemplate,
+} from "lucide-react";
 import { AuthContext } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
 import { logout } from "@/lib/serverAdmin";
@@ -23,6 +31,11 @@ export const navItemsAdmin = [
     title: "Categorias",
     href: "/admin/dashboard/categorias",
     icon: Logs,
+  },
+  {
+    title: "Banners",
+    href: "/admin/dashboard/banners",
+    icon: LayoutTemplate,
   },
   {
     title: "Contraseña",
