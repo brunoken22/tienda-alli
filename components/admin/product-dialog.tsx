@@ -34,7 +34,7 @@ interface ProductDialogProps {
   >;
   onSave: (
     product: Omit<ProductType, "id" | "categories" | "imagesId">,
-    images: File[]
+    images: File[],
   ) => Promise<boolean>;
   categories: CategoryType[];
 }
@@ -519,7 +519,7 @@ export function ProductDialog({
                       .filter(
                         (cat) =>
                           cat.isActive &&
-                          !formData.categories.find((category) => category.id === cat.id)
+                          !formData.categories.find((category) => category.id === cat.id),
                       )
                       .map((cat) => (
                         <option key={cat.id} value={cat.id}>
@@ -640,7 +640,7 @@ export function ProductDialog({
                   size='sm'
                   variant='outline'
                   className={`${formData.sizes.length ? "" : "bg-slate-200"}`}
-                  disabled={formData.sizes.length ? false : true}
+                  // disabled={formData.sizes.length ? false : true}
                 >
                   <Plus className='h-4 w-4 mr-2' />
                   Agregar modelo
@@ -654,7 +654,7 @@ export function ProductDialog({
                       key={variant.id}
                       className={`relative p-4 bg-primary/20 border border-primary/50`}
                     >
-                      <div
+                      {/* <div
                         className={`${
                           formData.sizes.length
                             ? "hidden"
@@ -664,7 +664,7 @@ export function ProductDialog({
                         <p className='text-2xl text-primary'>
                           Tienes que añadir tallas para desbloquear
                         </p>
-                      </div>
+                      </div> */}
 
                       <div className='flex items-center justify-between mb-3 '>
                         <h4 className='text-sm font-medium text-foreground'>
@@ -882,97 +882,100 @@ export function ProductDialog({
                         </div>
 
                         {/* Tallas */}
-                        <div className='space-y-3'>
-                          <div className='space-y-2'>
-                            <div className='flex items-center justify-between'>
-                              <Label className='text-foreground'>
-                                Tallas Disponibles <span className='text-red-500'>*</span>
-                              </Label>
-                              <div className='flex items-center gap-2'>
-                                <button
-                                  type='button'
-                                  onClick={() => {
-                                    // Seleccionar todas las tallas
-                                    updateVariant(variantIndex, "sizes", [...formData.sizes]);
-                                  }}
-                                  className='text-xs hover:text-primary transition-colors px-2 py-1 hover:bg-primary/10 rounded'
-                                >
-                                  Seleccionar todas
-                                </button>
-                                <span className='text-muted-foreground'>|</span>
-                                <button
-                                  type='button'
-                                  onClick={() => updateVariant(variantIndex, "sizes", [])}
-                                  className='text-xs hover:text-destructive transition-colors px-2 py-1 hover:bg-destructive/10 rounded'
-                                >
-                                  Limpiar
-                                </button>
+                        {formData.sizes.length ? (
+                          <div className='space-y-3'>
+                            <div className='space-y-2'>
+                              <div className='flex items-center justify-between'>
+                                <Label className='text-foreground'>
+                                  Tallas Disponibles <span className='text-red-500'>*</span>
+                                </Label>
+                                <div className='flex items-center gap-2'>
+                                  <button
+                                    type='button'
+                                    onClick={() => {
+                                      // Seleccionar todas las tallas
+                                      updateVariant(variantIndex, "sizes", [...formData.sizes]);
+                                    }}
+                                    className='text-xs hover:text-primary transition-colors px-2 py-1 hover:bg-primary/10 rounded'
+                                  >
+                                    Seleccionar todas
+                                  </button>
+                                  <span className='text-muted-foreground'>|</span>
+                                  <button
+                                    type='button'
+                                    onClick={() => updateVariant(variantIndex, "sizes", [])}
+                                    className='text-xs hover:text-destructive transition-colors px-2 py-1 hover:bg-destructive/10 rounded'
+                                  >
+                                    Limpiar
+                                  </button>
+                                </div>
                               </div>
+
+                              <p className='text-sm text-muted-foreground'>
+                                Haz clic en cada talla para seleccionarla/deseleccionarla
+                              </p>
                             </div>
 
-                            <p className='text-sm text-muted-foreground'>
-                              Haz clic en cada talla para seleccionarla/deseleccionarla
-                            </p>
-                          </div>
+                            {/* Grid de tallas seleccionables */}
+                            <div className='flex flex-wrap gap-2 p-3 border  text-white border-primary rounded-md bg-background min-h-[60px]'>
+                              {formData.sizes.map((size) => {
+                                const isSelected =
+                                  formData.variant[variantIndex]?.sizes?.includes(size);
+                                return (
+                                  <button
+                                    key={size}
+                                    type='button'
+                                    onClick={() => {
+                                      const currentSizes =
+                                        formData.variant[variantIndex]?.sizes || [];
+                                      let newSizes;
 
-                          {/* Grid de tallas seleccionables */}
-                          <div className='flex flex-wrap gap-2 p-3 border border-primary rounded-md bg-background min-h-[60px]'>
-                            {formData.sizes.map((size) => {
-                              const isSelected =
-                                formData.variant[variantIndex]?.sizes?.includes(size);
-                              return (
-                                <button
-                                  key={size}
-                                  type='button'
-                                  onClick={() => {
-                                    const currentSizes =
-                                      formData.variant[variantIndex]?.sizes || [];
-                                    let newSizes;
+                                      if (isSelected) {
+                                        // Quitar la talla
+                                        newSizes = currentSizes.filter((s) => s !== size);
+                                      } else {
+                                        // Agregar la talla
+                                        newSizes = [...currentSizes, size];
+                                      }
 
-                                    if (isSelected) {
-                                      // Quitar la talla
-                                      newSizes = currentSizes.filter((s) => s !== size);
-                                    } else {
-                                      // Agregar la talla
-                                      newSizes = [...currentSizes, size];
-                                    }
-
-                                    updateVariant(variantIndex, "sizes", newSizes);
-                                  }}
-                                  className={`
+                                      updateVariant(variantIndex, "sizes", newSizes);
+                                    }}
+                                    className={`
             relative px-3 py-2 rounded-md text-sm font-medium transition-all duration-200
-            flex items-center justify-center min-w-[44px]
+            flex items-center justify-center min-w-[44px]  text-white
             ${
               isSelected
-                ? "bg-primary text-secondary shadow-sm ring-2 ring-primary ring-offset-1"
-                : "bg-muted hover:bg-muted/80 text-foreground border border-primary/30 hover:border-primary hover:bg-secondary "
+                ? "bg-primary text-white shadow-sm ring-2 ring-primary ring-offset-1"
+                : "bg-primary/80 hover:bg-muted/80 text-white border border-primary/30 hover:border-primary hover:bg-secondary "
             }
           `}
-                                >
-                                  {size}
-                                  {isSelected && (
-                                    <div className='absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border border-background flex items-center justify-center'>
-                                      <Check className='h-2.5 w-2.5 text-primary-foreground' />
-                                    </div>
-                                  )}
-                                </button>
-                              );
-                            })}
-                          </div>
-
-                          {/* Validación */}
-                          {!formData.variant[variantIndex]?.sizes?.length && (
-                            <div className='flex items-start gap-2 text-destructive text-sm bg-yellow-100 p-3 rounded-md'>
-                              <AlertCircle className='h-4 w-4 mt-0.5 flex-shrink-0' />
-                              <div>
-                                <p className='font-medium'>Atención</p>
-                                <p>
-                                  Debes seleccionar al menos una talla disponible para este modelo.
-                                </p>
-                              </div>
+                                  >
+                                    {size}
+                                    {isSelected && (
+                                      <div className='absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border border-background flex items-center justify-center'>
+                                        <Check className='h-2.5 w-2.5 text-white' />
+                                      </div>
+                                    )}
+                                  </button>
+                                );
+                              })}
                             </div>
-                          )}
-                        </div>
+
+                            {/* Validación */}
+                            {!formData.variant[variantIndex]?.sizes?.length && (
+                              <div className='flex items-start gap-2 text-destructive text-sm bg-yellow-100 p-3 rounded-md'>
+                                <AlertCircle className='h-4 w-4 mt-0.5 flex-shrink-0' />
+                                <div>
+                                  <p className='font-medium'>Atención</p>
+                                  <p>
+                                    Debes seleccionar al menos una talla disponible para este
+                                    modelo.
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ) : null}
                       </div>
                     </Card>
                   ))}

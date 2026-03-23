@@ -162,11 +162,11 @@ export default function TemplateProduct({
   // Determinar si el botón debe estar deshabilitado
   const isButtonDisabled = useMemo(() => {
     if (variants.length > 0) {
-      return !selectedColorName || !selectedSize;
+      return !selectedColorName || size.length ? !selectedSize : false;
     }
-    if (size?.length > 0) {
-      return !selectedSize;
-    }
+    // if (size?.length > 0) {
+    //   return !selectedSize;
+    // }
     return false;
   }, [variants.length, selectedColorName, selectedSize, size?.length]);
 
@@ -174,7 +174,7 @@ export default function TemplateProduct({
   const buttonText = useMemo(() => {
     if (variants.length > 0) {
       if (!selectedColorName) return "Selecciona un color";
-      if (!selectedSize) return "Selecciona una talla";
+      if (size.length && !selectedSize) return "Selecciona una talla";
       return "Agregar al carrito";
     }
     if (size?.length > 0) {
@@ -190,7 +190,7 @@ export default function TemplateProduct({
       (item) =>
         item.id === id &&
         item.variantColorName === selectedColorName &&
-        item.variantSize === selectedSize
+        item.variantSize === selectedSize,
     );
   }, [cart, id, selectedColorName, selectedSize]);
 
