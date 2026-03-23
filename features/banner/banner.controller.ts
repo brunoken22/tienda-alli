@@ -42,8 +42,10 @@ export async function createBannerController(formData: FormData) {
         {
           width: 1920,
           height: 900,
-          crop: "fill",
-          gravity: "auto",
+          crop: "fill", // 'fill' asegura que ocupe todo el espacio, recortando si es necesario
+          gravity: "auto", // 'auto' usa IA para enfocar el sujeto principal
+          quality: "auto", // ← NUEVO: Aplica la mejor compresión sin pérdida visual aparente
+          fetch_format: "auto", // ← NUEVO: Sirve la imagen en el formato más eficiente (WebP, AVIF)
         },
       ],
     };
