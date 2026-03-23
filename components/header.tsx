@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Search, ShoppingCartIcon as CartIcon, Menu, X, MessageCircle } from "lucide-react";
 import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-context";
+import Image from "next/image";
 
 const navigationItems = [
   { href: "/", label: "Inicio" },
@@ -43,14 +44,16 @@ export function Header() {
       <div className='bg-[#fcfcfc]'>
         <header className=' max-sm:rounded-bl-[30px] bg-primary/90 '>
           <div className='max-w-screen-2xl mx-auto px-4'>
-            <div className='flex items-center justify-between h-16 md:h-20'>
-              <Link href='/' className='flex items-center space-x-2 group'>
-                <div className='w-8 h-8 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform'>
-                  <span className='text-purple-600 font-bold text-lg'>A</span>
-                </div>
-                <span className='max-lg:hidden text-white font-bold text-xl md:text-2xl group-hover:text-purple-200 transition-colors'>
-                  Tienda de ALLI
-                </span>
+            <div className='flex items-center justify-between h-16 md:h-20 space-y-2'>
+              <Link href='/' className='flex items-center  group '>
+                <Image
+                  src='/logo.webp'
+                  alt='GabiiAlli'
+                  title='GabiiAlli'
+                  width={75}
+                  height={75}
+                  className='hover:opacity-60'
+                />
               </Link>
 
               {/* Búsqueda Desktop */}
@@ -66,15 +69,13 @@ export function Header() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`relative px-3 py-2 text-sm font-medium transition-colors ${
-                      isActivePath(item.href)
-                        ? "text-yellow-300"
-                        : "text-white hover:text-purple-200"
+                    className={`relative px-3 py-2 text-sm text-secondary  transition-colors ${
+                      isActivePath(item.href) ? " font-bold" : " hover:text-secondary/80"
                     }`}
                   >
                     {item.label}
                     {isActivePath(item.href) && (
-                      <div className='absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-300 rounded-full' />
+                      <div className='absolute bottom-0 left-0 right-0 h-0.5 bg-white rounded-full' />
                     )}
                   </Link>
                 ))}

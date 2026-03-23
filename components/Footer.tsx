@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin, Linkedin } from "lucide-react";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -9,14 +10,16 @@ export function Footer() {
           {/* Company Info */}
           <div className='space-y-4'>
             <Link href='/' className='flex items-center space-x-2 group'>
-              <div className='w-12 h-12 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform'>
-                <span className='text-purple-600 font-bold text-lg'>A</span>
-              </div>
-              <span className='max-lg:hidden text-white font-bold text-xl md:text-2xl group-hover:text-purple-200 transition-colors'>
-                Tienda de ALLI
-              </span>
+              <Image
+                src='/logo.webp'
+                alt='GabiiAlli'
+                title='GabiiAlli'
+                width={100}
+                height={100}
+                className='hover:opacity-60'
+              />
             </Link>
-            <p className='text-sm text-muted-foreground leading-relaxed'>
+            <p className='text-sm  leading-relaxed'>
               Tu tienda online de confianza con los mejores productos y la mejor atención al
               cliente.
             </p>
@@ -53,34 +56,22 @@ export function Footer() {
             <h4 className='text-lg font-semibold'>Enlaces Rápidos</h4>
             <ul className='space-y-2 text-sm'>
               <li>
-                <Link
-                  href='/productos'
-                  className='text-muted-foreground hover:text-foreground transition-colors'
-                >
+                <Link href='/productos' className=' hover:opacity-70 transition-colors'>
                   Productos
                 </Link>
               </li>
               <li>
-                <Link
-                  href='/'
-                  className='text-muted-foreground hover:text-foreground transition-colors'
-                >
+                <Link href='/' className=' hover:opacity-70 transition-colors'>
                   Categorías
                 </Link>
               </li>
               <li>
-                <Link
-                  href='/'
-                  className='text-muted-foreground hover:text-foreground transition-colors'
-                >
+                <Link href='/' className=' hover:opacity-70 transition-colors'>
                   Ofertas
                 </Link>
               </li>
               <li>
-                <Link
-                  href='/'
-                  className='text-muted-foreground hover:text-foreground transition-colors'
-                >
+                <Link href='/' className=' hover:opacity-70 transition-colors'>
                   Novedades
                 </Link>
               </li>
@@ -92,27 +83,24 @@ export function Footer() {
             <h4 className='text-lg font-semibold'>Contacto</h4>
             <ul className='space-y-3 text-sm'>
               <li className='flex items-start gap-3'>
-                <MapPin className='w-4 h-4 mt-1 text-muted-foreground flex-shrink-0' />
-                <span className='text-muted-foreground'>
+                <MapPin className='w-4 h-4 mt-1  flex-shrink-0' />
+                <span className=''>
                   Buenos Aires, Argentina,
                   {/* <br />
                   Ciudad, País 12345 */}
                 </span>
               </li>
               <li className='flex items-center gap-3'>
-                <Phone className='w-4 h-4 text-muted-foreground flex-shrink-0' />
-                <Link
-                  href='tel:+541161204047'
-                  className='text-muted-foreground hover:text-foreground transition-colors'
-                >
+                <Phone className='w-4 h-4  flex-shrink-0' />
+                <Link href='tel:+541161204047' className=' hover:opacity-70 transition-colors'>
                   +54 (11) 6120-4047
                 </Link>
               </li>
               <li className='flex items-center gap-3'>
-                <Mail className='w-4 h-4 text-muted-foreground flex-shrink-0' />
+                <Mail className='w-4 h-4  flex-shrink-0' />
                 <Link
                   href='mailto:info@tutienda.com'
-                  className='text-muted-foreground hover:text-foreground transition-colors'
+                  className=' hover:opacity-70 transition-colors'
                 >
                   bruno_am_22@hotmail.com
                 </Link>
@@ -124,8 +112,8 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className='mt-12 pt-8 border-t'>
           <div className='flex flex-col md:flex-row justify-between items-center gap-4'>
-            <p className='text-sm text-muted-foreground text-center md:text-left'>
-              © {new Date().getFullYear()} Tienda Alli. Todos los derechos reservados.
+            <p className='text-sm  text-center md:text-left'>
+              © {new Date().getFullYear()} Gabii Alli. Todos los derechos reservados.
             </p>
           </div>
         </div>

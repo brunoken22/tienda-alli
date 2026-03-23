@@ -19,19 +19,19 @@ const config: Config = {
         arrow: "arrow 1s ease-in-out infinite",
       },
       backgroundColor: {
-        primary: "#3c006c",
-        primaryLight: "#3c006ce6",
+        primary: "#C98185",
+        primaryLight: "#ED989A",
         secondary: "#fff",
-        tertiary: "#7e22ce",
+        tertiary: "#D98A8C",
       },
       colors: {
-        primary: "#3c006c",
-        primaryLight: "#3c006ce6",
+        primary: "#C98185",
+        primaryLight: "#ED989A",
         secondary: "#fff",
-        tertiary: "#7e22ce",
+        tertiary: "#D98A8C",
       },
       gradientColorStops: {
-        primary: "#7e22ce",
+        primary: "#D98A8C",
       },
       keyframes: {
         arrow: {

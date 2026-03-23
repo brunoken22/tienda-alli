@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       title: product.title,
       description: product.description,
       url: "https://tienda-alli.vercel.app/productos/" + product.id,
-      siteName: "Tienda Alli",
+      siteName: "Gabii Alli",
       images: [
         {
           url: product.images[0],

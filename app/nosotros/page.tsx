@@ -3,18 +3,18 @@ import { Package, Users, Award, Heart } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Nosotros",
-  description: "Conoce más sobre nosotros y nuestra historia en Tienda Alli",
+  description: "Conoce más sobre nosotros y nuestra historia en Gabii Alli",
   openGraph: {
-    title: "Nosotros | Tienda Alli",
+    title: "Nosotros | Gabii Alli",
     description: "Descubre quiénes somos y nuestra pasión por ofrecerte los mejores productos",
     url: "https://tienda-alli.vercel.app/nosotros",
-    siteName: "Tienda Alli",
+    siteName: "Gabii Alli",
     images: [
       {
         url: "/tienda-alli.webp",
         width: 1200,
         height: 630,
-        alt: "Tienda Alli - Conoce nuestro equipo",
+        alt: "Gabii Alli - Conoce nuestro equipo",
       },
     ],
     locale: "es_ES",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nosotros | Tienda Alli",
+    title: "Nosotros | Gabii Alli",
     description: "Descubre quiénes somos y nuestra pasión por ofrecerte los mejores productos",
     images: ["https://tienda-alli.vercel.app/tienda-alli.webp"],
   },
@@ -38,19 +38,19 @@ export default function Nosotros() {
       icon: Package,
       title: "Variedad y Calidad",
       description:
-        "Desde cartucheras con diseños innovadores hasta mochilas duraderas, cada producto en Tienda Alli refleja nuestro compromiso con la calidad. Seleccionamos cuidadosamente nuestros productos para asegurarnos de que cumplan con las necesidades y expectativas de nuestros clientes.",
+        "Desde cartucheras con diseños innovadores hasta mochilas duraderas, cada producto en Gabii Alli refleja nuestro compromiso con la calidad. Seleccionamos cuidadosamente nuestros productos para asegurarnos de que cumplan con las necesidades y expectativas de nuestros clientes.",
     },
     {
       icon: Users,
       title: "Filosofía de Negocio",
       description:
-        "En Tienda Alli, creemos en la accesibilidad, la innovación y el apoyo a la comunidad educativa. Nos esforzamos por brindar productos asequibles y relevantes, promoviendo así el éxito académico y el bienestar de los estudiantes.",
+        "En Gabii Alli, creemos en la accesibilidad, la innovación y el apoyo a la comunidad educativa. Nos esforzamos por brindar productos asequibles y relevantes, promoviendo así el éxito académico y el bienestar de los estudiantes.",
     },
     {
       icon: Award,
       title: "Nuestro Compromiso",
       description:
-        "Con un equipo apasionado y enfocado en el cliente, trabajamos incansablemente para garantizar que cada experiencia de compra en Tienda Alli sea satisfactoria. Valoramos la retroalimentación y nos esforzamos por mejorar continuamente.",
+        "Con un equipo apasionado y enfocado en el cliente, trabajamos incansablemente para garantizar que cada experiencia de compra en Gabii Alli sea satisfactoria. Valoramos la retroalimentación y nos esforzamos por mejorar continuamente.",
     },
   ];
 
@@ -66,7 +66,7 @@ export default function Nosotros() {
             Nuestra <span className='text-primary'>Historia</span>
           </h1>
           <p className='text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto text-pretty leading-relaxed'>
-            En el corazón de <span className='font-semibold text-primary'>Tienda Alli</span>, nos
+            En el corazón de <span className='font-bold text-primary'>Gabii Alli</span>, nos
             dedicamos a ofrecer una amplia gama de cartucheras, mochilas y más. Nuestra historia
             está impulsada por la pasión de proporcionar a estudiantes y educadores las herramientas
             adecuadas para el éxito académico.

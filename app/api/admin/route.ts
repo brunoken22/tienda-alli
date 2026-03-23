@@ -15,7 +15,7 @@ export async function GET(_: Request) {
 export async function POST() {
   try {
     const newAdmin = await Admin.create({
-      name: "Tienda Alli", // Debes proporcionar un nombre
+      name: "Gabii Alli", // Debes proporcionar un nombre
       email: "bruno_am_22@hotmail.com",
       password: "123456789", // El hook beforeCreate la hasheará automáticamente
       role: "admin",

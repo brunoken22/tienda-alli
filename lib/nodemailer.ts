@@ -402,7 +402,7 @@ export default async function sendCodeEmail(email: string, code: string, userNam
 
   try {
     const info = await transporter.sendMail({
-      from: `"Tienda Alli Support" <${process.env.NAME_EMAIL}>`,
+      from: `"Gabii Alli Support" <${process.env.NAME_EMAIL}>`,
       to: email,
       subject: `Tu código de recuperación: ${code}`,
       text: textContent,

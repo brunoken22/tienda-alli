@@ -19,7 +19,7 @@ export function Button({
 
   // Variant styles
   const variantStyles = {
-    primary: "bg-primary text-white hover:bg-purple-700 focus:ring-purple-500",
+    primary: "bg-primary text-white hover:bg-primaryLight focus:ring-primaryLight",
     secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500",
     outline:
       "border border-black  bg-transparent hover:bg-primary hover:text-secondary focus:ring-gray-500",

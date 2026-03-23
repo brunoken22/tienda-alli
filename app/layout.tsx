@@ -8,8 +8,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "Tienda Alli",
-    template: "%s | Tienda Alli", // Para títulos dinámicos en páginas hijas
+    default: "Gabii Alli",
+    template: "%s | Gabii Alli", // Para títulos dinámicos en páginas hijas
   },
   description:
     "Útiles escolares, mochilas, cartucheras, ropa y camperas importadas. Productos de calidad para todas tus necesidades",
@@ -25,17 +25,17 @@ export const metadata: Metadata = {
     "vestimenta",
   ],
   openGraph: {
-    title: "Tienda Alli - Útiles Escolares y Ropa Importada",
+    title: "Gabii Alli - Útiles Escolares y Ropa Importada",
     description:
       "Encuentra los mejores útiles escolares, mochilas, cartucheras y ropa importada de calidad",
     url: "https://tienda-alli.vercel.app",
-    siteName: "Tienda Alli",
+    siteName: "Gabii Alli",
     images: [
       {
         url: "https://tienda-alli.vercel.app/tienda-alli.webp",
         width: 1200,
         height: 630,
-        alt: "Tienda Alli - Productos escolares y ropa importada de calidad",
+        alt: "Gabii Alli - Productos escolares y ropa importada de calidad",
       },
     ],
     locale: "es_EC",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tienda Alli - Útiles Escolares y Moda",
+    title: "Gabii Alli - Útiles Escolares y Moda",
     description: "Los mejores productos escolares y ropa importada para todas tus necesidades",
     images: ["https://tienda-alli.vercel.app/tienda-alli.webp"],
     creator: "@BrunoKen",

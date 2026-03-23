@@ -193,7 +193,7 @@ export function GeneratePdf({ data }: { data: Omit<ShoppingCart, "variant">[] })
   const subtotal = data.reduce(
     (sum, item) =>
       sum + (item.priceOffer > 0 ? item.priceOffer : item.price) * (item.quantity || 1),
-    0
+    0,
   );
   const taxRate = 0.0; // 21% q
   const tax = subtotal * taxRate;
@@ -217,7 +217,7 @@ export function GeneratePdf({ data }: { data: Omit<ShoppingCart, "variant">[] })
         {/* Encabezado */}
         <View style={styles.header}>
           <View style={styles.logoContainer}>
-            <Image src='/tienda-alli.png' style={styles.logo} />
+            <Image src='/logo.png' style={styles.logo} />
             <View style={styles.headerTextContainer}>
               <Text style={styles.headerTitle}>Tienda Allí</Text>
               <Text style={styles.headerSubtitle}>Ropa y accesorios de calidad</Text>
@@ -271,7 +271,7 @@ export function GeneratePdf({ data }: { data: Omit<ShoppingCart, "variant">[] })
                 <Text style={styles.tableCell}>
                   {formatCurrency(
                     producto.quantity *
-                      (producto.priceOffer > 0 ? producto.priceOffer : producto.price)
+                      (producto.priceOffer > 0 ? producto.priceOffer : producto.price),
                   )}
                 </Text>
               </View>

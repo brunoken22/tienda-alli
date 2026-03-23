@@ -12,7 +12,7 @@ export default function LoadingComponent() {
     >
       <div className='flex flex-col items-center gap-4 group-hover:scale-95 transition-transform duration-700'>
         <Image
-          src='/tienda-alli.webp'
+          src='/logo.webp'
           height={400}
           width={400}
           alt='TIENDA ALLI'
