@@ -28,11 +28,11 @@ export const metadata: Metadata = {
     title: "Gabii Alli - Útiles Escolares y Ropa Importada",
     description:
       "Encuentra los mejores útiles escolares, mochilas, cartucheras y ropa importada de calidad",
-    url: "https://tienda-alli.vercel.app",
+    url: "https://gabii-alli.vercel.app",
     siteName: "Gabii Alli",
     images: [
       {
-        url: "https://tienda-alli.vercel.app/tienda-alli.webp",
+        url: "https://gabii-alli.vercel.app/tienda-alli.webp",
         width: 1200,
         height: 630,
         alt: "Gabii Alli - Productos escolares y ropa importada de calidad",
@@ -45,13 +45,13 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Gabii Alli - Útiles Escolares y Moda",
     description: "Los mejores productos escolares y ropa importada para todas tus necesidades",
-    images: ["https://tienda-alli.vercel.app/tienda-alli.webp"],
+    images: ["https://gabii-alli.vercel.app/tienda-alli.webp"],
     creator: "@BrunoKen",
   },
   alternates: {
-    canonical: "https://tienda-alli.vercel.app",
+    canonical: "https://gabii-alli.vercel.app",
   },
-  metadataBase: new URL("https://tienda-alli.vercel.app"),
+  metadataBase: new URL("https://gabii-alli.vercel.app"),
   authors: [{ name: "Bruno ken", url: "https://brunoken.vercel.app/" }],
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Nosotros | Gabii Alli",
     description: "Descubre quiénes somos y nuestra pasión por ofrecerte los mejores productos",
-    url: "https://tienda-alli.vercel.app/nosotros",
+    url: "https://gabii-alli.vercel.app/nosotros",
     siteName: "Gabii Alli",
     images: [
       {
@@ -24,10 +24,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Nosotros | Gabii Alli",
     description: "Descubre quiénes somos y nuestra pasión por ofrecerte los mejores productos",
-    images: ["https://tienda-alli.vercel.app/tienda-alli.webp"],
+    images: ["https://gabii-alli.vercel.app/tienda-alli.webp"],
   },
   alternates: {
-    canonical: "https://tienda-alli.vercel.app/nosotros",
+    canonical: "https://gabii-alli.vercel.app/nosotros",
   },
   authors: [{ name: "Bruno ken", url: "https://brunoken.vercel.app/" }],
 };

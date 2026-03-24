@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     openGraph: {
       title: product.title,
       description: product.description,
-      url: "https://tienda-alli.vercel.app/productos/" + product.id,
+      url: "https://gabii-alli.vercel.app/productos/" + product.id,
       siteName: "Gabii Alli",
       images: [
         {

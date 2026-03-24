@@ -5,12 +5,12 @@ export const metadata: Metadata = {
   title: "Productos ",
   description: "Los productos (Gabii Alli)",
   alternates: {
-    canonical: "https://tienda-alli.vercel.app/productos",
+    canonical: "https://gabii-alli.vercel.app/productos",
   },
   openGraph: {
     title: "Productos | Gabii Alli",
     description: "Descubre los mejores productos en Gabii Alli",
-    url: "https://tienda-alli.vercel.app/productos",
+    url: "https://gabii-alli.vercel.app/productos",
     siteName: "Gabii Alli",
     images: [
       {
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Productos | Gabii Alli",
     description: "Descubre los mejores productos en Gabii Alli",
-    images: ["https://tienda-alli.vercel.app/tienda-alli.webp"], // Misma imagen que OG
+    images: ["https://gabii-alli.vercel.app/tienda-alli.webp"], // Misma imagen que OG
   },
   authors: [{ name: "Bruno ken", url: "https://brunoken.vercel.app/" }],
 };

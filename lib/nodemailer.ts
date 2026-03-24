@@ -368,7 +368,7 @@ export default async function sendCodeEmail(email: string, code: string, userNam
 
         <!-- Botón de acción -->
         <div class="button-container">
-          <a href="tienda-alli.vercel.app" class="button">Ir al sitio web</a>
+          <a href="gabii-alli.vercel.app" class="button">Ir al sitio web</a>
         </div>
 
         <!-- Advertencia de expiración -->
