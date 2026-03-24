@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     color: "#2c3e50",
     marginBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#ecf0f1",
+    borderBottomColor: "#C98185",
     paddingBottom: 5,
   },
   sectionText: {
@@ -86,13 +86,13 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 15,
     borderWidth: 1,
-    borderColor: "#ecf0f1",
+    borderColor: "#C98185",
     borderRadius: 5,
     overflow: "hidden",
   },
   tableHeader: {
     flexDirection: "row",
-    backgroundColor: "#3c006c",
+    backgroundColor: "#C98185",
     color: "#FFFFFF",
     paddingVertical: 8,
   },
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   tableRow: {
     flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: "#ecf0f1",
+    borderBottomColor: "#C98185",
     alignItems: "center",
     paddingVertical: 10,
   },
@@ -219,8 +219,8 @@ export function GeneratePdf({ data }: { data: Omit<ShoppingCart, "variant">[] })
           <View style={styles.logoContainer}>
             <Image src='/logo.png' style={styles.logo} />
             <View style={styles.headerTextContainer}>
-              <Text style={styles.headerTitle}>Tienda Allí</Text>
-              <Text style={styles.headerSubtitle}>Ropa y accesorios de calidad</Text>
+              <Text style={styles.headerTitle}>Gabii Allí</Text>
+              {/* <Text style={styles.headerSubtitle}>Ropa y accesorios de calidad</Text> */}
             </View>
           </View>
 
@@ -229,7 +229,7 @@ export function GeneratePdf({ data }: { data: Omit<ShoppingCart, "variant">[] })
           </View>
         </View>
 
-        <View style={styles.divider} />
+        {/* <View style={styles.divider} /> */}
 
         {/* Información de contacto */}
         <View style={styles.section}>

@@ -95,7 +95,7 @@ export default function ShoppingCart() {
             <div className='border-t bg-gray-50 p-6 space-y-4'>
               <div className='flex items-center justify-between'>
                 <span className='text-lg font-medium text-gray-900'>Total:</span>
-                <span className='text-2xl font-bold text-purple-600'>
+                <span className='text-2xl font-bold text-primary'>
                   {total.toLocaleString("es-AR", {
                     style: "currency",
                     currency: "ARS",
@@ -106,7 +106,7 @@ export default function ShoppingCart() {
               </div>
               <Button
                 onClick={() => setOpenIsCompraLink(true)}
-                className='w-full bg-purple-600 hover:bg-purple-700'
+                className='w-full bg-primary hover:bg-primary/90'
                 size='lg'
               >
                 Iniciar Compra
