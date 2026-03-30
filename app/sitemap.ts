@@ -1,22 +1,23 @@
+import baseURL from "@/utils/baseUrl";
 import type { MetadataRoute } from "next";
-const URL = "https://gabii-alli.vercel.app";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  console.log("Generando sitemap...", baseURL);
   const sitemapPages = [
     {
-      url: URL,
+      url: baseURL,
       lastModified: new Date(),
       changeFrequency: "yearly" as const,
       priority: 1,
     },
     {
-      url: `${URL}/nosotros`,
+      url: `${baseURL}/nosotros`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.8,
     },
     {
-      url: `${URL}/productos`,
+      url: `${baseURL}/productos`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.8,
@@ -24,11 +25,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   try {
-    const productsResponse = await fetch(`${URL}/api/sitemap/products`);
+    const productsResponse = await fetch(`${baseURL}/api/sitemap/products`);
     const products = await productsResponse.json();
     if (products.success) {
       const productPages = products.data.map((productId: { id: string }) => ({
-        url: `${URL}/productos/${productId.id}`,
+        url: `${baseURL}/productos/${productId.id}`,
         lastModified: new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.6,
@@ -37,6 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
     return sitemapPages;
   } catch (e) {
+    console.error("Error al generar sitemap: ", e);
     return sitemapPages;
   }
 }

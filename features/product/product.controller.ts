@@ -341,7 +341,6 @@ export async function getCategoryProductsController() {
 export async function getProductsSitemapController() {
   try {
     const result = await getProductsSitemapService();
-    console.log("Esto es el result del controller: ", result);
     return {
       data: result,
       success: true,
