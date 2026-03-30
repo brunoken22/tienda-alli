@@ -10,6 +10,7 @@ import {
   getPriceFilterService,
   getProductIDService,
   getProductsService,
+  getProductsSitemapService,
   getShoppingCartService,
   publishedProductService,
 } from "./product.service";
@@ -333,6 +334,21 @@ export async function getCategoryProductsController() {
   } catch (e) {
     const error = e as Error;
     console.error("Esto es el error: ", error);
+    throw new Error(error.message);
+  }
+}
+
+export async function getProductsSitemapController() {
+  try {
+    const result = await getProductsSitemapService();
+    console.log("Esto es el result del controller: ", result);
+    return {
+      data: result,
+      success: true,
+    };
+  } catch (e) {
+    const error = e as Error;
+    console.error("getProductsController ", error);
     throw new Error(error.message);
   }
 }

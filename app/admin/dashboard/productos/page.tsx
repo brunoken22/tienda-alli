@@ -43,19 +43,19 @@ export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [minPrice, setMinPrice] = useState(
-    searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : 0
+    searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : 0,
   );
   const [maxPrice, setMaxPrice] = useState(
-    searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : 100000
+    searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : 100000,
   );
   const [onSale, setOnSale] = useState(searchParams.get("onSale") === "true");
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
   const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 12);
   const [sortBy, setSortBy] = useState<"title" | "price" | "priceOffer" | "createdAt">(
-    (searchParams.get("sortBy") as any) || "title"
+    (searchParams.get("sortBy") as any) || "title",
   );
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">(
-    (searchParams.get("sortOrder") as any) || "asc"
+    (searchParams.get("sortOrder") as any) || "asc",
   );
 
   const [alertForm, setAlertForm] = useState({
@@ -231,7 +231,7 @@ export default function ProductsPage() {
 
   const handleSaveProduct = async (
     productData: Omit<ProductType, "id" | "imagesId" | "categories" | "createdAt">,
-    images: File[]
+    images: File[],
   ) => {
     if (
       !productData.title ||
@@ -258,21 +258,21 @@ export default function ProductsPage() {
     const formData = new FormData();
     formData.append(
       "title",
-      productData.title.trim()[0].toUpperCase() + productData.title.trim().slice(1)
+      productData.title.trim()[0].toUpperCase() + productData.title.trim().slice(1),
     );
     formData.append("price", productData.price.toString());
     formData.append("priceOffer", productData.priceOffer.toString());
 
     formData.append(
       "description",
-      productData.description.trim()[0].toUpperCase() + productData.description.trim().slice(1)
+      productData.description.trim()[0].toUpperCase() + productData.description.trim().slice(1),
     );
     if (productData.variant.length) {
       productData.variant.map((variant) => formData.append("variant", JSON.stringify(variant)));
     }
     if (productData.sizes.length) {
       productData.sizes.map((size) =>
-        formData.append("sizes", size.trim()[0].toUpperCase() + size.trim().slice(1))
+        formData.append("sizes", size.trim()[0].toUpperCase() + size.trim().slice(1)),
       );
     }
     if (images.length) {
@@ -280,7 +280,7 @@ export default function ProductsPage() {
     }
     if (productData.categoryFormData.length) {
       productData.categoryFormData.map((category) =>
-        formData.append("category", category.trim()[0].toUpperCase() + category.trim().slice(1))
+        formData.append("category", category.trim()[0].toUpperCase() + category.trim().slice(1)),
       );
     }
     if (editingProduct) {
@@ -290,7 +290,7 @@ export default function ProductsPage() {
 
         setProducts((data) => {
           const updateProducts = data.data.map((product) =>
-            product.id === editingProduct.id ? updateProduct : product
+            product.id === editingProduct.id ? updateProduct : product,
           );
           return {
             ...data,
@@ -330,7 +330,7 @@ export default function ProductsPage() {
   const handleActiveProduct = async (
     active: boolean,
     id: string,
-    setIsActive: Dispatch<SetStateAction<boolean>>
+    setIsActive: Dispatch<SetStateAction<boolean>>,
   ) => {
     setIsActive((prev) => !prev);
     const updatePublished = await publishedProduct(id, active);
@@ -355,6 +355,7 @@ export default function ProductsPage() {
           <div className='border-l-4 p-2 max-sm:border-0 max-sm:p-0 border-primary'>
             <h2 className='text-2xl font-bold text-foreground mb-2'>Gestión de Productos</h2>
             <p className='text-muted-foreground'>Administra tu catálogo de productos</p>
+            {/* <p>Total: {}</p> */}
           </div>
           <div className='flex gap-4 items-center'>
             <Button onClick={handleAddProduct} className='gap-2'>

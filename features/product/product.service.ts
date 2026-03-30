@@ -427,3 +427,19 @@ export async function getCategoryProductsService() {
     throw new Error(error.message);
   }
 }
+
+export async function getProductsSitemapService() {
+  try {
+    const products = await Product.findAll({
+      attributes: ["id"],
+      where: {
+        isActive: true,
+      },
+    });
+    return products;
+  } catch (e) {
+    const error = e as Error;
+    console.error("getProductsSitemapService ", error);
+    throw new Error(error.message);
+  }
+}

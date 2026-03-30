@@ -162,6 +162,7 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
 
   const handleQuantityChange = (delta: number) => {
     const newQuantity = quantity + delta;
+    // const variant = product.variant.find((variant)=>variant.sizes.includes(selectedSize))
     if (newQuantity >= 1 && newQuantity <= 99) {
       setQuantity(newQuantity);
     }
@@ -370,7 +371,7 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
                       }}
                       className={`relative flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl border-2 transition-all md:h-16 md:w-16 ${
                         selectedVariant?.id === variant.id
-                          ? "scale-105 border-primary ring-2 ring-primary ring-offset-1"
+                          ? `scale-105 border-primary ring-primary ring-2  ring-offset-1`
                           : "border-border hover:scale-105"
                       }`}
                       style={{ backgroundColor: variant.colorHex }}
