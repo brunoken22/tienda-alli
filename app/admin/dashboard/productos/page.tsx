@@ -65,6 +65,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<{
     data: ProductType[];
     isLoading: boolean;
+    totalPrice: number;
     pagination?: {
       total: number;
       page: number;
@@ -75,6 +76,7 @@ export default function ProductsPage() {
     };
   }>({
     data: [],
+    totalPrice: 0,
     isLoading: true,
   });
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -144,10 +146,12 @@ export default function ProductsPage() {
             isLoading: false,
             data: response.data,
             pagination: response.pagination,
+            totalPrice: response.totalPrice,
           });
         } else {
           setProducts({
             isLoading: false,
+            totalPrice: 0,
             data: [],
           });
         }
@@ -155,6 +159,7 @@ export default function ProductsPage() {
         console.error("Error loading products:", error);
         setProducts({
           isLoading: false,
+          totalPrice: 0,
           data: [],
         });
       }
@@ -212,6 +217,7 @@ export default function ProductsPage() {
   };
 
   const handleEditProduct = (product: ProductType) => {
+    console.log(product);
     setEditingProduct(product);
     setDialogOpen(true);
   };
@@ -262,6 +268,7 @@ export default function ProductsPage() {
     );
     formData.append("price", productData.price.toString());
     formData.append("priceOffer", productData.priceOffer.toString());
+    formData.append("stock", productData.stock.toString());
 
     formData.append(
       "description",
@@ -355,7 +362,13 @@ export default function ProductsPage() {
           <div className='border-l-4 p-2 max-sm:border-0 max-sm:p-0 border-primary'>
             <h2 className='text-2xl font-bold text-foreground mb-2'>Gestión de Productos</h2>
             <p className='text-muted-foreground'>Administra tu catálogo de productos</p>
-            {/* <p>Total: {}</p> */}
+            <p className='text-sm text-primary font-black'>
+              Total: $
+              {products?.totalPrice?.toLocaleString("es-AR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }) || 0}
+            </p>
           </div>
           <div className='flex gap-4 items-center'>
             <Button onClick={handleAddProduct} className='gap-2'>

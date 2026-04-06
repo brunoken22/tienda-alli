@@ -116,6 +116,7 @@ export function ProductDialog({
     images: [],
     imagesFormData: [],
     sizes: [],
+    stock: 0,
     variant: [],
     isActive: false,
   });
@@ -140,6 +141,7 @@ export function ProductDialog({
           categoryFormData: product.categories.map((category) => category.id),
           sizes: product.sizes,
           images: [],
+          stock: product.stock,
           categories: product.categories,
           imagesFormData: imagesConvert,
           variant: product.variant.map((v) => ({
@@ -162,6 +164,7 @@ export function ProductDialog({
         variant: [],
         sizes: [],
         images: [],
+        stock: 0,
         isActive: false,
       });
       setImagesUrl([]);
@@ -288,6 +291,7 @@ export function ProductDialog({
       colorName: "Negro",
       colorHex: "#000000",
       price: formData.price,
+      stock: 0,
       priceOffer: formData.priceOffer,
     };
     setFormData({ ...formData, variant: [...formData.variant, newVariant] });
@@ -432,7 +436,7 @@ export function ProductDialog({
             </div>
 
             {/* Precios y stock */}
-            <div className='grid grid-cols-2 max-sm:flex max-sm:flex-col gap-4'>
+            <div className='grid grid-cols-3 max-sm:flex max-sm:flex-col gap-4'>
               <div className='space-y-2'>
                 <Label htmlFor='price' className='text-foreground'>
                   Precio <span className='text-red-500'>*</span>
@@ -457,6 +461,19 @@ export function ProductDialog({
                   step='0.01'
                   value={formData.priceOffer ?? 0}
                   onChange={(e) => setFormData({ ...formData, priceOffer: Number(e.target.value) })}
+                  className='bg-background border-border text-foreground'
+                />
+              </div>
+              <div className='space-y-2'>
+                <Label htmlFor='stock' className='text-foreground'>
+                  Stock
+                </Label>
+                <Input
+                  id='stock'
+                  type='number'
+                  step='0.01'
+                  value={formData.stock ?? 0}
+                  onChange={(e) => setFormData({ ...formData, stock: Number(e.target.value) })}
                   className='bg-background border-border text-foreground'
                 />
               </div>
@@ -654,18 +671,6 @@ export function ProductDialog({
                       key={variant.id}
                       className={`relative p-4 bg-primary/20 border border-primary/50`}
                     >
-                      {/* <div
-                        className={`${
-                          formData.sizes.length
-                            ? "hidden"
-                            : "absolute inset-0 backdrop-blur-lg flex justify-center items-center z-10"
-                        }`}
-                      >
-                        <p className='text-2xl text-primary'>
-                          Tienes que añadir tallas para desbloquear
-                        </p>
-                      </div> */}
-
                       <div className='flex items-center justify-between mb-3 '>
                         <h4 className='text-sm font-medium text-foreground'>
                           Modelo {variantIndex + 1}
@@ -852,7 +857,7 @@ export function ProductDialog({
                           </div>
                         )}
 
-                        <div className='grid grid-cols-2 gap-3'>
+                        <div className='grid grid-cols-3 gap-3'>
                           <div className='space-y-1'>
                             <Label className='text-sm text-foreground'>
                               Precio<span className='text-red-500'>*</span>
@@ -875,6 +880,21 @@ export function ProductDialog({
                               value={variant.priceOffer}
                               onChange={(e) =>
                                 updateVariant(variantIndex, "priceOffer", Number(e.target.value))
+                              }
+                              className='bg-background border-border text-foreground h-9'
+                            />
+                          </div>
+                          <div className='space-y-1'>
+                            <Label htmlFor='stock' className='text-sm'>
+                              Stock
+                            </Label>
+                            <Input
+                              id='stock'
+                              type='number'
+                              step='0.01'
+                              value={variant.stock ?? 0}
+                              onChange={(e) =>
+                                updateVariant(variantIndex, "stock", Number(e.target.value))
                               }
                               className='bg-background border-border text-foreground h-9'
                             />

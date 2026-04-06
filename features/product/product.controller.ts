@@ -43,6 +43,8 @@ export async function getProductsController(req: Request) {
     return {
       data: result.products,
       pagination: result.pagination,
+      totalPrice: result.totalPrice,
+      totalProducts: result.pagination.total,
       success: true,
     };
   } catch (e) {
@@ -98,7 +100,7 @@ export async function createProductController(formData: FormData) {
       variant: variant.length ? variant : [],
       sizes: formData.getAll("sizes") as string[],
       isActive: true,
-      // stock: Number(formData.get("stock")),
+      stock: Number(formData.get("stock")),
     };
     if (
       !product.title ||
@@ -173,7 +175,7 @@ export async function editProductController(id: string, formData: FormData) {
       variant: variant,
       sizes: formData.getAll("sizes") as string[],
       isActive: true,
-      // stock: Number(formData.get("stock")),
+      stock: Number(formData.get("stock")),
     };
     if (
       !product.title ||

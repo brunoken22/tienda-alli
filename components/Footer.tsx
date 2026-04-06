@@ -25,7 +25,7 @@ export function Footer() {
             </p>
             <div className='flex gap-3'>
               <Link
-                href='https://www.facebook.com/search/top/?q=tienda%20alli'
+                href='https://www.facebook.com/profile.php?id=61578429236119'
                 target='_blank'
                 className='w-9 h-9 rounded-full bg-muted bg-secondary/20 hover:bg-secondary/80 hover:text-primary hover:text-primary-foreground flex items-center justify-center transition-colors'
                 aria-label='Facebook'
@@ -40,14 +40,14 @@ export function Footer() {
               >
                 <Instagram className='w-4 h-4' />
               </Link>
-              <Link
+              {/* <Link
                 href='https://www.linkedin.com/in/brunoken18/'
                 target='_blank'
                 className='w-9 h-9 rounded-full bg-muted bg-secondary/20 hover:bg-secondary/80 hover:text-primary hover:text-primary-foreground flex items-center justify-center transition-colors'
                 aria-label='Instagram'
               >
                 <Linkedin className='w-4 h-4' />
-              </Link>
+              </Link> */}
             </div>
           </div>
 
@@ -92,14 +92,14 @@ export function Footer() {
               </li>
               <li className='flex items-center gap-3'>
                 <Phone className='w-4 h-4  flex-shrink-0' />
-                <Link href='tel:+541161204047' className=' hover:opacity-70 transition-colors'>
-                  +54 (11) 6120-4047
+                <Link href='tel:+54111159102865' className=' hover:opacity-70 transition-colors'>
+                  +54 (11) 5910-2865
                 </Link>
               </li>
               <li className='flex items-center gap-3'>
                 <Mail className='w-4 h-4  flex-shrink-0' />
                 <Link
-                  href='mailto:info@tutienda.com'
+                  href='mailto:bruno_am_22@hotmail.com'
                   className=' hover:opacity-70 transition-colors'
                 >
                   bruno_am_22@hotmail.com

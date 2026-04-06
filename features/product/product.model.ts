@@ -78,9 +78,9 @@ const Product = sequelize.define(
             if (!v.colorHex || typeof v.colorHex !== "string") {
               throw new Error(`variant[${index}].colorHex debe ser un string`);
             }
-            // if (typeof v.stock !== "number") {
-            //   throw new Error(`variant[${index}].stock debe ser un número`);
-            // }
+            if (typeof v.stock !== "number") {
+              throw new Error(`variant[${index}].stock debe ser un número`);
+            }
             if (typeof v.price !== "number") {
               throw new Error(`variant[${index}].price debe ser un número`);
             }
@@ -103,7 +103,7 @@ const Product = sequelize.define(
   {
     tableName: "products",
     timestamps: true,
-  }
+  },
 );
 
 Product.belongsToMany(Category, {

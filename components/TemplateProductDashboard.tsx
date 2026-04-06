@@ -17,7 +17,7 @@ export default function TemplateProductDashboard({
   handleActiveProduct: (
     active: boolean,
     id: string,
-    setIsActive: Dispatch<SetStateAction<boolean>>
+    setIsActive: Dispatch<SetStateAction<boolean>>,
   ) => void;
   handleEditProduct: (product: ProductType) => void;
   handleDeleteProduct: (id: string) => void;
@@ -109,15 +109,27 @@ export default function TemplateProductDashboard({
             {product.priceOffer && product.priceOffer > 1 ? (
               <>
                 <span className='text-lg text-green-600  font-black bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent drop-shadow-sm'>
-                  ${product.priceOffer.toLocaleString()}
+                  $
+                  {product.priceOffer.toLocaleString("es-AR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </span>
                 <span className='text-base text-primary line-through font-semibold'>
-                  ${product.price.toLocaleString()}
+                  $
+                  {product.price.toLocaleString("es-AR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </span>
               </>
             ) : (
               <span className='text-lg font-black bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-primary'>
-                ${product.price.toLocaleString()}
+                $
+                {product.price.toLocaleString("es-AR", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </span>
             )}
           </div>

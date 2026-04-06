@@ -10,6 +10,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!product) {
     return {
       title: "Post not found",
+      robots: {
+        index: false,
+      },
     };
   }
 
@@ -34,6 +37,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       ],
       locale: "es_EC",
       type: "website",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+      },
     },
     twitter: {
       card: "summary_large_image",

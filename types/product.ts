@@ -5,7 +5,7 @@ export type VariantType = {
   sizes: string[];
   colorName: string;
   colorHex: string;
-  // stock: number;
+  stock: number;
   price: number;
   priceOffer: number;
 };
@@ -21,7 +21,7 @@ export type ProductType = {
   images: string[];
   imagesId: string[];
   imagesFormData?: File[];
-  // stock: number;
+  stock: number;
   sizes: string[];
   variant: VariantType[] | [];
   isActive: boolean;

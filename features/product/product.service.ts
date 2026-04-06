@@ -76,6 +76,16 @@ export async function getProductsService(filters?: ProductQueryParams) {
       };
     }
 
+    const result: any = await Product.findOne({
+      where: whereConditions,
+      attributes: [
+        [sequelize.fn("SUM", sequelize.literal("price * stock")), "totalInventoryValue"],
+      ],
+      raw: true,
+    });
+
+    const totalPrice = result?.totalInventoryValue || 0;
+
     // Obtener total de productos para paginación
     const total = await Product.count({
       where: whereConditions,
@@ -93,6 +103,7 @@ export async function getProductsService(filters?: ProductQueryParams) {
 
     return {
       products,
+      totalPrice,
       pagination: {
         total,
         page,
