@@ -105,7 +105,21 @@ export default function TemplateProductDashboard({
             </div>
           </div>
 
-          <div className='flex items-baseline gap-3 '>
+          <div className='flex items-baseline gap-3 flex-col'>
+            <div className='flex items-baseline gap-1'>
+              <span className='text-sm '>Total:</span>
+              <p className='text-sm font-black bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent'>
+                $
+                {(product.price * product.stock || 0).toLocaleString("es-AR", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </p>
+            </div>
+            <div className='flex text-sm'>
+              <span className='text-sm '>Stock: </span>
+              <p className=' text-primary'> {product.stock}</p>
+            </div>
             {product.priceOffer && product.priceOffer > 1 ? (
               <>
                 <span className='text-lg text-green-600  font-black bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent drop-shadow-sm'>
