@@ -21,11 +21,11 @@ export default function Modal({ closeModal }: ModalProps) {
   const [showCopySuccess, setShowCopySuccess] = useState(false);
 
   // Calcular total
-  const calculateTotal = useCallback((items: Omit<ShoppingCart, "variant">[]) => {
+  const calculateTotal = useCallback((items: Omit<ShoppingCart, "variant" | "stock">[]) => {
     return items.reduce(
       (accumulator, item) =>
         accumulator + (item.priceOffer > 0 ? item.priceOffer : item.price) * (item.quantity || 1),
-      0
+      0,
     );
   }, []);
 
@@ -66,7 +66,7 @@ _*Este pedido fue generado automáticamente desde la tienda online.*_`;
       } catch (error) {
         console.error("Error generando texto del pedido:", error);
         setTextShoppingCopy(
-          "Error al generar el resumen del pedido. Por favor, contacta al vendedor."
+          "Error al generar el resumen del pedido. Por favor, contacta al vendedor.",
         );
       }
     } else {

@@ -122,6 +122,7 @@ export async function getProductID(id: string): Promise<ProductType> {
       priceOffer: 0,
       images: [],
       imagesId: [],
+      stock: 0,
       categories: [],
       sizes: [],
       variant: [],

@@ -22,8 +22,8 @@ interface TemplateProductProps {
   size: string[];
   variants?: VariantType[];
   addToast: () => void;
-  addItem: (cart: Omit<ShoppingCart, "variant">) => void;
-  cart: Omit<ShoppingCart, "variant">[];
+  addItem: (cart: Omit<ShoppingCart, "variant" | "stock">) => void;
+  cart: Omit<ShoppingCart, "variant" | "stock">[];
 }
 
 interface ColorOption {
@@ -46,7 +46,7 @@ export default function TemplateProduct({
   addToast,
   addItem,
   cart,
-}: Omit<TemplateProductProps, "categories">) {
+}: Omit<TemplateProductProps, "categories" | "stock">) {
   const [selectedColorName, setSelectedColorName] = useState<string>("");
   const [selectedColorHex, setSelectedColorHex] = useState<string>("");
   const [selectedSize, setSelectedSize] = useState<string>("");
@@ -201,7 +201,7 @@ export default function TemplateProduct({
 
     if (isButtonDisabled || isItemInCart) return;
 
-    const newAddItem: Omit<ShoppingCart, "variant"> = {
+    const newAddItem: Omit<ShoppingCart, "variant" | "stock"> = {
       id,
       title,
       price: currentPrice,

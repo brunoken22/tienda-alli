@@ -19,7 +19,7 @@ export default function TemplateShopppingCart({
   variantColorHex,
   variantSize,
   variantId,
-}: Omit<ShoppingCart, "variant">) {
+}: Omit<ShoppingCart, "variant" | "stock">) {
   const {
     state: { cart },
   } = useShoppingCart();
@@ -27,8 +27,8 @@ export default function TemplateShopppingCart({
 
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
-    const newShoppingCart: Omit<ShoppingCart, "variant">[] = cart.filter(
-      (item) => item.id !== e.currentTarget.id
+    const newShoppingCart: Omit<ShoppingCart, "variant" | "stock">[] = cart.filter(
+      (item) => item.id !== e.currentTarget.id,
     );
     if (typeof window !== "undefined") {
       localStorage.setItem("shoppingCart", JSON.stringify(newShoppingCart));

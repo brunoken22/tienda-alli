@@ -3,8 +3,8 @@ import { createContext, useContext, useReducer, ReactNode, Dispatch } from "reac
 
 // Definición de tipos de acción corregidos
 type ShoppingCartAction =
-  | { type: "SET_CART"; payload: Omit<ShoppingCart, "variant">[] }
-  | { type: "ADD_ITEM"; payload: Omit<ShoppingCart, "variant"> }
+  | { type: "SET_CART"; payload: Omit<ShoppingCart, "variant" | "stock">[] }
+  | { type: "ADD_ITEM"; payload: Omit<ShoppingCart, "variant" | "stock"> }
   | {
       type: "REMOVE_ITEM";
       payload: {
@@ -47,14 +47,14 @@ const ShoppingCartContext = createContext<
 >(undefined);
 
 // Función helper para identificar items únicos
-function getItemUniqueKey(item: Omit<ShoppingCart, "variant">): string {
+function getItemUniqueKey(item: Omit<ShoppingCart, "variant" | "stock">): string {
   return `${item.id}-${item.variantId}-${item.variantSize}`;
 }
 
 // Reducer corregido
 function shoppingCartReducer(
   state: ShoppingCartState,
-  action: ShoppingCartAction
+  action: ShoppingCartAction,
 ): ShoppingCartState {
   switch (action.type) {
     case "SET_CART":
@@ -63,7 +63,7 @@ function shoppingCartReducer(
     case "ADD_ITEM":
       // Usar la función helper para comparar
       const existingItemIndex = state.cart.findIndex(
-        (item) => getItemUniqueKey(item) === getItemUniqueKey(action.payload)
+        (item) => getItemUniqueKey(item) === getItemUniqueKey(action.payload),
       );
 
       if (existingItemIndex > -1) {
@@ -108,7 +108,7 @@ function shoppingCartReducer(
             item.variantColorHex === action.payload.variantColorHex &&
             item.variantColorName === action.payload.variantColorName &&
             item.variantSize === action.payload.variantSize
-          )
+          ),
       );
 
       // Actualizar localStorage
@@ -132,7 +132,7 @@ function shoppingCartReducer(
           item.variantColorName === action.payload.variantColorName &&
           item.variantSize === action.payload.variantSize
             ? { ...item, quantity: Math.max(0, action.payload.quantity) } // Evitar cantidades negativas
-            : item
+            : item,
         )
         .filter((item) => item.quantity > 0); // Eliminar items con cantidad 0
 
@@ -191,7 +191,8 @@ export function useShoppingCartActions() {
 
   return {
     // Agregar item al carrito
-    addItem: (item: Omit<ShoppingCart, "variant">) => dispatch({ type: "ADD_ITEM", payload: item }),
+    addItem: (item: Omit<ShoppingCart, "variant" | "stock">) =>
+      dispatch({ type: "ADD_ITEM", payload: item }),
 
     // Eliminar item específico por sus identificadores únicos
     removeItem: (
@@ -199,7 +200,7 @@ export function useShoppingCartActions() {
       variantId: string,
       variantSize: string,
       variantColorName: string,
-      variantColorHex: string
+      variantColorHex: string,
     ) =>
       dispatch({
         type: "REMOVE_ITEM",
@@ -213,7 +214,7 @@ export function useShoppingCartActions() {
       variantSize: string,
       variantColorHex: string,
       variantColorName: string,
-      quantity: number
+      quantity: number,
     ) =>
       dispatch({
         type: "UPDATE_QUANTITY",
@@ -233,7 +234,7 @@ export function useShoppingCartActions() {
     clearCart: () => dispatch({ type: "CLEAR_CART" }),
 
     // Establecer carrito completo (útil para sincronización)
-    setCart: (cart: Omit<ShoppingCart, "variant">[]) =>
+    setCart: (cart: Omit<ShoppingCart, "variant" | "stock">[]) =>
       dispatch({ type: "SET_CART", payload: cart }),
   };
 }
