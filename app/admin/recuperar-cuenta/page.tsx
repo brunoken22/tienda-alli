@@ -286,8 +286,8 @@ export default function ForgotPasswordPage() {
                     {loadingCode
                       ? "Verificando..."
                       : codeVerified
-                      ? "✓ Verificado"
-                      : "Verificar Código"}
+                        ? "✓ Verificado"
+                        : "Verificar Código"}
                   </Button>
 
                   <Button
@@ -334,7 +334,7 @@ export default function ForgotPasswordPage() {
                       <button
                         type='button'
                         onClick={() => setShowPassword(!showPassword)}
-                        className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
+                        className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-secondary transition-colors'
                         aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                       >
                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -360,10 +360,10 @@ export default function ForgotPasswordPage() {
                             strength.level === "weak"
                               ? "bg-destructive"
                               : strength.level === "fair"
-                              ? "bg-yellow-500"
-                              : strength.level === "good"
-                              ? "bg-blue-500"
-                              : "bg-green-500"
+                                ? "bg-yellow-500"
+                                : strength.level === "good"
+                                  ? "bg-blue-500"
+                                  : "bg-green-500"
                           }`}
                           style={{ width: `${strength.score}%` }}
                         />
@@ -414,7 +414,7 @@ export default function ForgotPasswordPage() {
                       <button
                         type='button'
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
+                        className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-secondary transition-colors'
                         aria-label={
                           showConfirmPassword ? "Ocultar contraseña" : "Mostrar contraseña"
                         }
@@ -443,8 +443,8 @@ export default function ForgotPasswordPage() {
                     {resetSuccess
                       ? "✓ Contraseña Actualizada"
                       : loadingReset
-                      ? "Actualizando..."
-                      : "Actualizar Contraseña"}
+                        ? "Actualizando..."
+                        : "Actualizar Contraseña"}
                   </Button>
 
                   {resetSuccess && (

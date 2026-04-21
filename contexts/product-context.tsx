@@ -3,8 +3,8 @@ import { createContext, useContext, useReducer, ReactNode, Dispatch } from "reac
 
 // Definición de tipos de acción corregidos
 type ShoppingCartAction =
-  | { type: "SET_CART"; payload: Omit<ShoppingCart, "variant" | "stock">[] }
-  | { type: "ADD_ITEM"; payload: Omit<ShoppingCart, "variant" | "stock"> }
+  | { type: "SET_CART"; payload: Omit<ShoppingCart, "variants" | "stock">[] }
+  | { type: "ADD_ITEM"; payload: Omit<ShoppingCart, "variants" | "stock"> }
   | {
       type: "REMOVE_ITEM";
       payload: {
@@ -47,7 +47,7 @@ const ShoppingCartContext = createContext<
 >(undefined);
 
 // Función helper para identificar items únicos
-function getItemUniqueKey(item: Omit<ShoppingCart, "variant" | "stock">): string {
+function getItemUniqueKey(item: Omit<ShoppingCart, "variants" | "stock">): string {
   return `${item.id}-${item.variantId}-${item.variantSize}`;
 }
 
@@ -191,7 +191,7 @@ export function useShoppingCartActions() {
 
   return {
     // Agregar item al carrito
-    addItem: (item: Omit<ShoppingCart, "variant" | "stock">) =>
+    addItem: (item: Omit<ShoppingCart, "variants" | "stock">) =>
       dispatch({ type: "ADD_ITEM", payload: item }),
 
     // Eliminar item específico por sus identificadores únicos
@@ -234,7 +234,7 @@ export function useShoppingCartActions() {
     clearCart: () => dispatch({ type: "CLEAR_CART" }),
 
     // Establecer carrito completo (útil para sincronización)
-    setCart: (cart: Omit<ShoppingCart, "variant" | "stock">[]) =>
+    setCart: (cart: Omit<ShoppingCart, "variants" | "stock">[]) =>
       dispatch({ type: "SET_CART", payload: cart }),
   };
 }

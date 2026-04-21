@@ -236,100 +236,113 @@ export default function ProductsPage() {
   };
 
   const handleSaveProduct = async (
-    productData: Omit<ProductType, "id" | "imagesId" | "categories" | "createdAt">,
+    productData: Omit<ProductType, "id" | "imagesId" | "categories" | "sizes">,
     images: File[],
   ) => {
-    if (
-      !productData.title ||
-      !productData.price ||
-      !images.length ||
-      !productData.description ||
-      !productData.categoryFormData?.length ||
-      (productData.variant.length &&
-        productData.variant.some((v) => !v.colorName || !v.price || !v.sizes.length))
-    ) {
-      setAlertForm((alert) => ({
-        ...alert,
-        message: "Por favor completa todos los campos requeridos.",
-      }));
-      setTimeout(() => {
-        document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" });
-      }, 500);
-      return false;
-    }
-    setAlertForm({
-      message: "",
-      success: false,
-    });
-    const formData = new FormData();
-    formData.append(
-      "title",
-      productData.title.trim()[0].toUpperCase() + productData.title.trim().slice(1),
-    );
-    formData.append("price", productData.price.toString());
-    formData.append("priceOffer", productData.priceOffer.toString());
-    formData.append("stock", productData.stock.toString());
-
-    formData.append(
-      "description",
-      productData.description.trim()[0].toUpperCase() + productData.description.trim().slice(1),
-    );
-    if (productData.variant.length) {
-      productData.variant.map((variant) => formData.append("variant", JSON.stringify(variant)));
-    }
-    if (productData.sizes.length) {
-      productData.sizes.map((size) =>
-        formData.append("sizes", size.trim()[0].toUpperCase() + size.trim().slice(1)),
-      );
-    }
-    if (images.length) {
-      images.map((image) => formData.append("images", image));
-    }
-    if (productData.categoryFormData.length) {
-      productData.categoryFormData.map((category) =>
-        formData.append("category", category.trim()[0].toUpperCase() + category.trim().slice(1)),
-      );
-    }
-    if (editingProduct) {
-      const productUpdate = await updateProduct(editingProduct.id, formData);
-      if (productUpdate.success) {
-        const updateProduct = { ...productUpdate.data.product, id: productUpdate.data.id };
-
-        setProducts((data) => {
-          const updateProducts = data.data.map((product) =>
-            product.id === editingProduct.id ? updateProduct : product,
-          );
-          return {
-            ...data,
-            data: updateProducts,
-          };
-        });
-        return true;
-      }
-      document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" });
-
-      setAlertForm((alert) => ({
-        ...alert,
-        message: productUpdate.message,
-      }));
-
-      return false;
-    } else {
-      const product = await addProduct(formData);
-      if (product.success) {
-        setProducts((data) => ({
-          ...data,
-          data: [product.data as ProductType, ...data.data],
+    try {
+      if (
+        !productData.title ||
+        !productData.price ||
+        !images.length ||
+        !productData.description ||
+        !productData.categoryFormData?.length ||
+        (productData.variants.length &&
+          productData.variants.some((v) => !v.colorName || !v.price || !v.size))
+      ) {
+        setAlertForm((alert) => ({
+          ...alert,
+          message: "Por favor completa todos los campos requeridos.",
         }));
-        return true;
+        setTimeout(() => {
+          document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" });
+        }, 500);
+        return false;
       }
-      document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" });
+      setAlertForm({
+        message: "",
+        success: false,
+      });
+      const formData = new FormData();
+      formData.append(
+        "title",
+        productData.title.trim()[0].toUpperCase() + productData.title.trim().slice(1),
+      );
+      formData.append("price", productData.price.toString());
+      formData.append("priceOffer", productData.priceOffer.toString());
+      formData.append("stock", productData.stock.toString());
 
+      formData.append(
+        "description",
+        productData.description.trim()[0].toUpperCase() + productData.description.trim().slice(1),
+      );
+      if (productData.variants.length) {
+        productData.variants.map((variant) => formData.append("variants", JSON.stringify(variant)));
+      }
+      // if (productData.sizes.length) {
+      //   productData.sizes.map((size) =>
+      //     formData.append("sizes", size.trim()[0].toUpperCase() + size.trim().slice(1)),
+      //   );
+      // }
+      if (images.length) {
+        images.map((image) => formData.append("images", image));
+      }
+      if (productData.categoryFormData.length) {
+        productData.categoryFormData.map((category) =>
+          formData.append("category", category.trim()[0].toUpperCase() + category.trim().slice(1)),
+        );
+      }
+      console.log(formData);
+
+      if (editingProduct) {
+        const productUpdate = await updateProduct(editingProduct.id, formData);
+        if (productUpdate.success) {
+          const updateProduct = { ...productUpdate.data.product, id: productUpdate.data.id };
+
+          setProducts((data) => {
+            const updateProducts = data.data.map((product) =>
+              product.id === editingProduct.id ? updateProduct : product,
+            );
+            return {
+              ...data,
+              data: updateProducts,
+            };
+          });
+          return true;
+        }
+        document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" });
+
+        setAlertForm((alert) => ({
+          ...alert,
+          message: productUpdate.message,
+        }));
+
+        return false;
+      } else {
+        const product = await addProduct(formData);
+        if (product.success) {
+          setProducts((data) => ({
+            ...data,
+            data: [product.data as ProductType, ...data.data],
+          }));
+          return true;
+        }
+        document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" });
+
+        setAlertForm((alert) => ({
+          ...alert,
+          message: product.message,
+        }));
+
+        return false;
+      }
+    } catch (error) {
       setAlertForm((alert) => ({
         ...alert,
-        message: product.message,
+        message: "Ocurrió un error al guardar el producto. Por favor intenta nuevamente.",
       }));
+      document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" });
 
+      console.error("Error saving product:", error);
       return false;
     }
   };
@@ -360,7 +373,7 @@ export default function ProductsPage() {
       <main className='p-6 max-sm:p-2 space-y-8'>
         <div className='flex max-sm:flex-col max-sm:gap-4 justify-between items-center '>
           <div className='border-l-4 p-2 max-sm:border-0 max-sm:p-0 border-primary'>
-            <h2 className='text-2xl font-bold text-foreground mb-2'>Gestión de Productos</h2>
+            <h2 className='text-2xl font-bold text-primary mb-2'>Gestión de Productos</h2>
             <p className='text-muted-foreground'>Administra tu catálogo de productos</p>
             <p className='text-sm text-primary font-black'>
               Total: $
@@ -631,7 +644,7 @@ export default function ProductsPage() {
           <div className='!mt-12  border-primary/50  max-sm:border-t-4 max-sm:pt-8'>
             <CardContent className='flex flex-col items-center justify-center py-16'>
               <Package className='w-16 h-16 text-muted-foreground mb-4' />
-              <h3 className='text-lg font-semibold text-foreground mb-2'>
+              <h3 className='text-lg font-semibold text-secondary mb-2'>
                 {searchTerm || category || minPrice > 0 || maxPrice < 100000 || onSale
                   ? "No se encontraron productos con los filtros aplicados"
                   : "No hay productos"}

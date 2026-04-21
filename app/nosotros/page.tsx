@@ -85,7 +85,7 @@ export default function Nosotros() {
                 <div className='inline-flex items-center justify-center w-14 h-14 rounded-xl bg-primary/10 mb-6 group-hover:bg-primary/20 transition-colors'>
                   <Icon className='w-7 h-7 text-secondary' />
                 </div>
-                <h3 className='text-xl font-bold mb-4 text-foreground'>{value.title}</h3>
+                <h3 className='text-xl font-bold mb-4 text-secondary'>{value.title}</h3>
                 <p className='text-muted-foreground leading-relaxed text-pretty'>
                   {value.description}
                 </p>

@@ -74,7 +74,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
             {/* Title and Message */}
             <div className='space-y-3'>
-              <h1 className='text-balance text-4xl font-bold tracking-tight text-foreground'>
+              <h1 className='text-balance text-4xl font-bold tracking-tight text-secondary'>
                 Producto no encontrado
               </h1>
               <p className='text-pretty text-lg text-muted-foreground'>

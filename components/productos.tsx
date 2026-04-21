@@ -18,7 +18,6 @@ import {
   SlidersHorizontal,
   Grid3X3,
   List,
-  ArrowUpDown,
 } from "lucide-react";
 import { useShoppingCart, useShoppingCartActions } from "@/contexts/product-context";
 import { ProductType } from "@/types/product";
@@ -404,10 +403,10 @@ export default function ProductosPage() {
                 <div className='flex flex-col sm:flex-row items-center max-sm:justify-center justify-between sm:gap-4 gap-2  p-4'>
                   <p className='text-sm text-muted-foreground'>
                     Mostrando{" "}
-                    <span className='font-medium text-foreground'>
+                    <span className='font-medium '>
                       {offset + 1}-{Math.min(offset + currentResults, totalResults)}
                     </span>{" "}
-                    de <span className='font-medium text-foreground'>{totalResults}</span> productos
+                    de <span className='font-medium '>{totalResults}</span> productos
                   </p>
 
                   <div className='flex items-center border rounded-lg p-1'>
@@ -458,11 +457,11 @@ export default function ProductosPage() {
                           ? item.images.filter((itemImages) => typeof itemImages === "string")
                           : []
                       }
-                      variants={item.variant}
-                      priceOffer={item.priceOffer}
-                      price={item.price}
+                      variants={item.variants}
+                      // priceOffer={item.priceOffer || 0}
+                      // price={item.price || 0}
                       id={item.id}
-                      size={item.sizes}
+                      // size={item.sizes}
                       addToast={() =>
                         toast.success("¡Producto agregado al carrito!", {
                           position: "bottom-right",

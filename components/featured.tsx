@@ -35,9 +35,10 @@ export function ProductsFeatured({ featured }: { featured: any }) {
               id={item.id}
               title={item.title}
               images={item.images}
-              price={item.price}
-              priceOffer={item.priceOffer}
-              size={item.sizes}
+              variants={item.variants}
+              // price={item.price}
+              // priceOffer={item.priceOffer}
+              // size={item.sizes}
               addToast={() =>
                 toast.success("¡Se agregó al carrito!", {
                   position: "top-right",

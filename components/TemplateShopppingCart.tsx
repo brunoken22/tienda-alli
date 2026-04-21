@@ -19,7 +19,7 @@ export default function TemplateShopppingCart({
   variantColorHex,
   variantSize,
   variantId,
-}: Omit<ShoppingCart, "variant" | "stock">) {
+}: Omit<ShoppingCart, "variants" | "stock">) {
   const {
     state: { cart },
   } = useShoppingCart();
@@ -27,7 +27,7 @@ export default function TemplateShopppingCart({
 
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
-    const newShoppingCart: Omit<ShoppingCart, "variant" | "stock">[] = cart.filter(
+    const newShoppingCart: Omit<ShoppingCart, "variants" | "stock">[] = cart.filter(
       (item) => item.id !== e.currentTarget.id,
     );
     if (typeof window !== "undefined") {
@@ -70,18 +70,16 @@ export default function TemplateShopppingCart({
             ) : null}
           </div>
 
-          <h3 className=' font-semibold text-foreground mt-2'>
+          <h3 className=' font-semibold  mt-2'>
             {priceOffer > 0 ? (
               <>
                 <span className=' font-bold text-green-600 mr-4'>
                   ${priceOffer.toLocaleString()}
                 </span>
-                <span className='text-sm text-muted-foreground line-through'>
-                  ${price.toLocaleString()}
-                </span>
+                <span className='text-sm  line-through'>${price.toLocaleString()}</span>
               </>
             ) : (
-              <span className=' font-bold text-foreground'>${price.toLocaleString()}</span>
+              <span className=' font-bold '>${price.toLocaleString()}</span>
             )}
           </h3>
 

@@ -125,7 +125,7 @@ export async function getProductID(id: string): Promise<ProductType> {
       stock: 0,
       categories: [],
       sizes: [],
-      variant: [],
+      variants: [],
       description: "",
       isActive: false,
     };

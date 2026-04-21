@@ -12,6 +12,6 @@ export type ShoppingCart = Omit<
 };
 
 export type ShoppingCartState = {
-  cart: Omit<ShoppingCart, "variant" | "stock">[];
+  cart: Omit<ShoppingCart, "variants" | "stock">[];
   isOpen: boolean;
 };

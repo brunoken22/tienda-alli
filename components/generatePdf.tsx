@@ -187,7 +187,7 @@ const formatCurrency = (value: number): string => {
   });
 };
 
-export function GeneratePdf({ data }: { data: Omit<ShoppingCart, "variant" | "stock">[] }) {
+export function GeneratePdf({ data }: { data: Omit<ShoppingCart, "variants" | "stock">[] }) {
   const date = formatDate();
 
   const subtotal = data.reduce(

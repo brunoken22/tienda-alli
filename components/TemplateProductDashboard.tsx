@@ -5,7 +5,7 @@ import SimpleHoverSwiper from "@/components/HoverSwiper";
 import { Switch } from "./ui/switch";
 import { Button } from "./ui/button";
 import { Pencil, Trash2, Package, Ruler, Palette, Layers } from "lucide-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useMemo } from "react";
 
 export default function TemplateProductDashboard({
   product,
@@ -23,24 +23,115 @@ export default function TemplateProductDashboard({
   handleDeleteProduct: (id: string) => void;
 }) {
   const [isActive, setIsActive] = useState(product.isActive);
+  const [expandedSize, setExpandedSize] = useState<string | null>(null);
 
   // Calcular stock total sumando todas las variantes
-  const totalStock =
-    product.variant.length > 0
-      ? product.variant.reduce((sum, variant) => sum + variant.stock, 0)
-      : product.stock;
+  const totalStock = useMemo(() => {
+    if (product.variants && product.variants.length > 0) {
+      return product.variants.reduce((sum, variant) => sum + (variant.stock || 0), 0);
+    }
+    return 0;
+  }, [product.variants]);
 
-  // Obtener colores únicos de las variantes
-  const uniqueColors =
-    product.variant.length > 0
-      ? Array.from(new Map(product.variant.map((v) => [v.colorName, v.colorHex])).entries())
-      : [];
+  // Agrupar variantes por TALLE (nueva estructura: un talle con múltiples colores)
+  const variantsBySize = useMemo((): Map<string, VariantType[]> => {
+    if (!product.variants || product.variants.length === 0) {
+      return new Map<string, VariantType[]>();
+    }
 
-  // Obtener talles únicos de las variantes
-  const uniqueSizes =
-    product.variant.length > 0
-      ? Array.from(new Set(product.variant.flatMap((v) => v.sizes))).sort()
-      : product.sizes || [];
+    const sizeMap = new Map<string, VariantType[]>();
+
+    product.variants.forEach((variant: VariantType) => {
+      const size = variant.size;
+      if (!size) return;
+
+      const existing = sizeMap.get(size);
+      if (existing) {
+        existing.push(variant);
+      } else {
+        sizeMap.set(size, [variant]);
+      }
+    });
+
+    return sizeMap;
+  }, [product.variants]);
+
+  // Obtener colores únicos de todas las variantes (para vista general)
+  const uniqueColors = useMemo(() => {
+    if (!product.variants || product.variants.length === 0) return [];
+
+    const colorMap = new Map<string, string>();
+    product.variants.forEach((variant) => {
+      if (!colorMap.has(variant.colorName)) {
+        colorMap.set(variant.colorName, variant.colorHex);
+      }
+    });
+    return Array.from(colorMap.entries()).map(([name, hex]) => ({ name, hex }));
+  }, [product.variants]);
+
+  // Calcular precio mínimo y máximo
+  const { minPrice, maxPrice, hasDiscount, discountPercentage } = useMemo(() => {
+    if (!product.variants || product.variants.length === 0) {
+      return { minPrice: 0, maxPrice: 0, hasDiscount: false, discountPercentage: 0 };
+    }
+
+    const prices = product.variants.map((v) => (v.priceOffer > 0 ? v.priceOffer : v.price));
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+
+    const hasAnyOffer = product.variants.some((v) => v.priceOffer > 0);
+    const bestDiscount = hasAnyOffer
+      ? Math.max(
+          ...product.variants.map((v) => {
+            if (v.priceOffer > 0) {
+              return Math.round(((v.price - v.priceOffer) / v.price) * 100);
+            }
+            return 0;
+          }),
+        )
+      : 0;
+
+    return {
+      minPrice: min,
+      maxPrice: max,
+      hasDiscount: hasAnyOffer,
+      discountPercentage: bestDiscount,
+    };
+  }, [product.variants]);
+
+  const hasVariants = product.variants && product.variants.length > 0;
+  const priceDisplay =
+    minPrice === maxPrice
+      ? `$${minPrice.toLocaleString("es-AR")}`
+      : `$${minPrice.toLocaleString("es-AR")} - $${maxPrice.toLocaleString("es-AR")}`;
+
+  // Calcular stock por talle
+  const getStockBySize = (size: string) => {
+    const variants = variantsBySize.get(size) || [];
+    return variants.reduce((sum, v) => sum + (v.stock || 0), 0);
+  };
+
+  // Obtener precio de un color específico en un talle
+  const getPriceForSizeAndColor = (size: string, colorHex: string) => {
+    const variants = variantsBySize.get(size) || [];
+    const variant = variants.find((v) => v.colorHex === colorHex);
+    if (variant) {
+      return {
+        price: variant.price,
+        priceOffer: variant.priceOffer,
+        hasOffer: variant.priceOffer > 0,
+      };
+    }
+    return { price: 0, priceOffer: 0, hasOffer: false };
+  };
+
+  const toggleSizeExpand = (size: string) => {
+    if (expandedSize === size) {
+      setExpandedSize(null);
+    } else {
+      setExpandedSize(size);
+    }
+  };
 
   return (
     <div
@@ -66,15 +157,15 @@ export default function TemplateProductDashboard({
         className={`relative overflow-hidden bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 w-full flex-shrink-0 h-[200px]`}
       >
         <div className='absolute top-4 right-4 z-10 flex flex-col gap-2.5 items-end'>
-          {product.priceOffer > 1 && (
+          {hasDiscount && discountPercentage > 0 && (
             <Badge className='bg-gradient-to-r from-rose-500 via-pink-500 to-red-500 hover:from-rose-600 hover:via-pink-600 hover:to-red-600 border-0 shadow-2xl backdrop-blur-xl text-white text-xs font-bold px-3 py-1.5 rounded-full animate-in slide-in-from-right-5'>
-              🔥 AHORRA {Math.round(((product.price - product.priceOffer) / product.price) * 100)}%
+              🔥 HASTA -{discountPercentage}%
             </Badge>
           )}
-          {product.variant.length > 0 && (
+          {hasVariants && (
             <Badge className='backdrop-blur-xl bg-gradient-to-r from-violet-500/90 to-purple-500/90 border-0 shadow-xl text-white text-xs font-semibold px-3 py-1.5 rounded-full'>
               <Layers className='w-3 h-3 mr-1' />
-              {product.variant.length} {product.variant.length === 1 ? "Variante" : "Variantes"}
+              {product.variants.length} {product.variants.length === 1 ? "Variante" : "Variantes"}
             </Badge>
           )}
         </div>
@@ -116,9 +207,9 @@ export default function TemplateProductDashboard({
           {/* Categorías */}
           {product.categories && product.categories.length > 0 && (
             <div className='flex flex-row overflow-x-auto gap-2 scroll-personalizado pb-1'>
-              {product.categories.map((cat, i) => (
+              {product.categories.map((cat) => (
                 <p
-                  key={i}
+                  key={cat.id}
                   className='text-xs font-semibold border border-primary/20 bg-gradient-to-r from-primary/10 to-primary/5 text-primary hover:border-primary/40 hover:bg-primary/15 transition-all px-3 py-1 rounded-full whitespace-nowrap'
                 >
                   {cat.title}
@@ -128,22 +219,28 @@ export default function TemplateProductDashboard({
           )}
 
           {/* Stock total */}
-          <div className='flex items-center gap-4 text-sm bg-gray-50 p-2 rounded-lg'>
+          <div className='flex items-center gap-4 text-sm bg-gray-50 /50 p-2 rounded-lg'>
             <div className='flex items-center gap-1.5'>
               <Package className='w-4 h-4 text-primary' />
               <span className='text-muted-foreground'>Stock total:</span>
               <span
-                className={`font-bold ${totalStock <= 5 ? "text-red-500" : totalStock <= 20 ? "text-orange-500" : "text-green-600"}`}
+                className={`font-bold ${
+                  totalStock <= 5
+                    ? "text-red-500"
+                    : totalStock <= 20
+                      ? "text-orange-500"
+                      : "text-green-600"
+                }`}
               >
                 {totalStock} unidades
               </span>
             </div>
           </div>
 
-          {/* Variantes - Colores y Talles */}
-          {product.variant.length > 0 ? (
+          {/* Variantes - AGRUPADAS POR TALLE */}
+          {hasVariants && (
             <div className='space-y-3'>
-              {/* Colores disponibles */}
+              {/* Resumen rápido de colores */}
               {uniqueColors.length > 0 && (
                 <div className='space-y-1.5'>
                   <div className='flex items-center gap-1.5 text-xs font-medium text-muted-foreground'>
@@ -151,147 +248,216 @@ export default function TemplateProductDashboard({
                     <span>Colores disponibles:</span>
                   </div>
                   <div className='flex flex-wrap gap-2'>
-                    {uniqueColors.map(([colorName, colorHex]) => (
-                      <div key={colorName} className='flex items-center gap-1.5'>
+                    {uniqueColors.map((color) => (
+                      <div key={color.name} className='flex items-center gap-1.5'>
                         <div
                           className='w-5 h-5 rounded-full border border-gray-300 shadow-sm'
-                          style={{ backgroundColor: colorHex }}
-                          title={colorName}
+                          style={{ backgroundColor: color.hex }}
+                          title={color.name}
                         />
-                        <span className='text-xs capitalize'>{colorName}</span>
+                        <span className='text-xs capitalize'>{color.name}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Talles disponibles */}
-              {uniqueSizes.length > 0 && (
-                <div className='space-y-1.5'>
-                  <div className='flex items-center gap-1.5 text-xs font-medium text-muted-foreground'>
-                    <Ruler className='w-3.5 h-3.5' />
-                    <span>Talles disponibles:</span>
-                  </div>
-                  <div className='flex flex-wrap gap-1.5'>
-                    {uniqueSizes.map((size) => (
-                      <Badge key={size} variant='outline' className='text-xs font-mono px-2 py-0.5'>
-                        {size}
-                      </Badge>
-                    ))}
-                  </div>
+              {/* Talles con sus colores - VISTA PRINCIPAL */}
+              <div className='space-y-2'>
+                <div className='flex items-center gap-1.5 text-xs font-medium text-muted-foreground'>
+                  <Ruler className='w-3.5 h-3.5' />
+                  <span>Talles disponibles ({variantsBySize.size})</span>
                 </div>
-              )}
 
-              {/* Detalle por variante */}
-              <details className='text-xs'>
-                <summary className='cursor-pointer text-primary hover:text-primary/80 font-medium mb-2'>
-                  Ver detalle por variante
-                </summary>
-                <div className='space-y-2 mt-2 max-h-40 overflow-y-auto'>
-                  {product.variant.map((variant: VariantType) => (
-                    <div key={variant.id} className='bg-gray-50 p-2 rounded-lg space-y-1'>
-                      <div className='flex items-center justify-between'>
-                        <div className='flex items-center gap-2'>
-                          <div
-                            className='w-3 h-3 rounded-full'
-                            style={{ backgroundColor: variant.colorHex }}
-                          />
-                          <span className='font-medium capitalize text-xs'>
-                            {variant.colorName}
-                          </span>
-                        </div>
-                        <Badge
-                          variant={variant.stock > 0 ? "default" : "destructive"}
-                          className='text-xs'
+                <div className='space-y-2'>
+                  {Array.from(variantsBySize.entries()).map(([size, variants]) => {
+                    const stockForSize = getStockBySize(size);
+                    const isExpanded = expandedSize === size;
+
+                    return (
+                      <div key={size} className='border rounded-lg overflow-hidden'>
+                        {/* Cabecera del talle */}
+                        <button
+                          onClick={() => toggleSizeExpand(size)}
+                          className='w-full flex items-center justify-between p-3 bg-gray-50 /30 hover:bg-gray-100 -800/50 transition-colors'
                         >
-                          Stock: {variant.stock}
+                          <div className='flex items-center gap-3'>
+                            <span className='font-bold text-md'>{size}</span>
+                            <Badge
+                              variant={stockForSize > 0 ? "default" : "destructive"}
+                              className='text-xs'
+                            >
+                              {stockForSize > 0 ? `${stockForSize} unidades` : "Sin stock"}
+                            </Badge>
+                          </div>
+                          <div className='flex items-center gap-2'>
+                            <div className='flex -space-x-1'>
+                              {variants.slice(0, 3).map((v) => (
+                                <div
+                                  key={v.colorHex}
+                                  className='w-5 h-5 rounded-full border-2 border-white shadow-sm'
+                                  style={{ backgroundColor: v.colorHex }}
+                                  title={v.colorName}
+                                />
+                              ))}
+                              {variants.length > 3 && (
+                                <span className='text-xs text-muted-foreground ml-1'>
+                                  +{variants.length - 3}
+                                </span>
+                              )}
+                            </div>
+                            <svg
+                              className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                              fill='none'
+                              stroke='currentColor'
+                              viewBox='0 0 24 24'
+                            >
+                              <path
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                strokeWidth={2}
+                                d='M19 9l-7 7-7-7'
+                              />
+                            </svg>
+                          </div>
+                        </button>
+
+                        {/* Detalle de colores para este talle (expandible) */}
+                        {isExpanded && (
+                          <div className='p-3 border-t space-y-2'>
+                            <div className='text-xs font-medium text-muted-foreground mb-2'>
+                              Colores disponibles para talle {size}:
+                            </div>
+                            <div className='grid grid-cols-1 gap-2'>
+                              {variants.map((variant) => {
+                                const priceInfo = getPriceForSizeAndColor(size, variant.colorHex);
+                                const hasStockColor = variant.stock > 0;
+
+                                return (
+                                  <div
+                                    key={variant.id}
+                                    className={`flex items-center justify-between p-2 rounded-lg ${
+                                      hasStockColor ? "bg-gray-50 /20" : "bg-red-50 /10 opacity-60"
+                                    }`}
+                                  >
+                                    <div className='flex items-center gap-3'>
+                                      <div
+                                        className='w-6 h-6 rounded-full border shadow-sm'
+                                        style={{ backgroundColor: variant.colorHex }}
+                                      />
+                                      <div>
+                                        <span className='text-sm font-medium capitalize'>
+                                          {variant.colorName}
+                                        </span>
+                                        {!hasStockColor && (
+                                          <Badge variant='destructive' className='ml-2 text-xs'>
+                                            Agotado
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    </div>
+                                    <div className='flex items-center gap-3'>
+                                      <div className='text-right'>
+                                        {priceInfo.hasOffer ? (
+                                          <>
+                                            <span className='text-sm font-bold text-green-600'>
+                                              ${priceInfo.priceOffer.toLocaleString("es-AR")}
+                                            </span>
+                                            <span className='text-xs text-gray-400 line-through ml-1'>
+                                              ${priceInfo.price.toLocaleString("es-AR")}
+                                            </span>
+                                          </>
+                                        ) : (
+                                          <span className='text-sm font-medium'>
+                                            ${priceInfo.price.toLocaleString("es-AR")}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <Badge
+                                        variant={hasStockColor ? "secondary" : "outline"}
+                                        className='text-xs min-w-[70px] justify-center'
+                                      >
+                                        {hasStockColor ? `Stock: ${variant.stock}` : "Sin stock"}
+                                      </Badge>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Resumen compacto (vista colapsada) */}
+              {/* <details className='text-xs'>
+                <summary className='cursor-pointer text-primary hover:text-primary/80 font-medium mb-2'>
+                  Ver resumen completo por talle y color
+                </summary>
+                <div className='space-y-3 mt-2 max-h-60 overflow-y-auto'>
+                  {Array.from(variantsBySize.entries()).map(([size, variants]) => (
+                    <div key={size} className='bg-gray-50 /30 p-2 rounded-lg'>
+                      <div className='font-bold text-sm mb-2 flex items-center gap-2'>
+                        <Ruler className='w-3 h-3' />
+                        Talle {size}
+                        <Badge variant='outline' className='text-xs'>
+                          {variants.length} {variants.length === 1 ? "color" : "colores"}
                         </Badge>
                       </div>
-                      {variant.sizes.length > 0 && (
-                        <div className='flex flex-wrap gap-1 pl-5'>
-                          {variant.sizes.map((size) => (
-                            <span key={size} className='text-xs bg-gray-200 px-1.5 py-0.5 rounded'>
-                              {size}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                      {(variant.priceOffer > 1 ? variant.priceOffer : variant.price) > 0 && (
-                        <div className='pl-5 text-xs'>
-                          {variant.priceOffer > 1 ? (
-                            <>
-                              <span className='text-green-600 font-bold'>
-                                ${variant.priceOffer.toLocaleString("es-AR")}
+                      <div className='space-y-1.5'>
+                        {variants.map((variant) => (
+                          <div key={variant.id} className='flex items-center justify-between pl-2'>
+                            <div className='flex items-center gap-2'>
+                              <div
+                                className='w-3 h-3 rounded-full'
+                                style={{ backgroundColor: variant.colorHex }}
+                              />
+                              <span className='text-xs capitalize'>{variant.colorName}</span>
+                            </div>
+                            <div className='flex items-center gap-3'>
+                              <span className='text-xs'>
+                                {variant.priceOffer > 0 ? (
+                                  <>
+                                    <span className='text-green-600 font-bold'>
+                                      ${variant.priceOffer.toLocaleString("es-AR")}
+                                    </span>
+                                    <span className='text-gray-400 line-through ml-1 text-[10px]'>
+                                      ${variant.price.toLocaleString("es-AR")}
+                                    </span>
+                                  </>
+                                ) : (
+                                  `$${variant.price.toLocaleString("es-AR")}`
+                                )}
                               </span>
-                              <span className='text-gray-400 line-through ml-2'>
-                                ${variant.price.toLocaleString("es-AR")}
-                              </span>
-                            </>
-                          ) : (
-                            <span className='font-medium'>
-                              ${variant.price.toLocaleString("es-AR")}
-                            </span>
-                          )}
-                        </div>
-                      )}
+                              <Badge
+                                variant={variant.stock > 0 ? "default" : "destructive"}
+                                className='text-[10px] px-1.5'
+                              >
+                                {variant.stock > 0 ? `${variant.stock}u` : "agotado"}
+                              </Badge>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>
-              </details>
-            </div>
-          ) : (
-            // Producto sin variantes (stock simple)
-            <div className='space-y-2'>
-              <div className='flex items-center justify-between text-sm'>
-                <span className='text-muted-foreground'>Stock:</span>
-                <span
-                  className={`font-bold ${product.stock <= 5 ? "text-red-500" : "text-primary"}`}
-                >
-                  {product.stock} unidades
-                </span>
-              </div>
-              {product.sizes && product.sizes.length > 0 && (
-                <div className='flex items-center gap-2 text-sm flex-wrap'>
-                  <span className='text-muted-foreground'>Talles:</span>
-                  <div className='flex gap-1.5 flex-wrap'>
-                    {product.sizes.map((size) => (
-                      <Badge key={size} variant='outline' className='text-xs'>
-                        {size}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
+              </details> */}
             </div>
           )}
+        </div>
 
-          {/* Precios */}
-          <div className='pt-2 border-t border-gray-100 '>
-            {product.priceOffer && product.priceOffer > 1 ? (
-              <div className='flex items-baseline gap-3 flex-wrap'>
-                <span className='text-2xl font-black bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent'>
-                  $
-                  {product.priceOffer.toLocaleString("es-AR", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </span>
-                <span className='text-base text-gray-400 line-through'>
-                  $
-                  {product.price.toLocaleString("es-AR", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </span>
-              </div>
-            ) : (
-              <span className='text-2xl font-black bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent'>
-                $
-                {product.price.toLocaleString("es-AR", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-              </span>
+        {/* Precios */}
+        <div className='pt-2 border-t border-gray-100  mt-2'>
+          <div className='flex items-baseline gap-2 flex-wrap'>
+            <span className='text-xl font-bold text-primary'>{priceDisplay}</span>
+            {hasDiscount && discountPercentage > 0 && (
+              <Badge variant='secondary' className='text-xs bg-green-100 text-green-700'>
+                Ahorra hasta {discountPercentage}%
+              </Badge>
             )}
           </div>
         </div>

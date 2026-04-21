@@ -64,7 +64,7 @@ export function Sidebar() {
             <UserCircle className='w-8 h-8' />
           </div>
           <div>
-            <h2 className='font-semibold text-foreground'>{user?.name}</h2>
+            <h2 className='font-semibold text-secondary'>{user?.name}</h2>
             <p className='text-xs text-muted-foreground'>Admin Panel</p>
           </div>
         </div>
@@ -95,7 +95,7 @@ export function Sidebar() {
 
       <div className='p-4 border-t border-border'>
         <div className='mb-3 px-3'>
-          <p className='text-sm font-medium text-foreground'>{user?.name}</p>
+          <p className='text-sm font-medium text-secondary'>{user?.name}</p>
           <p className='text-xs text-muted-foreground'>{user?.email}</p>
         </div>
         <Button onClick={handleLogout} variant='secondary' className='w-full hover:opacity-80'>

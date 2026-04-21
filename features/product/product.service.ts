@@ -277,7 +277,7 @@ export async function getShoppingCartService(shoppingCartIds: string[]) {
       where: {
         id: shoppingCartIds,
       },
-      attributes: ["id", "title", "price", "priceOffer", "variant", "images"],
+      attributes: ["id", "title", "price", "priceOffer", "variants", "images"],
     });
     return products;
   } catch (e) {
@@ -290,7 +290,7 @@ export async function getPriceFilterService() {
   try {
     const products = await Product.findAll({
       where: { isActive: true },
-      attributes: ["id", "price", "priceOffer", "variant"],
+      attributes: ["id", "price", "priceOffer", "variants"],
       raw: true,
     });
 
@@ -339,7 +339,7 @@ export async function getMetricsService() {
 
     // 3. Obtener todos los productos activos para calcular modelos y ofertas
     const products = await Product.findAll({
-      attributes: ["id", "variant", "price", "priceOffer"],
+      attributes: ["id", "variants", "price", "priceOffer"],
       raw: true, // Esto devuelve objetos planos en lugar de instancias
     });
 

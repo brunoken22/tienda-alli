@@ -55,7 +55,7 @@ const Product = sequelize.define(
       type: DataTypes.ARRAY(DataTypes.STRING),
       defaultValue: [],
     },
-    variant: {
+    variants: {
       type: DataTypes.JSONB,
       defaultValue: [],
       validate: {
@@ -69,8 +69,8 @@ const Product = sequelize.define(
             if (!v.id || typeof v.id !== "string") {
               throw new Error(`variant[${index}].id debe ser un string`);
             }
-            if (!Array.isArray(v.sizes)) {
-              throw new Error(`variant[${index}].sizes debe ser un array`);
+            if (typeof v.size !== "string") {
+              throw new Error(`variant[${index}].size debe ser un string`);
             }
             if (!v.colorName || typeof v.colorName !== "string") {
               throw new Error(`variant[${index}].color debe ser un string`);

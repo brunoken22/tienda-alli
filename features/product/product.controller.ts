@@ -16,6 +16,8 @@ import {
 } from "./product.service";
 import { deleteImages, uploadImages } from "@/lib/cloudinary";
 import { ShoppingCart } from "@/types/shopping-cart";
+import Product from "./product.model";
+import { where } from "sequelize";
 
 export async function getProductsController(req: Request) {
   try {
@@ -79,7 +81,7 @@ export async function createProductController(formData: FormData) {
     }
     generateImg = await uploadImages(formDataImages);
 
-    const variantFormData = formData.getAll("variant");
+    const variantFormData = formData.getAll("variants");
     const variant: VariantType[] = variantFormData.map((variantData) => {
       const convertVariant = JSON.parse(variantData.toString());
       return {
@@ -97,7 +99,7 @@ export async function createProductController(formData: FormData) {
       // category: formData.getAll("category") as string[],
       images: generateImg.map((image) => image.url),
       imagesId: generateImg.map((image) => image.public_id),
-      variant: variant.length ? variant : [],
+      variants: variant.length ? variant : [],
       sizes: formData.getAll("sizes") as string[],
       isActive: true,
       stock: Number(formData.get("stock")),
@@ -155,7 +157,7 @@ export async function editProductController(id: string, formData: FormData) {
 
     generateImg = await uploadImages(formDataImages);
 
-    const variantFormData = formData.getAll("variant");
+    const variantFormData = formData.getAll("variants");
 
     const variant: VariantType[] = variantFormData.map((variantData) => {
       const convertVariant = JSON.parse(variantData.toString());
@@ -172,7 +174,7 @@ export async function editProductController(id: string, formData: FormData) {
       description: formData.get("description") as string,
       images: generateImg.map((image) => image?.url),
       imagesId: generateImg.map((image) => image?.public_id),
-      variant: variant,
+      variants: variant,
       sizes: formData.getAll("sizes") as string[],
       isActive: true,
       stock: Number(formData.get("stock")),
@@ -249,7 +251,7 @@ export async function getOfferProductsController() {
   }
 }
 
-export async function getShoppingCartController(shoppingCart: Omit<ShoppingCart, "variant">[]) {
+export async function getShoppingCartController(shoppingCart: Omit<ShoppingCart, "variants">[]) {
   try {
     const shoppingCartIds: string[] = shoppingCart.map((item) => item.id);
     const responseService = await getShoppingCartService(shoppingCartIds);
@@ -268,7 +270,7 @@ export async function getShoppingCartController(shoppingCart: Omit<ShoppingCart,
       const variant = (findProduct.dataValues.variant as VariantType[]).find(
         (variantItem: VariantType) => variantItem.id === product.variantId,
       );
-      const size = variant?.sizes.find((size) => size === product.variantSize);
+      const size = variant?.size === product.variantSize;
 
       if (!variant && !size) {
         return null;
@@ -353,3 +355,82 @@ export async function getProductsSitemapController() {
     throw new Error(error.message);
   }
 }
+
+// Función para migrar productos antiguos a nueva estructura
+// function migrateProductToNewStructure(oldProduct: ProductType) {
+//   const newVariants: VariantType[] = [];
+
+//   // Si el producto tiene variantes en el formato antiguo
+//   if (oldProduct.variants && oldProduct.variants.length > 0) {
+//     for (const oldVariant of oldProduct.variants) {
+//       // Si tiene múltiples talles, crear una variante por cada talle
+//       if (oldVariant.sizes && oldVariant.sizes.length > 0) {
+//         // Distribuir el stock equitativamente entre los talles
+//         const stockPerSize = Math.floor(oldVariant.stock / oldVariant.sizes.length);
+//         const remainingStock = oldVariant.stock % oldVariant.sizes.length;
+
+//         for (let i = 0; i < oldVariant.sizes.length; i++) {
+//           const size = oldVariant.sizes[i];
+//           // Asignar stock: el último talle recibe el resto si hay división inexacta
+//           const sizeStock =
+//             i === oldVariant.sizes.length - 1 ? stockPerSize + remainingStock : stockPerSize;
+
+//           newVariants.push({
+//             id: crypto.randomUUID(),
+//             colorName: oldVariant.colorName,
+//             colorHex: oldVariant.colorHex,
+//             size: size,
+//             price: oldVariant.price,
+//             priceOffer: oldVariant.priceOffer || 0,
+//             stock: sizeStock,
+//           });
+//         }
+//       } else {
+//         // Si no tiene talles, crear una variante sin talle (o con talle "ÚNICO")
+//         newVariants.push({
+//           id: crypto.randomUUID(),
+//           colorName: oldVariant.colorName,
+//           colorHex: oldVariant.colorHex,
+//           size: "ÚNICO",
+//           price: oldVariant.price,
+//           priceOffer: oldVariant.priceOffer || 0,
+//           stock: oldVariant.stock,
+//         });
+//       }
+//     }
+//   }
+//   // Retornar el producto con la nueva estructura
+//   return {
+//     id: oldProduct.id,
+//     title: oldProduct.title,
+//     description: oldProduct.description,
+//     categories: oldProduct.categories,
+//     images: oldProduct.images,
+//     imagesId: oldProduct.imagesId,
+//     isActive: oldProduct.isActive,
+//     variants: newVariants, // ← Nueva estructura
+//   };
+// }
+
+// // Función para migrar un array de productos
+// export async function migrateAllProducts() {
+//   try {
+//     const migratedProducts: ProductType[] = [];
+//     const oldProducts = await Product.findAll();
+//     for (const oldProduct of oldProducts) {
+//       const migrated = migrateProductToNewStructure(oldProduct.dataValues);
+//       migratedProducts.push(migrated);
+//     }
+//     // console.log("Product:", migratedProducts[0]);
+//     const response = await Promise.all(
+//       migratedProducts.map(
+//         async (product) =>
+//           await Product.update({ variants: product.variants }, { where: { id: product.id } }),
+//       ),
+//     );
+//     return response;
+//   } catch (e) {
+//     console.error("Error en migrateAllProducts:", e);
+//     return e;
+//   }
+// }

@@ -21,7 +21,7 @@ export default function Modal({ closeModal }: ModalProps) {
   const [showCopySuccess, setShowCopySuccess] = useState(false);
 
   // Calcular total
-  const calculateTotal = useCallback((items: Omit<ShoppingCart, "variant" | "stock">[]) => {
+  const calculateTotal = useCallback((items: Omit<ShoppingCart, "variants" | "stock">[]) => {
     return items.reduce(
       (accumulator, item) =>
         accumulator + (item.priceOffer > 0 ? item.priceOffer : item.price) * (item.quantity || 1),

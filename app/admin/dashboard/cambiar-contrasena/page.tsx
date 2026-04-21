@@ -98,7 +98,7 @@ export default function PasswordBuilder() {
     const responseResetPassword = await updateResetPassword(
       user?.id,
       oldPassword,
-      confirmPassword.trim()
+      confirmPassword.trim(),
     );
     if (responseResetPassword.success) {
       setIsSubmitted(true);
@@ -138,7 +138,7 @@ export default function PasswordBuilder() {
               <button
                 type='button'
                 onClick={() => setShowOldPassword(!showOldPassword)}
-                className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
+                className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-secondary transition-colors'
                 aria-label={showOldPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
               >
                 {showOldPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -163,7 +163,7 @@ export default function PasswordBuilder() {
               <button
                 type='button'
                 onClick={() => setShowPassword(!showPassword)}
-                className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
+                className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-secondary transition-colors'
                 aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -183,7 +183,7 @@ export default function PasswordBuilder() {
               <div className='w-full bg-muted rounded-full h-2 overflow-hidden'>
                 <div
                   className={`h-full transition-all duration-300 ${getStrengthColor(
-                    strength.level
+                    strength.level,
                   )}`}
                   style={{ width: `${strength.score}%` }}
                 />
@@ -231,7 +231,7 @@ export default function PasswordBuilder() {
               <button
                 type='button'
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
+                className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-secondary transition-colors'
                 aria-label={showConfirmPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
               >
                 {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -265,8 +265,8 @@ export default function PasswordBuilder() {
                   {strength.score < 75
                     ? "más fuerte"
                     : passwordsMatch
-                    ? "confirmada"
-                    : "confirmada correctamente"}
+                      ? "confirmada"
+                      : "confirmada correctamente"}
                 </strong>
               </p>
             </div>

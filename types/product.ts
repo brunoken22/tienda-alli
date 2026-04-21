@@ -2,7 +2,7 @@ import { CategoryType } from "./category";
 
 export type VariantType = {
   id: string;
-  sizes: string[];
+  size: string;
   colorName: string;
   colorHex: string;
   stock: number;
@@ -14,16 +14,20 @@ export type ProductType = {
   id: string;
   title: string;
   description: string;
-  price: number;
-  priceOffer: number;
   categoryFormData?: string[];
   categories: CategoryType[];
   images: string[];
   imagesId: string[];
   imagesFormData?: File[];
-  stock: number;
   sizes: string[];
-  variant: VariantType[] | [];
+
+  //PRODUCTOS SIN VARIANTES (ÚNICOS)
+  stock: number;
+  price: number;
+  priceOffer: number;
+
+  variants: VariantType[] | [];
+
   isActive: boolean;
 };
 

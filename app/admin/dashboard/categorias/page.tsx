@@ -166,12 +166,12 @@ export default function CategoriasPage() {
   const handleActiveCategory = async (
     active: boolean,
     id: string,
-    setIsActive: Dispatch<SetStateAction<boolean>>
+    setIsActive: Dispatch<SetStateAction<boolean>>,
   ) => {
     if (
       active === false &&
       confirm(
-        "¿Desactivar esta categoría? Los productos relacionados dejarán de aparecer en la tienda."
+        "¿Desactivar esta categoría? Los productos relacionados dejarán de aparecer en la tienda.",
       ) === false
     ) {
       return;
@@ -195,7 +195,7 @@ export default function CategoriasPage() {
     <div className='container mx-auto py-8 px-4'>
       <div className='flex max-sm:flex-col max-sm:text-center max-md:gap-4 items-center justify-between mb-8'>
         <div>
-          <h1 className='text-3xl font-bold text-foreground'>Gestión de Categorías</h1>
+          <h1 className='text-3xl font-bold text-secondary'>Gestión de Categorías</h1>
           <p className='text-muted-foreground mt-1'>
             Administra las categorías de productos de tu tienda
           </p>

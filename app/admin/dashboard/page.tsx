@@ -221,16 +221,16 @@ export default function DashboardPage() {
                             className='h-12 w-12  rounded-full object-fill'
                           />
                         </div>
-                        {product.variant.length > 3 && (
+                        {product.variants.length > 3 && (
                           <div className='px-2 py-0.5 rounded-full text-[10px] font-bold bg-muted border'>
-                            +{product.variant.length - 3}
+                            +{product.variants.length - 3}
                           </div>
                         )}
                       </div>
                       <div className='flex-1 min-w-0  grid grid-cols-1'>
                         <p className='text-sm font-medium truncate'>{product.title}</p>
                         <p className='text-xs text-muted-foreground'>
-                          {product.variant.length} variantes
+                          {product.variants.length} variantes
                         </p>
                       </div>
                     </div>

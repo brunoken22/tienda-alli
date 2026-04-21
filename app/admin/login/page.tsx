@@ -55,7 +55,7 @@ export default function LoginPage() {
         <CardContent className='mt-4'>
           <form onSubmit={handleSubmit} className='space-y-4'>
             <div className='space-y-2'>
-              <Label htmlFor='email' className='text-foreground'>
+              <Label htmlFor='email' className='text-secondary'>
                 Correo electrónico
               </Label>
               <div className='relative'>
@@ -66,14 +66,14 @@ export default function LoginPage() {
                   placeholder='admin@tienda.com'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className='pl-9 bg-secondary border-border text-foreground'
+                  className='pl-9 bg-secondary border-border text-secondary'
                   required
                 />
               </div>
             </div>
 
             <div className='space-y-2'>
-              <Label htmlFor='password' className='text-foreground'>
+              <Label htmlFor='password' className='text-secondary'>
                 Contraseña
               </Label>
               <div className='relative'>
@@ -84,13 +84,13 @@ export default function LoginPage() {
                   placeholder='••••••••'
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className='pl-9 pr-9 bg-secondary border-border text-foreground'
+                  className='pl-9 pr-9 bg-secondary border-border text-secondary'
                   required
                 />
                 <button
                   type='button'
                   onClick={togglePasswordVisibility}
-                  className='absolute right-3 top-3 h-4 w-4 text-muted-foreground hover:text-foreground transition-colors'
+                  className='absolute right-3 top-3 h-4 w-4 text-muted-foreground hover:text-secondary transition-colors'
                   aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
