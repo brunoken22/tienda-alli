@@ -16,8 +16,6 @@ import {
 } from "./product.service";
 import { deleteImages, uploadImages } from "@/lib/cloudinary";
 import { ShoppingCart } from "@/types/shopping-cart";
-import Product from "./product.model";
-import { where } from "sequelize";
 
 export async function getProductsController(req: Request) {
   try {

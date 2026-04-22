@@ -227,7 +227,7 @@ export default function TemplateProductDashboard({
                 className={`font-bold ${
                   totalStock <= 5
                     ? "text-red-500"
-                    : totalStock <= 20
+                    : totalStock <= 10
                       ? "text-orange-500"
                       : "text-green-600"
                 }`}

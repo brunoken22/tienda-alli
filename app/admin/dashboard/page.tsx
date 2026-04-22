@@ -210,7 +210,7 @@ export default function DashboardPage() {
                     className='bg-secondary hover:opacity-80 flex items-center justify-between p-3 rounded-lg border hover:bg-accent/50 transition-colors'
                   >
                     <div className='flex items-center gap-3 flex-1 '>
-                      <div className='flex gap-1.5 flex-wrap'>
+                      <div className='flex items-center gap-1.5 flex-wrap'>
                         <div>
                           <Image
                             src={product.images[0]}
@@ -222,16 +222,14 @@ export default function DashboardPage() {
                           />
                         </div>
                         {product.variants.length > 3 && (
-                          <div className='px-2 py-0.5 rounded-full text-[10px] font-bold bg-muted border'>
+                          <div className='px-2 py-0.5 h-max rounded-full text-[10px] font-bold bg-gray-50 border'>
                             +{product.variants.length - 3}
                           </div>
                         )}
                       </div>
                       <div className='flex-1 min-w-0  grid grid-cols-1'>
                         <p className='text-sm font-medium truncate'>{product.title}</p>
-                        <p className='text-xs text-muted-foreground'>
-                          {product.variants.length} variantes
-                        </p>
+                        <p className='text-xs '>{product.variants.length} variantes</p>
                       </div>
                     </div>
                     <div className='text-right mx-2'>
