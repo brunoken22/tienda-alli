@@ -503,11 +503,11 @@ export function ProductDialog({
         </DialogHeader>
 
         {/* Tabs de navegación */}
-        <div className='flex border-b px-6 gap-1'>
+        <div className='flex border-b  gap-1'>
           <button
             type='button'
             onClick={() => setActiveTab("basic")}
-            className={`px-4 py-2 text-sm font-medium transition-all rounded-t-lg ${
+            className={`px-2 py-2 text-sm font-medium transition-all rounded-t-lg ${
               activeTab === "basic"
                 ? "bg-primary text-secondary"
                 : "text-muted-foreground hover:text-primary"
@@ -518,7 +518,7 @@ export function ProductDialog({
           <button
             type='button'
             onClick={() => setActiveTab("variants")}
-            className={`px-4 py-2 text-sm font-medium transition-all rounded-t-lg ${
+            className={`px-2 py-2 text-sm font-medium transition-all rounded-t-lg ${
               activeTab === "variants"
                 ? "bg-primary text-secondary"
                 : "text-muted-foreground hover:text-primary"
@@ -529,7 +529,7 @@ export function ProductDialog({
           <button
             type='button'
             onClick={() => setActiveTab("images")}
-            className={`px-4 py-2 text-sm font-medium transition-all rounded-t-lg ${
+            className={`px-2 py-2 text-sm font-medium transition-all rounded-t-lg ${
               activeTab === "images"
                 ? "bg-primary text-secondary"
                 : "text-muted-foreground hover:text-primary"
@@ -552,7 +552,7 @@ export function ProductDialog({
         )}
 
         <form onSubmit={handleSubmit} className='flex-1 '>
-          <div className='p-6 space-y-6'>
+          <div className=' space-y-6'>
             {/* TAB 1: INFORMACIÓN BÁSICA */}
             {activeTab === "basic" && (
               <div className='space-y-5'>
