@@ -491,7 +491,7 @@ export function ProductDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-[1000px] max-h-[90vh] overflow-auto flex flex-col bg-secondary border-primary p-0'>
-        <DialogHeader className='p-6 pb-0'>
+        <DialogHeader className='p-2 pb-0'>
           <DialogTitle className='text-primary'>
             {product ? "✏️ Editar Producto" : "✨ Crear Nuevo Producto"}
           </DialogTitle>
