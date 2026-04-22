@@ -102,12 +102,12 @@ export default function ProductCarousel({
                           <span className='text-2xl font-bold text-green-700'>
                             ${product.priceOffer.toLocaleString()}
                           </span>
-                          <span className='text-sm text-muted-foreground line-through'>
+                          <span className='text-sm  line-through'>
                             ${product.price.toLocaleString()}
                           </span>
                         </>
                       ) : (
-                        <span className='text-2xl font-bold text-secondary'>
+                        <span className='text-2xl font-bold '>
                           ${product.price.toLocaleString()}
                         </span>
                       )}
