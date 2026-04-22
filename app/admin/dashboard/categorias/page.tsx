@@ -194,8 +194,8 @@ export default function CategoriasPage() {
   return (
     <div className='container mx-auto py-8 px-4'>
       <div className='flex max-sm:flex-col max-sm:text-center max-md:gap-4 items-center justify-between mb-8'>
-        <div>
-          <h1 className='text-3xl font-bold text-secondary'>Gestión de Categorías</h1>
+        <div className='border-l-4 p-2 max-sm:border-0 max-sm:p-0 border-primary'>
+          <h1 className='text-3xl font-bold text-primary'>Gestión de Categorías</h1>
           <p className='text-muted-foreground mt-1'>
             Administra las categorías de productos de tu tienda
           </p>
