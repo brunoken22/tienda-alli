@@ -60,7 +60,7 @@ export async function sendEmailPasswordController(email: string) {
     }
     const passwordService = await sendEmailPasswordService(email);
     if (typeof passwordService === "string") {
-      return { data: passwordService, success: false };
+      throw new Error(passwordService);
     }
     return { data: passwordService, success: true };
   } catch (e) {

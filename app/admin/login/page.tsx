@@ -66,7 +66,7 @@ export default function LoginPage() {
                   placeholder='admin@tienda.com'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className='pl-9 bg-secondary border-border text-secondary'
+                  className='pl-9 bg-secondary border-border '
                   required
                 />
               </div>
@@ -84,7 +84,7 @@ export default function LoginPage() {
                   placeholder='••••••••'
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className='pl-9 pr-9 bg-secondary border-border text-secondary'
+                  className='pl-9 pr-9 bg-secondary border-border'
                   required
                 />
                 <button

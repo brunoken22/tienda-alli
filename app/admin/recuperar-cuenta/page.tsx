@@ -215,7 +215,7 @@ export default function ForgotPasswordPage() {
                       className={emailError ? "border-destructive" : ""}
                     />
                     {emailError && (
-                      <p className='text-sm text-destructive flex items-center gap-1'>
+                      <p className='text-sm text-red-500 flex items-center gap-1'>
                         <AlertCircle size={16} /> {emailError}
                       </p>
                     )}
