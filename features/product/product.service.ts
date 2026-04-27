@@ -1,6 +1,6 @@
 import { ProductQueryParams, ProductType, VariantType } from "@/types/product";
 import Product from "./product.model";
-import { Op, Sequelize } from "sequelize";
+import { Op } from "sequelize";
 import Category from "../category/category.model";
 import sequelize from "@/config/sequelize";
 
@@ -24,86 +24,141 @@ export async function getProductsService(filters?: ProductQueryParams) {
     // Construir condiciones de búsqueda
     const whereConditions: any = {};
 
-    // Filtrar por nombre/título
     if (search) {
       whereConditions.title = {
         [Op.iLike]: `%${search}%`,
       };
     }
-    // Filtrar por estado activo
+
     if (isActive !== undefined) {
       whereConditions.isActive = isActive;
     }
 
-    // Filtrar por precio
-    if (minPrice !== undefined || maxPrice !== undefined) {
-      whereConditions.price = {};
-      if (minPrice !== undefined) {
-        whereConditions.price[Op.gte] = minPrice;
-      }
-      if (maxPrice !== undefined) {
-        whereConditions.price[Op.lte] = maxPrice;
-      }
-    }
-
-    // Filtrar por productos en oferta (priceOffer > 0 y menor que price)
-    if (onSale) {
-      whereConditions.priceOffer = {
-        [Op.gt]: 0,
-        [Op.lt]: Sequelize.col("price"),
-      };
-    }
-
-    // Construir condiciones para categorías si se especifica
+    // Construir include para categorías
     const includeConditions: any[] = [
       {
         model: Category,
         as: "categories",
         through: { attributes: [] },
+        required: false,
       },
     ];
-
-    if (isActive !== undefined) {
-      includeConditions[0].where = {
-        isActive: true,
-      };
-    }
 
     if (category) {
       includeConditions[0].where = {
         title: category,
-        ...includeConditions[0].where,
+        isActive: true,
       };
+      includeConditions[0].required = true;
     }
 
-    const result: any = await Product.findOne({
-      where: whereConditions,
-      attributes: [
-        [sequelize.fn("SUM", sequelize.literal("price * stock")), "totalInventoryValue"],
-      ],
-      raw: true,
-    });
-
-    const totalPrice = result?.totalInventoryValue || 0;
-
-    // Obtener total de productos para paginación
-    const total = await Product.count({
-      where: whereConditions,
-      include: includeConditions,
-      distinct: true,
-    });
-    // Obtener productos con paginación
+    // ============ OBTENER PRODUCTOS ============
     const products = await Product.findAll({
       where: whereConditions,
       include: includeConditions,
       limit,
       offset,
       order: [[sortBy, sortOrder]],
+      // distinct: true,
     });
 
+    // ============ PROCESAR PRODUCTOS CON VARIANTES JSON ============
+    const productsWithAggregates = products.map((product) => {
+      const productData = product.toJSON();
+      const variants = (productData.variants as VariantType[]) || [];
+
+      if (variants.length === 0) {
+        return {
+          ...productData,
+          minPrice: 0,
+          maxPrice: 0,
+          totalStock: 0,
+          hasOffer: false,
+          bestDiscount: 0,
+          priceRange: "$0",
+        };
+      }
+
+      // Calcular precios (usando priceOffer si existe, sino price)
+      const prices = variants.map((v) =>
+        v.priceOffer && v.priceOffer > 0 ? v.priceOffer : v.price,
+      );
+      const minPriceValue = Math.min(...prices);
+      const maxPriceValue = Math.max(...prices);
+
+      // Calcular stock total
+      const totalStock = variants.reduce((sum, v) => sum + (v.stock || 0), 0);
+
+      // Verificar si hay oferta
+      const hasOffer = variants.some((v) => v.priceOffer && v.priceOffer > 0);
+
+      // Calcular mejor descuento
+      const bestDiscount = hasOffer
+        ? Math.max(
+            ...variants.map((v) => {
+              if (v.priceOffer && v.priceOffer > 0) {
+                return Math.round(((v.price - v.priceOffer) / v.price) * 100);
+              }
+              return 0;
+            }),
+          )
+        : 0;
+
+      // Formatear rango de precios
+      const priceRange =
+        minPriceValue === maxPriceValue
+          ? `$${minPriceValue.toLocaleString("es-AR")}`
+          : `$${minPriceValue.toLocaleString("es-AR")} - $${maxPriceValue.toLocaleString("es-AR")}`;
+
+      return {
+        ...productData,
+        minPrice: minPriceValue,
+        maxPrice: maxPriceValue,
+        totalStock,
+        hasOffer,
+        bestDiscount,
+        priceRange,
+      };
+    });
+
+    // ============ APLICAR FILTROS DE PRECIO Y OFERTA (post-query) ============
+    let filteredProducts = productsWithAggregates;
+
+    // Filtrar por precio mínimo
+    if (minPrice !== undefined) {
+      filteredProducts = filteredProducts.filter((p) => p.maxPrice >= minPrice);
+    }
+
+    // Filtrar por precio máximo
+    if (maxPrice !== undefined) {
+      filteredProducts = filteredProducts.filter((p) => p.minPrice <= maxPrice);
+    }
+
+    // Filtrar por productos en oferta
+    if (onSale) {
+      filteredProducts = filteredProducts.filter((p) => p.hasOffer === true);
+    }
+
+    // ============ CALCULAR TOTALES ============
+    const total = filteredProducts.length;
+
+    // Aplicar paginación después de filtrar
+    const paginatedProducts = filteredProducts.slice(offset, offset + limit);
+
+    // Calcular valor total del inventario
+    const totalInventoryValue = filteredProducts.reduce((sum, product) => {
+      const variants = (product.variants as VariantType[]) || [];
+      const productValue = variants.reduce((acc, variant) => {
+        const price =
+          variant.priceOffer && variant.priceOffer > 0 ? variant.priceOffer : variant.price;
+        return acc + price * (variant.stock || 0);
+      }, 0);
+      return sum + productValue;
+    }, 0);
+
     return {
-      products,
-      totalPrice,
+      products: paginatedProducts,
+      totalPrice: totalInventoryValue,
       pagination: {
         total,
         page,

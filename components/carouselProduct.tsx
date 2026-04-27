@@ -68,7 +68,7 @@ export default function ProductCarousel({
           <SwiperSlide key={product.id}>
             <Card className='bg-secondary/90 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1'>
               <CardContent className='p-0'>
-                <div className='h-56 overflow-hidden rounded-lg bg-muted pt-2'>
+                <div className='h-72 overflow-hidden rounded-lg bg-muted pt-2'>
                   {product.priceOffer ? (
                     <div className='absolute top-3 left-3 z-10 flex flex-col gap-1'>
                       <Badge className='bg-red-600 hover:bg-red-700 text-white font-semibold shadow-lg'>
@@ -87,7 +87,7 @@ export default function ProductCarousel({
                     alt={product.title}
                     title={product.title}
                     width={200}
-                    height={200}
+                    height={276}
                     className='h-full w-full object-cover transition-transform duration-500 hover:scale-110'
                   />
                 </div>
