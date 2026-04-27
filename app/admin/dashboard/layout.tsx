@@ -1,22 +1,20 @@
 "use client";
 
 import type React from "react";
-import { useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Sidebar } from "@/components/admin/sidebar";
-import { AuthContext } from "@/contexts/auth-context";
 import NavAdminMobile from "@/components/NavAdminMobile";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useContext(AuthContext);
-  const router = useRouter();
+  // const { user, isLoading } = useContext(AuthContext);
+  // const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  useEffect(() => {
-    if (!isLoading && !user) {
-      router.push("/admin/login");
-    }
-  }, [user, isLoading, router]);
+  // useEffect(() => {
+  //   if (!isLoading && !user) {
+  //     router.push("/admin/login");
+  //   }
+  // }, [user, isLoading, router]);
 
   return (
     <div className='relative'>

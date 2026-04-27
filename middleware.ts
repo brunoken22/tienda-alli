@@ -14,6 +14,7 @@ export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const method = request.method;
   const authToken = request.cookies.get("token_admin")?.value;
+  console.log("Middleware ejecutado para:", path, "Método:", method, "Token:", authToken);
   if (path.includes("/api/admin")) {
     if (method === "POST" || method === "PATCH" || method === "DELETE") {
       if (authToken) {
