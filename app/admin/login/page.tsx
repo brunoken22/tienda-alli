@@ -55,7 +55,7 @@ export default function LoginPage() {
         <CardContent className='mt-4'>
           <form onSubmit={handleSubmit} className='space-y-4'>
             <div className='space-y-2'>
-              <Label htmlFor='email' className='text-secondary'>
+              <Label htmlFor='email' className=''>
                 Correo electrónico
               </Label>
               <div className='relative'>
@@ -73,7 +73,7 @@ export default function LoginPage() {
             </div>
 
             <div className='space-y-2'>
-              <Label htmlFor='password' className='text-secondary'>
+              <Label htmlFor='password' className=''>
                 Contraseña
               </Label>
               <div className='relative'>
