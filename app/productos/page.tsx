@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import ProductosComponent from "@/components/productos";
+import { getCategories } from "@/lib/category";
+import { getPriceFilter } from "@/lib/price";
 
 export const metadata: Metadata = {
   title: "Productos ",
@@ -32,6 +34,10 @@ export const metadata: Metadata = {
   authors: [{ name: "Bruno ken", url: "https://brunoken.vercel.app/" }],
 };
 
-export default function Products() {
-  return <ProductosComponent />;
+export default async function Products() {
+  const categoriesData = await getCategories();
+
+  const priceFilterData = await getPriceFilter();
+
+  return <ProductosComponent categoriesData={categoriesData} priceFilterData={priceFilterData} />;
 }

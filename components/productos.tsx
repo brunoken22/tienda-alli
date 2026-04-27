@@ -31,11 +31,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CategoryType } from "@/types/category";
-import { getCategories } from "@/lib/category";
 import { PriceFilterType } from "@/types/price-filter";
-import { getPriceFilter } from "@/lib/price";
 
-export default function ProductosPage() {
+export default function ProductosPage({
+  categoriesData,
+  priceFilterData,
+}: {
+  categoriesData: CategoryType[];
+  priceFilterData: PriceFilterType;
+}) {
   const { replace } = useRouter();
   const [openInput, setOpenInput] = useState(false);
   const searchParams = useSearchParams();
@@ -55,10 +59,10 @@ export default function ProductosPage() {
     searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : 0,
   );
   const [priceFilter, setPriceFilter] = useState<PriceFilterType>({
-    maxPrice: 1000000,
-    minPrice: 0,
-    maxPriceOffer: 1000000,
-    minPriceOffer: 0,
+    maxPrice: priceFilterData.maxPrice || 1000000,
+    minPrice: priceFilterData.minPrice || 0,
+    maxPriceOffer: priceFilterData.maxPriceOffer || 1000000,
+    minPriceOffer: priceFilterData.minPriceOffer || 0,
   });
 
   const [maxPrice, setMaxPrice] = useState(
@@ -79,7 +83,7 @@ export default function ProductosPage() {
   const [openLinkProduct, setOpenLinkProduct] = useState<string[]>([]);
 
   //Categorias de los productos
-  const [categories, setCategories] = useState<CategoryType[]>([]);
+  const [categories, setCategories] = useState<CategoryType[]>(categoriesData || []);
 
   // Usar el hook existente pero con los nuevos parámetros
   const { data, isLoading } = GetDataProduct(
@@ -133,20 +137,17 @@ export default function ProductosPage() {
   ]);
 
   // Cargar categorías para el filtro
-  useEffect(() => {
-    const loadCategoriesAndPrice = async () => {
-      try {
-        const categoriesData = await getCategories();
-        setCategories(categoriesData);
-
-        const priceFilterData = await getPriceFilter();
-        setPriceFilter(priceFilterData);
-      } catch (error) {
-        console.error("Error loading categories:", error);
-      }
-    };
-    loadCategoriesAndPrice();
-  }, []);
+  // useEffect(() => {
+  //   const loadCategoriesAndPrice = async () => {
+  //     try {
+  //       setCategories(categoriesData);
+  //       setPriceFilter(priceFilterData);
+  //     } catch (error) {
+  //       console.error("Error loading categories:", error);
+  //     }
+  //   };
+  //   loadCategoriesAndPrice();
+  // }, []);
 
   const handleModValueFormSearch = (inputSearchFrom: string) => {
     setSearch(inputSearchFrom);
@@ -175,6 +176,7 @@ export default function ProductosPage() {
   const hasActiveFilters =
     search || category || minPrice > 0 || maxPrice < priceFilter.maxPrice || typeSearch.length > 0;
 
+  console.log("DATOS DEL PRECIO DEL FRILTRO: ", priceFilter, priceFilterData);
   return (
     <Suspense>
       <div className='min-h-screen max-md:p-3 py-8 px-2'>
@@ -265,7 +267,7 @@ export default function ProductosPage() {
                     min={priceFilter.minPrice}
                     max={priceFilter.maxPrice}
                     value={[minPrice, maxPrice]}
-                    onValueChange={(value: any) => {
+                    onValueChange={(value: number[]) => {
                       setMinPrice(value[0]);
                       setMaxPrice(value[1]);
                     }}
