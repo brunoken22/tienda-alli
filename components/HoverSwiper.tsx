@@ -27,8 +27,8 @@ export default function HoverImage({
         src={mainImage}
         alt={title}
         title={title}
-        width={300}
-        height={200}
+        fill
+        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
         className={`absolute inset-0 w-full h-full object-contain transition-all duration-500 ${
           isHovered ? "opacity-0 " : "opacity-100 "
         } ${classNameImg ? classNameImg : ""}`}
@@ -39,8 +39,8 @@ export default function HoverImage({
         src={hoverImage}
         alt={`${title} - vista alternativa`}
         title={title}
-        width={300}
-        height={200}
+        fill
+        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
         className={`absolute inset-0 w-full h-full object-contain transition-all duration-500 ${
           isHovered ? "opacity-100 " : "opacity-0"
         } ${classNameImg ? classNameImg : ""}`}

@@ -176,7 +176,6 @@ export default function ProductosPage({
   const hasActiveFilters =
     search || category || minPrice > 0 || maxPrice < priceFilter.maxPrice || typeSearch.length > 0;
 
-  console.log("DATOS DEL PRECIO DEL FRILTRO: ", priceFilter, priceFilterData);
   return (
     <Suspense>
       <div className='min-h-screen max-md:p-3 py-8 px-2'>
