@@ -40,19 +40,55 @@ import { Badge } from "../ui/badge";
 // Colores predefinidos
 const PREDEFINED_COLORS = [
   { name: "Rojo", hex: "#FF0000" },
+  { name: "Rojo Vino", hex: "#722F37" },
+  { name: "Rojo Tomate", hex: "#CE2939" },
   { name: "Verde", hex: "#00FF00" },
+  { name: "Verde Militar", hex: "#4B5320" },
+  { name: "Verde Oliva", hex: "#808000" },
+  { name: "Verde Menta", hex: "#98FF98" },
+  { name: "Verde Botella", hex: "#006A4E" },
+  { name: "Verde Agua", hex: "#B5E8E0" },
   { name: "Azul", hex: "#0000FF" },
+  { name: "Azul Marino", hex: "#001F5B" },
+  { name: "Azul Cielo", hex: "#87CEEB" },
+  { name: "Azul Petróleo", hex: "#005F6A" },
+  { name: "Azul Jean", hex: "#5B7FA6" },
+  { name: "Azul Royal", hex: "#4169E1" },
+  { name: "Azul Índigo", hex: "#4B0082" },
   { name: "Negro", hex: "#000000" },
   { name: "Blanco", hex: "#FFFFFF" },
+  { name: "Blanco Hueso", hex: "#FAF9F6" },
   { name: "Gris", hex: "#808080" },
+  { name: "Gris Claro", hex: "#D3D3D3" },
+  { name: "Gris Oscuro", hex: "#404040" },
+  { name: "Gris Perla", hex: "#E8E4E1" },
   { name: "Amarillo", hex: "#FFFF00" },
+  { name: "Amarillo Mostaza", hex: "#E1AD21" },
   { name: "Naranja", hex: "#FFA500" },
+  { name: "Naranja Quemado", hex: "#BF5700" },
   { name: "Rosa", hex: "#FFC0CB" },
+  { name: "Rosa Bebé", hex: "#FFB6C1" },
+  { name: "Rosa Palo", hex: "#E8B4B8" },
+  { name: "Rosa Fucsia", hex: "#FF0090" },
+  { name: "Rosa Salmón", hex: "#FA8072" },
   { name: "Morado", hex: "#800080" },
+  { name: "Lila", hex: "#C8A2C8" },
+  { name: "Lavanda", hex: "#E6E6FA" },
+  { name: "Violeta", hex: "#EE82EE" },
   { name: "Marrón", hex: "#A52A2A" },
+  { name: "Marrón Camel", hex: "#C19A6B" },
+  { name: "Marrón Chocolate", hex: "#7B3F00" },
   { name: "Turquesa", hex: "#40E0D0" },
+  { name: "Beige", hex: "#F5F0DC" },
+  { name: "Crema", hex: "#FFFDD0" },
+  { name: "Arena", hex: "#C2B280" },
+  { name: "Terracota", hex: "#E2725B" },
+  { name: "Coral", hex: "#FF7F50" },
+  { name: "Borgoña", hex: "#800020" },
+  { name: "Champagne", hex: "#F7E7CE" },
+  { name: "Caqui", hex: "#C3B091" },
+  { name: "Tiza", hex: "#F0EDE8" },
 ];
-
 // Talles predefinidos comunes (se pueden expandir con custom)
 const DEFAULT_PREDEFINED_SIZES = [
   "XS",
@@ -61,6 +97,22 @@ const DEFAULT_PREDEFINED_SIZES = [
   "L",
   "XL",
   "XXL",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
   "28",
   "30",
   "32",
@@ -897,6 +949,7 @@ export function ProductDialog({
                 )}
 
                 {/* LISTA DE VARIANTES */}
+                {/* LISTA DE VARIANTES - reemplaza el bloque "LISTA DE VARIANTES" existente */}
                 <div>
                   <div className='flex items-center justify-between mb-3'>
                     <Label className='font-semibold'>
@@ -933,119 +986,167 @@ export function ProductDialog({
                     </div>
                   )}
 
-                  {/* Listado */}
-                  <div className='space-y-2 max-h-[400px] overflow-y-auto'>
-                    {formData.variants.map((variant, idx) => (
-                      <Card key={variant.id} className='p-3 bg-primary/10'>
-                        <div className='flex items-center justify-between mb-2'>
-                          <div className='flex items-center gap-2'>
-                            <div
-                              className='w-5 h-5 rounded-full border'
-                              style={{ backgroundColor: variant.colorHex }}
-                            />
-                            <span className='text-sm font-medium'>
-                              {variant.colorName || "Sin color"}
-                            </span>
-                            <Badge variant='outline' className='text-xs'>
-                              Talle: {variant.size || "?"}
-                            </Badge>
-                          </div>
-                          <div className='flex gap-1'>
+                  {/* Vista agrupada por color */}
+                  <div className='space-y-3 max-h-[400px] overflow-y-auto'>
+                    {getUniqueColors().map((color) => {
+                      const colorVariants = formData.variants.filter(
+                        (v) => v.colorName === color.name,
+                      );
+                      return (
+                        <Card
+                          key={color.name}
+                          className='p-3 bg-primary/5 border border-primary/20'
+                        >
+                          {/* Header del grupo de color */}
+                          <div className='flex items-center justify-between mb-3'>
+                            <div className='flex items-center gap-2'>
+                              <div
+                                className='w-5 h-5 rounded-full border-2 border-white shadow'
+                                style={{ backgroundColor: color.hex }}
+                              />
+                              <span className='text-sm font-semibold'>{color.name}</span>
+                              <Badge variant='outline' className='text-xs'>
+                                {colorVariants.length} talle{colorVariants.length !== 1 ? "s" : ""}
+                              </Badge>
+                            </div>
+                            {/* Botón para eliminar todas las variantes de este color */}
                             <Button
                               type='button'
-                              size='icon'
+                              size='sm'
                               variant='ghost'
-                              className='h-7 w-7'
-                              onClick={() => toggleColorPicker(idx)}
-                            >
-                              <Palette className='h-3.5 w-3.5' />
-                            </Button>
-                            <Button
-                              type='button'
-                              size='icon'
-                              variant='ghost'
-                              className='h-7 w-7'
+                              className='h-6 px-2 text-red-400 hover:text-red-600 text-xs'
                               onClick={() => {
-                                const newVariant = { ...variant, id: crypto.randomUUID() };
                                 setFormData({
                                   ...formData,
-                                  variants: [...formData.variants, newVariant],
+                                  variants: formData.variants.filter(
+                                    (v) => v.colorName !== color.name,
+                                  ),
                                 });
                               }}
                             >
-                              <Copy className='h-3.5 w-3.5' />
-                            </Button>
-                            <Button
-                              type='button'
-                              size='icon'
-                              variant='ghost'
-                              className='h-7 w-7 text-red-500'
-                              onClick={() => removeVariant(idx)}
-                            >
-                              <Trash2 className='h-3.5 w-3.5' />
+                              <Trash2 className='h-3 w-3 mr-1' />
+                              Quitar color
                             </Button>
                           </div>
-                        </div>
 
-                        <div className='grid grid-cols-4 gap-2'>
-                          {/* Selector de talle con opción personalizada */}
-                          <div className='relative'>
-                            <select
-                              value={variant.size}
-                              onChange={(e) => {
-                                const newSize = e.target.value;
-                                if (newSize === "__custom__") {
-                                  // Mostrar prompt para talle personalizado
-                                  const customSize = prompt("Ingresa el talle personalizado:");
-                                  if (customSize && customSize.trim()) {
-                                    const upperSize = customSize.trim().toUpperCase();
-                                    if (!predefinedSizes.includes(upperSize)) {
-                                      setPredefinedSizes([...predefinedSizes, upperSize]);
+                          {/* Grilla de talles */}
+                          <div className='space-y-2'>
+                            {/* Header de columnas */}
+                            <div className='grid grid-cols-[80px_1fr_1fr_1fr_32px] gap-2 text-xs text-muted-foreground px-1'>
+                              <span>Talle</span>
+                              <span>Precio</span>
+                              <span>Oferta</span>
+                              <span>Stock</span>
+                              <span />
+                            </div>
+
+                            {colorVariants.map((variant) => {
+                              const idx = formData.variants.findIndex((v) => v.id === variant.id);
+                              return (
+                                <div
+                                  key={variant.id}
+                                  className='grid grid-cols-[80px_1fr_1fr_1fr_32px] gap-2 items-center'
+                                >
+                                  {/* Talle */}
+                                  <select
+                                    value={variant.size}
+                                    onChange={(e) => {
+                                      const newSize = e.target.value;
+                                      if (newSize === "__custom__") {
+                                        const customSize = prompt(
+                                          "Ingresa el talle personalizado:",
+                                        );
+                                        if (customSize?.trim()) {
+                                          const upperSize = customSize.trim().toUpperCase();
+                                          if (!predefinedSizes.includes(upperSize)) {
+                                            setPredefinedSizes([...predefinedSizes, upperSize]);
+                                          }
+                                          updateVariant(idx, "size", upperSize);
+                                        }
+                                      } else {
+                                        updateVariant(idx, "size", newSize);
+                                      }
+                                    }}
+                                    className='h-8 text-sm border rounded px-2 bg-background w-full font-medium'
+                                  >
+                                    <option value=''>Talle</option>
+                                    {predefinedSizes.map((s) => (
+                                      <option key={s} value={s}>
+                                        {s}
+                                      </option>
+                                    ))}
+                                    <option value='__custom__'>✨ Agregar...</option>
+                                  </select>
+
+                                  <Input
+                                    type='number'
+                                    placeholder='Precio'
+                                    value={variant.price || ""}
+                                    onChange={(e) =>
+                                      updateVariant(idx, "price", Number(e.target.value))
                                     }
-                                    updateVariant(idx, "size", upperSize);
-                                  }
-                                } else {
-                                  updateVariant(idx, "size", newSize);
-                                }
-                              }}
-                              className='h-8 text-sm border rounded px-2 bg-background w-full'
-                            >
-                              <option value=''>Seleccionar</option>
-                              {predefinedSizes.map((s) => (
-                                <option key={s} value={s}>
-                                  {s}
-                                </option>
-                              ))}
-                              <option value='__custom__'>✨ + Agregar nuevo...</option>
-                            </select>
+                                    className='h-8 text-sm'
+                                  />
+                                  <Input
+                                    type='number'
+                                    placeholder='Oferta'
+                                    value={variant.priceOffer || ""}
+                                    onChange={(e) =>
+                                      updateVariant(idx, "priceOffer", Number(e.target.value))
+                                    }
+                                    className='h-8 text-sm'
+                                  />
+                                  <Input
+                                    type='number'
+                                    placeholder='Stock'
+                                    value={variant.stock || ""}
+                                    onChange={(e) =>
+                                      updateVariant(idx, "stock", Number(e.target.value))
+                                    }
+                                    className='h-8 text-sm'
+                                  />
+
+                                  {/* Eliminar esta variante individual */}
+                                  <Button
+                                    type='button'
+                                    size='icon'
+                                    variant='ghost'
+                                    className='h-8 w-8 text-red-400 hover:text-red-600'
+                                    onClick={() => removeVariant(idx)}
+                                  >
+                                    <X className='h-3.5 w-3.5' />
+                                  </Button>
+                                </div>
+                              );
+                            })}
                           </div>
 
-                          <Input
-                            type='number'
-                            placeholder='Precio'
-                            value={variant.price || ""}
-                            onChange={(e) => updateVariant(idx, "price", Number(e.target.value))}
-                            className='h-8 text-sm'
-                          />
-                          <Input
-                            type='number'
-                            placeholder='Oferta'
-                            value={variant.priceOffer || ""}
-                            onChange={(e) =>
-                              updateVariant(idx, "priceOffer", Number(e.target.value))
-                            }
-                            className='h-8 text-sm'
-                          />
-                          <Input
-                            type='number'
-                            placeholder='Stock'
-                            value={variant.stock || ""}
-                            onChange={(e) => updateVariant(idx, "stock", Number(e.target.value))}
-                            className='h-8 text-sm'
-                          />
-                        </div>
-                      </Card>
-                    ))}
+                          {/* Botón para agregar un talle más a este color */}
+                          <button
+                            type='button'
+                            onClick={() => {
+                              const newVariant: VariantType = {
+                                id: crypto.randomUUID(),
+                                size: "",
+                                colorName: color.name,
+                                colorHex: color.hex,
+                                price: 0,
+                                stock: 0,
+                                priceOffer: 0,
+                              };
+                              setFormData({
+                                ...formData,
+                                variants: [...formData.variants, newVariant],
+                              });
+                            }}
+                            className='mt-2 w-full h-7 border border-dashed border-primary/40 rounded text-xs text-muted-foreground hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1'
+                          >
+                            <Plus className='h-3 w-3' />
+                            Agregar talle a {color.name}
+                          </button>
+                        </Card>
+                      );
+                    })}
                   </div>
                 </div>
 
