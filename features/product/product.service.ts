@@ -3,6 +3,7 @@ import Product from "./product.model";
 import { Op } from "sequelize";
 import Category from "../category/category.model";
 import sequelize from "@/config/sequelize";
+import Banner from "../banner/banner.model";
 
 export async function getProductsService(filters?: ProductQueryParams) {
   try {
@@ -400,6 +401,7 @@ export async function getMetricsService() {
 
     let variants = 0;
     let offer = 0;
+    let banners = 0;
 
     // Calcular modelos y ofertas
     products.forEach((product: any) => {
@@ -427,12 +429,15 @@ export async function getMetricsService() {
       }
     });
 
+    const totalBanners = await Banner.count();
+    banners = totalBanners;
     return {
       metrics: {
         products: totalProductos,
         categories,
         variants,
         offer,
+        banners,
       },
     };
   } catch (e) {

@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useEffect, type Dispatch, type SetStateAction } from "react";
+import { useState, useEffect, type Dispatch, type SetStateAction, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -80,6 +80,21 @@ const expandShortHex = (hex: string): string => {
   return hex;
 };
 
+const defaultProduct = {
+  title: "",
+  description: "",
+  categories: [],
+  categoryFormData: [],
+  images: [],
+  imagesFormData: [],
+  variants: [],
+  isActive: true,
+  price: 0,
+  priceOffer: 0,
+  stock: 0,
+  sizes: [],
+};
+
 interface ProductDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -115,20 +130,7 @@ export function ProductDialog({
   const [predefinedSizes, setPredefinedSizes] = useState<string[]>([...DEFAULT_PREDEFINED_SIZES]);
 
   // Formulario principal
-  const [formData, setFormData] = useState<Omit<ProductType, "id" | "imagesId">>({
-    title: "",
-    description: "",
-    categories: [],
-    categoryFormData: [],
-    images: [],
-    imagesFormData: [],
-    variants: [],
-    isActive: true,
-    price: 0,
-    priceOffer: 0,
-    stock: 0,
-    sizes: [],
-  });
+  const [formData, setFormData] = useState<Omit<ProductType, "id" | "imagesId">>(defaultProduct);
 
   // Estado para vista de variantes agrupadas
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
@@ -486,11 +488,67 @@ export function ProductDialog({
     if (isValidHex(formattedValue)) setCustomColorInput(expandShortHex(formattedValue));
   };
 
-  // ============ RENDER ============
+  // useEffect(() => {
+  //   const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+  //     if (formData.title) {
+  //       e.preventDefault();
+  //       e.returnValue = "Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?";
+  //     }
+  //   };
+
+  //   // Para eventos de cierre de pestaña/navegador
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+
+  //   // Para navegación dentro de Next.js (más complejo)
+  //   const handleRouteChange = () => {
+  //     if (formData.title) {
+  //       const confirmLeave = window.confirm(
+  //         "Tienes cambios sin guardar. ¿Seguro que quieres salir?",
+  //       );
+  //       if (!confirmLeave) {
+  //         throw "cancelRouteChange"; // Cancelar navegación
+  //       }
+  //     }
+  //   };
+
+  //   // Interceptar navegación (funciona con router de Next.js)
+  //   window.addEventListener("popstate", handleRouteChange);
+
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //     window.removeEventListener("popstate", handleRouteChange);
+  //   };
+  // }, [formData]);
+
+  const handleClickOutside = (event: any) => {
+    if (
+      !product &&
+      (formData.title ||
+        formData.description ||
+        formData.variants.length > 0 ||
+        formData.imagesFormData?.length)
+    ) {
+      const confirmLeave = window.confirm(
+        "⚠️ Tienes cambios sin guardar en el formulario.\n\n¿Estás seguro de que quieres salir? Los datos no guardados se perderán.",
+      );
+
+      if (!confirmLeave) {
+        event.preventDefault();
+        event.stopPropagation();
+        return false;
+      } else {
+        setFormData(defaultProduct);
+      }
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[1000px] max-h-[90vh] overflow-auto flex flex-col bg-secondary border-primary p-0'>
+      <DialogContent
+        onInteractOutside={handleClickOutside}
+        onEscapeKeyDown={handleClickOutside}
+        className='sm:max-w-[1000px] max-h-[90vh] overflow-auto flex flex-col bg-secondary border-primary p-0'
+      >
         <DialogHeader className='p-2 pb-0'>
           <DialogTitle className='text-primary'>
             {product ? "✏️ Editar Producto" : "✨ Crear Nuevo Producto"}
@@ -1119,10 +1177,10 @@ export function ProductDialog({
         {/* Color Picker Modal */}
         {showColorPicker !== null && (
           <div
-            className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'
+            className='fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md'
             onClick={() => setShowColorPicker(null)}
           >
-            <div className='bg-background rounded-lg p-4 w-80' onClick={(e) => e.stopPropagation()}>
+            <div className='bg-primary rounded-lg p-4 w-80' onClick={(e) => e.stopPropagation()}>
               <h4 className='font-medium mb-3'>Seleccionar Color</h4>
               <div className='grid grid-cols-6 gap-2 mb-3'>
                 {PREDEFINED_COLORS.map((color, idx) => (
@@ -1136,20 +1194,25 @@ export function ProductDialog({
                   />
                 ))}
               </div>
-              <div className='flex gap-2'>
+              <div className='flex gap-2 items-center'>
                 <Input
                   value={colorNameInput}
                   onChange={(e) => setColorNameInput(e.target.value)}
                   placeholder='Nombre'
-                  className='flex-1'
+                  className=' w-24 text-black'
                 />
                 <Input
                   value={colorHexInput}
                   onChange={(e) => handleHexInputChange(e.target.value)}
                   placeholder='#000000'
-                  className='w-24'
+                  className='w-2'
                 />
-                <Button type='button' onClick={() => applyCustomColor(showColorPicker)} size='sm'>
+                <Button
+                  variant='secondary'
+                  type='button'
+                  onClick={() => applyCustomColor(showColorPicker)}
+                  size='sm'
+                >
                   OK
                 </Button>
               </div>

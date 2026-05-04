@@ -20,7 +20,7 @@ export function Button({
   // Variant styles
   const variantStyles = {
     primary: "bg-primary text-white hover:bg-primaryLight focus:ring-primaryLight",
-    secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500",
+    secondary: "bg-secondary text-gray-900 hover:bg-secondary/80 focus:ring-gray-500",
     outline:
       "border border-black  bg-transparent hover:bg-primary hover:text-secondary focus:ring-gray-500",
     ghost: "bg-transparent hover:bg-gray-400 focus:ring-gray-500",
