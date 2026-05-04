@@ -217,7 +217,6 @@ export default function ProductsPage() {
   };
 
   const handleEditProduct = (product: ProductType) => {
-    console.log(product);
     setEditingProduct(product);
     setDialogOpen(true);
   };
@@ -291,7 +290,6 @@ export default function ProductsPage() {
           formData.append("category", category.trim()[0].toUpperCase() + category.trim().slice(1)),
         );
       }
-      console.log(formData);
 
       if (editingProduct) {
         const productUpdate = await updateProduct(editingProduct.id, formData);
