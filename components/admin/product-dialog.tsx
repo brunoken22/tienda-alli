@@ -74,8 +74,10 @@ const DEFAULT_PREDEFINED_SIZES = [
 
 const isValidHex = (color: string): boolean => /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
 const expandShortHex = (hex: string): string => {
-  if (hex.length === 4 && hex.startsWith("#")) {
-    return "#" + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3];
+  if (hex.length && hex.startsWith("#")) {
+    const hexcode = hex.slice(1);
+
+    return "#" + hexcode;
   }
   return hex;
 };
@@ -120,7 +122,6 @@ export function ProductDialog({
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<"basic" | "variants" | "images">("basic");
   const [showColorPicker, setShowColorPicker] = useState<number | null>(null);
-  const [customColorInput, setCustomColorInput] = useState<string>("#000000");
   const [colorHexInput, setColorHexInput] = useState<string>("#000000");
   const [colorNameInput, setColorNameInput] = useState<string>("Negro");
   const [imagesUrl, setImagesUrl] = useState<string[]>([]);
@@ -133,7 +134,6 @@ export function ProductDialog({
   const [formData, setFormData] = useState<Omit<ProductType, "id" | "imagesId">>(defaultProduct);
 
   // Estado para vista de variantes agrupadas
-  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [selectedColors, setSelectedColors] = useState<{ name: string; hex: string }[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
 
@@ -300,9 +300,11 @@ export function ProductDialog({
   };
 
   const updateVariant = (index: number, field: keyof VariantType, value: any) => {
-    const updatedVariants = [...formData.variants];
-    updatedVariants[index] = { ...updatedVariants[index], [field]: value };
-    setFormData({ ...formData, variants: updatedVariants });
+    setFormData((prev) => {
+      const updatedVariants = [...prev.variants];
+      updatedVariants[index] = { ...updatedVariants[index], [field]: value };
+      return { ...prev, variants: updatedVariants };
+    });
   };
 
   // ============ GENERADOR POR MATRIZ ============
@@ -455,7 +457,6 @@ export function ProductDialog({
       setShowColorPicker(variantIndex);
       const variant = formData.variants[variantIndex];
       if (variant) {
-        setCustomColorInput(variant.colorHex);
         setColorHexInput(variant.colorHex);
         setColorNameInput(variant.colorName);
       }
@@ -465,11 +466,15 @@ export function ProductDialog({
   const selectPredefinedColor = (variantIndex: number, color: { name: string; hex: string }) => {
     updateVariant(variantIndex, "colorName", color.name);
     updateVariant(variantIndex, "colorHex", expandShortHex(color.hex));
+    setColorHexInput(color.hex);
+    setColorNameInput(color.name);
   };
 
   const applyCustomColor = (variantIndex: number) => {
-    if (isValidHex(colorHexInput)) {
-      updateVariant(variantIndex, "colorHex", expandShortHex(colorHexInput));
+    const validatorHex = isValidHex(colorHexInput);
+    if (validatorHex) {
+      const colorHex = expandShortHex(colorHexInput);
+      updateVariant(variantIndex, "colorHex", colorHex);
       updateVariant(variantIndex, "colorName", colorNameInput);
       setShowColorPicker(null);
     }
@@ -485,40 +490,7 @@ export function ProductDialog({
   const handleHexInputChange = (value: string) => {
     const formattedValue = formatHexColor(value);
     setColorHexInput(formattedValue);
-    if (isValidHex(formattedValue)) setCustomColorInput(expandShortHex(formattedValue));
   };
-
-  // useEffect(() => {
-  //   const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-  //     if (formData.title) {
-  //       e.preventDefault();
-  //       e.returnValue = "Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?";
-  //     }
-  //   };
-
-  //   // Para eventos de cierre de pestaña/navegador
-  //   window.addEventListener("beforeunload", handleBeforeUnload);
-
-  //   // Para navegación dentro de Next.js (más complejo)
-  //   const handleRouteChange = () => {
-  //     if (formData.title) {
-  //       const confirmLeave = window.confirm(
-  //         "Tienes cambios sin guardar. ¿Seguro que quieres salir?",
-  //       );
-  //       if (!confirmLeave) {
-  //         throw "cancelRouteChange"; // Cancelar navegación
-  //       }
-  //     }
-  //   };
-
-  //   // Interceptar navegación (funciona con router de Next.js)
-  //   window.addEventListener("popstate", handleRouteChange);
-
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleBeforeUnload);
-  //     window.removeEventListener("popstate", handleRouteChange);
-  //   };
-  // }, [formData]);
 
   const handleClickOutside = (event: any) => {
     if (
@@ -936,17 +908,6 @@ export function ProductDialog({
                         <Plus className='h-3 w-3 mr-1' />
                         Individual
                       </Button>
-                      <button
-                        type='button'
-                        onClick={() => setViewMode(viewMode === "list" ? "grid" : "list")}
-                        className='p-1.5 rounded-md hover:bg-accent'
-                      >
-                        {viewMode === "list" ? (
-                          <Grid3x3 className='h-4 w-4' />
-                        ) : (
-                          <Layers className='h-4 w-4' />
-                        )}
-                      </button>
                     </div>
                   </div>
 

@@ -23,7 +23,7 @@ export function Button({
     secondary: "bg-secondary text-gray-900 hover:bg-secondary/80 focus:ring-gray-500",
     outline:
       "border border-black  bg-transparent hover:bg-primary hover:text-secondary focus:ring-gray-500",
-    ghost: "bg-transparent hover:bg-gray-400 focus:ring-gray-500",
+    ghost: "bg-transparent hover:text-secondary hover:bg-primary/80 focus:ring-primary/80",
     link: "bg-transparent underline-offset-4 hover:underline text-purple-600 hover:text-purple-700 p-0 focus:ring-purple-500",
     danger: "bg-red-500 text-secondary hover:opacity-80",
   };
