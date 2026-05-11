@@ -10,6 +10,7 @@ import {
   LockKeyhole,
   Logs,
   LayoutTemplate,
+  BadgeDollarSign,
 } from "lucide-react";
 import { AuthContext } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,11 @@ export const navItemsAdmin = [
     title: "Banners",
     href: "/admin/dashboard/banners",
     icon: LayoutTemplate,
+  },
+  {
+    title: "Ventas",
+    href: "/admin/dashboard/ventas",
+    icon: BadgeDollarSign,
   },
   {
     title: "Contraseña",

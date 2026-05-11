@@ -7,6 +7,7 @@ const routingAdmin = [
   "/admin/dashboard/productos",
   "/admin/dashboard/categorias",
   "/admin/dashboard/banners",
+  "/admin/dashboard/ventas",
   "/admin/dashboard/cambiar-contrasena",
 ];
 

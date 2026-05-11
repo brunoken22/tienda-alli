@@ -26,7 +26,7 @@ export type ProductType = {
   price: number;
   priceOffer: number;
 
-  variants: VariantType[] | [];
+  variants: VariantType[];
 
   isActive: boolean;
 };

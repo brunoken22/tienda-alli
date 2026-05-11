@@ -6,15 +6,7 @@ import { Sidebar } from "@/components/admin/sidebar";
 import NavAdminMobile from "@/components/NavAdminMobile";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  // const { user, isLoading } = useContext(AuthContext);
-  // const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  // useEffect(() => {
-  //   if (!isLoading && !user) {
-  //     router.push("/admin/login");
-  //   }
-  // }, [user, isLoading, router]);
 
   return (
     <div className='relative'>
