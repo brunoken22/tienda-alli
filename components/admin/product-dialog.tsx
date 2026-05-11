@@ -334,16 +334,30 @@ export function ProductDialog({
   const addVariant = () => {
     const newVariant: VariantType = {
       id: crypto.randomUUID(),
+
       size: "",
-      colorName: "Negro",
-      colorHex: "#000000",
+
+      // SIN COLOR INICIAL
+      colorName: "Sin color",
+      colorHex: "transparent",
+
       price: 0,
       stock: 0,
       priceOffer: 0,
     };
-    setFormData({ ...formData, variants: [...formData.variants, newVariant] });
-  };
 
+    setFormData({
+      ...formData,
+      variants: [...formData.variants, newVariant],
+    });
+
+    // ABRIR AUTOMÁTICAMENTE EL SELECTOR
+    setTimeout(() => {
+      setShowColorPicker(formData.variants.length);
+      setColorHexInput("#000000");
+      setColorNameInput("");
+    }, 100);
+  };
   const removeVariant = (index: number) => {
     setFormData({
       ...formData,
@@ -500,21 +514,6 @@ export function ProductDialog({
     e.target.value = "";
   };
 
-  // ============ COLOR PICKER ============
-
-  const toggleColorPicker = (variantIndex: number) => {
-    if (showColorPicker === variantIndex) {
-      setShowColorPicker(null);
-    } else {
-      setShowColorPicker(variantIndex);
-      const variant = formData.variants[variantIndex];
-      if (variant) {
-        setColorHexInput(variant.colorHex);
-        setColorNameInput(variant.colorName);
-      }
-    }
-  };
-
   const selectPredefinedColor = (variantIndex: number, color: { name: string; hex: string }) => {
     updateVariant(variantIndex, "colorName", color.name);
     updateVariant(variantIndex, "colorHex", expandShortHex(color.hex));
@@ -524,14 +523,17 @@ export function ProductDialog({
 
   const applyCustomColor = (variantIndex: number) => {
     const validatorHex = isValidHex(colorHexInput);
+
     if (validatorHex) {
       const colorHex = expandShortHex(colorHexInput);
+
       updateVariant(variantIndex, "colorHex", colorHex);
-      updateVariant(variantIndex, "colorName", colorNameInput);
+
+      updateVariant(variantIndex, "colorName", colorNameInput.trim() || "Color personalizado");
+
       setShowColorPicker(null);
     }
   };
-
   const formatHexColor = (value: string): string => {
     let cleanValue = value.replace(/[^0-9a-fA-F#]/g, "");
     if (!cleanValue.startsWith("#") && cleanValue.length > 0) cleanValue = "#" + cleanValue;
@@ -948,7 +950,6 @@ export function ProductDialog({
                   </div>
                 )}
 
-                {/* LISTA DE VARIANTES */}
                 {/* LISTA DE VARIANTES - reemplaza el bloque "LISTA DE VARIANTES" existente */}
                 <div>
                   <div className='flex items-center justify-between mb-3'>
@@ -1042,25 +1043,56 @@ export function ProductDialog({
 
                             {colorVariants.map((variant) => {
                               const idx = formData.variants.findIndex((v) => v.id === variant.id);
+
                               return (
                                 <div
                                   key={variant.id}
-                                  className='grid grid-cols-[80px_1fr_1fr_1fr_32px] gap-2 items-center'
+                                  className='grid grid-cols-[40px_80px_1fr_1fr_1fr_32px] gap-2 items-center'
                                 >
-                                  {/* Talle */}
+                                  {/* SELECTOR DE COLOR */}
+                                  <button
+                                    type='button'
+                                    onClick={() => {
+                                      setShowColorPicker(idx);
+
+                                      setColorHexInput(
+                                        variant.colorHex === "transparent"
+                                          ? "#000000"
+                                          : variant.colorHex,
+                                      );
+
+                                      setColorNameInput(
+                                        variant.colorName === "Sin color" ? "" : variant.colorName,
+                                      );
+                                    }}
+                                    className='w-8 h-8 rounded-full border-2 border-white shadow flex items-center justify-center overflow-hidden'
+                                    style={{
+                                      background:
+                                        variant.colorHex === "transparent"
+                                          ? "repeating-conic-gradient(#ddd 0% 25%, #fff 0% 50%) 50% / 10px 10px"
+                                          : variant.colorHex,
+                                    }}
+                                    title={variant.colorName}
+                                  />
+
+                                  {/* TALLE */}
                                   <select
                                     value={variant.size}
                                     onChange={(e) => {
                                       const newSize = e.target.value;
+
                                       if (newSize === "__custom__") {
                                         const customSize = prompt(
                                           "Ingresa el talle personalizado:",
                                         );
+
                                         if (customSize?.trim()) {
                                           const upperSize = customSize.trim().toUpperCase();
+
                                           if (!predefinedSizes.includes(upperSize)) {
                                             setPredefinedSizes([...predefinedSizes, upperSize]);
                                           }
+
                                           updateVariant(idx, "size", upperSize);
                                         }
                                       } else {
@@ -1070,14 +1102,17 @@ export function ProductDialog({
                                     className='h-8 text-sm border rounded px-2 bg-background w-full font-medium'
                                   >
                                     <option value=''>Talle</option>
+
                                     {predefinedSizes.map((s) => (
                                       <option key={s} value={s}>
                                         {s}
                                       </option>
                                     ))}
+
                                     <option value='__custom__'>✨ Agregar...</option>
                                   </select>
 
+                                  {/* PRECIO */}
                                   <Input
                                     type='number'
                                     placeholder='Precio'
@@ -1087,6 +1122,8 @@ export function ProductDialog({
                                     }
                                     className='h-8 text-sm'
                                   />
+
+                                  {/* OFERTA */}
                                   <Input
                                     type='number'
                                     placeholder='Oferta'
@@ -1096,6 +1133,8 @@ export function ProductDialog({
                                     }
                                     className='h-8 text-sm'
                                   />
+
+                                  {/* STOCK */}
                                   <Input
                                     type='number'
                                     placeholder='Stock'
@@ -1106,7 +1145,7 @@ export function ProductDialog({
                                     className='h-8 text-sm'
                                   />
 
-                                  {/* Eliminar esta variante individual */}
+                                  {/* ELIMINAR */}
                                   <Button
                                     type='button'
                                     size='icon'
@@ -1267,7 +1306,7 @@ export function ProductDialog({
                   value={colorHexInput}
                   onChange={(e) => handleHexInputChange(e.target.value)}
                   placeholder='#000000'
-                  className='w-2'
+                  className='w-24 text-black'
                 />
                 <Button
                   variant='secondary'
