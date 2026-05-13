@@ -573,7 +573,7 @@ export function ProductDialog({
       <DialogContent
         onInteractOutside={handleClickOutside}
         onEscapeKeyDown={handleClickOutside}
-        className='sm:max-w-[1000px] max-h-[90vh] overflow-auto flex flex-col bg-secondary border-primary p-0'
+        className='sm:max-w-[1000px] max-h-[90vh] overflow-auto flex p-0 flex-col bg-secondary border-primary '
       >
         <DialogHeader className='p-2 pb-0'>
           <DialogTitle className='text-primary'>
@@ -1278,7 +1278,7 @@ export function ProductDialog({
         {/* Color Picker Modal */}
         {showColorPicker !== null && (
           <div
-            className='fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md'
+            className='fixed inset-0 z-50 flex items-start justify-center overflow-y-auto backdrop-blur-md pt-20'
             onClick={() => setShowColorPicker(null)}
           >
             <div className='bg-primary rounded-lg p-4 w-80' onClick={(e) => e.stopPropagation()}>
