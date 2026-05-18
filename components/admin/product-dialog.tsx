@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useEffect, type Dispatch, type SetStateAction, useRef } from "react";
+import { useState, useEffect, type Dispatch, type SetStateAction } from "react";
 import {
   Dialog,
   DialogContent,
@@ -19,8 +19,6 @@ import {
   Plus,
   TriangleAlert,
   Upload,
-  Palette,
-  Copy,
   Save,
   Trash2,
   Eye,
@@ -28,7 +26,6 @@ import {
   Layers,
   Zap,
   Grid3x3,
-  Tag,
   PlusCircle,
 } from "lucide-react";
 import convertUrlsToFiles from "@/utils/convertFilesImg";

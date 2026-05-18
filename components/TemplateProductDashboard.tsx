@@ -292,9 +292,9 @@ export default function TemplateProductDashboard({
                           </div>
                           <div className='flex items-center gap-2'>
                             <div className='flex -space-x-1'>
-                              {variants.slice(0, 3).map((v) => (
+                              {variants.slice(0, 3).map((v, i) => (
                                 <div
-                                  key={v.colorHex}
+                                  key={v.colorHex + i}
                                   className='w-5 h-5 rounded-full border-2 border-white shadow-sm'
                                   style={{ backgroundColor: v.colorHex }}
                                   title={v.colorName}
