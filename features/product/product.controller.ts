@@ -70,6 +70,7 @@ export async function createProductController(formData: FormData) {
     const formDataImages = formData.getAll("images") as File[];
     const price = Number(formData.get("price"));
     const priceOffer = Number(formData.get("priceOffer"));
+    // const variants = Array(formData.get("variants") || []);
 
     if (!formDataImages) {
       throw new Error("Se requieren imagenes");
@@ -80,7 +81,7 @@ export async function createProductController(formData: FormData) {
     generateImg = await uploadImages(formDataImages);
 
     const variantFormData = formData.getAll("variants");
-    const variant: VariantType[] = variantFormData.map((variantData) => {
+    const variants: VariantType[] = variantFormData.map((variantData) => {
       const convertVariant = JSON.parse(variantData.toString());
       return {
         ...convertVariant,
@@ -89,7 +90,7 @@ export async function createProductController(formData: FormData) {
       };
     });
 
-    const product: Omit<ProductType, "id" | "categories"> = {
+    const product: Omit<ProductType, "id" | "categories" | "variants"> = {
       title: (formData.get("title") as string)?.trim(),
       price: price,
       priceOffer: priceOffer,
@@ -97,7 +98,7 @@ export async function createProductController(formData: FormData) {
       // category: formData.getAll("category") as string[],
       images: generateImg.map((image) => image.url),
       imagesId: generateImg.map((image) => image.public_id),
-      variants: variant.length ? variant : [],
+      // variants: variant.length ? variant : [],
       sizes: formData.getAll("sizes") as string[],
       isActive: true,
       stock: Number(formData.get("stock")),
@@ -116,7 +117,7 @@ export async function createProductController(formData: FormData) {
       throw new Error("Se requieren todos los campos");
     }
     const categories = formData.getAll("category") as string[];
-    const productService = await createProductService(product, categories);
+    const productService = await createProductService(product, variants, categories);
 
     return { data: productService, success: true };
   } catch (e) {
@@ -157,7 +158,7 @@ export async function editProductController(id: string, formData: FormData) {
 
     const variantFormData = formData.getAll("variants");
 
-    const variant: VariantType[] = variantFormData.map((variantData) => {
+    const variants: VariantType[] = variantFormData.map((variantData) => {
       const convertVariant = JSON.parse(variantData.toString());
       return {
         ...convertVariant,
@@ -165,14 +166,14 @@ export async function editProductController(id: string, formData: FormData) {
         priceOffer: Number(convertVariant.priceOffer),
       };
     });
-    const product: Omit<ProductType, "id" | "categories"> = {
+    const product: Omit<ProductType, "id" | "categories" | "variants"> = {
       title: formData.get("title") as string,
       price: price,
       priceOffer: priceOffer,
       description: formData.get("description") as string,
       images: generateImg.map((image) => image?.url),
       imagesId: generateImg.map((image) => image?.public_id),
-      variants: variant,
+      // variants: variant,
       sizes: formData.getAll("sizes") as string[],
       isActive: true,
       stock: Number(formData.get("stock")),
@@ -190,7 +191,7 @@ export async function editProductController(id: string, formData: FormData) {
       throw new Error("Se requieren todos los campos");
     }
     const categories = formData.getAll("category") as string[];
-    const productService = await editProductService(id, product, categories);
+    const productService = await editProductService(id, product, variants, categories);
 
     if (productService) {
       await deleteImages(productSearch.imagesId);

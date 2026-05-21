@@ -331,7 +331,7 @@ export function ProductDialog({
   const addVariant = () => {
     const newVariant: VariantType = {
       id: crypto.randomUUID(),
-
+      productId: "",
       size: "",
 
       // SIN COLOR INICIAL

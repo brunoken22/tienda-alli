@@ -13,10 +13,7 @@ const Variant = sequelize.define(
     productId: {
       type: DataTypes.UUID,
       allowNull: false,
-    },
-    title: {
-      type: DataTypes.STRING(200),
-      allowNull: false,
+      onDelete: "CASCADE",
     },
     price: {
       type: DataTypes.DECIMAL(10, 2),
@@ -59,5 +56,8 @@ const Variant = sequelize.define(
 );
 
 Variant.belongsTo(Product, { foreignKey: "productId", as: "product" });
-
+Product.hasMany(Variant, {
+  foreignKey: "productId",
+  as: "variants",
+});
 export default Variant;

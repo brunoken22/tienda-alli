@@ -1,6 +1,5 @@
 import { DataTypes } from "sequelize";
 import sequelize from "@/config/sequelize";
-import { VariantType } from "@/types/product";
 import Category from "../category/category.model";
 import ProductCategory from "../productCategory/productCategory.model";
 
@@ -34,10 +33,10 @@ const Product = sequelize.define(
         return value ? parseFloat(value) : null;
       },
     },
-    category: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      defaultValue: [],
-    },
+    // category: {
+    //   type: DataTypes.ARRAY(DataTypes.STRING),
+    //   defaultValue: [],
+    // },
 
     images: {
       type: DataTypes.ARRAY(DataTypes.STRING),
@@ -55,42 +54,42 @@ const Product = sequelize.define(
       type: DataTypes.ARRAY(DataTypes.STRING),
       defaultValue: [],
     },
-    variants: {
-      type: DataTypes.JSONB,
-      defaultValue: [],
-      validate: {
-        isValidVariants(value: VariantType[]) {
-          if (!Array.isArray(value)) {
-            throw new Error("variant debe ser un array");
-          }
+    // variants: {
+    //   type: DataTypes.JSONB,
+    //   defaultValue: [],
+    //   validate: {
+    //     isValidVariants(value: VariantType[]) {
+    //       if (!Array.isArray(value)) {
+    //         throw new Error("variant debe ser un array");
+    //       }
 
-          value.forEach((v, index) => {
-            // Validar que cada objeto tenga la estructura correcta
-            if (!v.id || typeof v.id !== "string") {
-              throw new Error(`variant[${index}].id debe ser un string`);
-            }
-            if (typeof v.size !== "string") {
-              throw new Error(`variant[${index}].size debe ser un string`);
-            }
-            if (!v.colorName || typeof v.colorName !== "string") {
-              throw new Error(`variant[${index}].color debe ser un string`);
-            }
-            if (!v.colorHex || typeof v.colorHex !== "string") {
-              throw new Error(`variant[${index}].colorHex debe ser un string`);
-            }
-            if (typeof v.stock !== "number") {
-              throw new Error(`variant[${index}].stock debe ser un número`);
-            }
-            if (typeof v.price !== "number") {
-              throw new Error(`variant[${index}].price debe ser un número`);
-            }
-            if (v.priceOffer && typeof v.priceOffer !== "number") {
-              throw new Error(`variant[${index}].priceOffer debe ser un número`);
-            }
-          });
-        },
-      },
-    },
+    //       value.forEach((v, index) => {
+    //         // Validar que cada objeto tenga la estructura correcta
+    //         if (!v.id || typeof v.id !== "string") {
+    //           throw new Error(`variant[${index}].id debe ser un string`);
+    //         }
+    //         if (typeof v.size !== "string") {
+    //           throw new Error(`variant[${index}].size debe ser un string`);
+    //         }
+    //         if (!v.colorName || typeof v.colorName !== "string") {
+    //           throw new Error(`variant[${index}].color debe ser un string`);
+    //         }
+    //         if (!v.colorHex || typeof v.colorHex !== "string") {
+    //           throw new Error(`variant[${index}].colorHex debe ser un string`);
+    //         }
+    //         if (typeof v.stock !== "number") {
+    //           throw new Error(`variant[${index}].stock debe ser un número`);
+    //         }
+    //         if (typeof v.price !== "number") {
+    //           throw new Error(`variant[${index}].price debe ser un número`);
+    //         }
+    //         if (v.priceOffer && typeof v.priceOffer !== "number") {
+    //           throw new Error(`variant[${index}].priceOffer debe ser un número`);
+    //         }
+    //       });
+    //     },
+    //   },
+    // },
     description: {
       type: DataTypes.TEXT,
       defaultValue: "",

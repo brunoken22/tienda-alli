@@ -4,6 +4,7 @@ import { Op } from "sequelize";
 import Category from "../category/category.model";
 import sequelize from "@/config/sequelize";
 import Banner from "../banner/banner.model";
+import Variant from "../variant/variant.model";
 
 export async function getProductsService(filters?: ProductQueryParams) {
   try {
@@ -43,6 +44,10 @@ export async function getProductsService(filters?: ProductQueryParams) {
         through: { attributes: [] },
         required: false,
       },
+      {
+        model: Variant,
+        as: "variants",
+      },
     ];
 
     if (category) {
@@ -57,6 +62,10 @@ export async function getProductsService(filters?: ProductQueryParams) {
     const products = await Product.findAll({
       where: whereConditions,
       include: includeConditions,
+      attributes: {
+        exclude: ["variants"],
+      },
+
       limit,
       offset,
       order: [[sortBy, sortOrder]],
@@ -199,23 +208,50 @@ export async function getProductIDService(id: string, options?: object): Promise
 }
 
 export async function createProductService(
-  product: Omit<ProductType, "id" | "categories">,
+  product: Omit<ProductType, "id" | "categories" | "variants">,
+  variants: VariantType[] = [],
   categories: string[],
 ) {
+  const transaction = await sequelize.transaction();
+
   try {
-    const productCreate = await Product.create(product);
+    const productCreate = await Product.create(product, { transaction });
+    if (productCreate && productCreate.dataValues.id && variants.length > 0) {
+      const variantAddProductId = variants.map((variant) => ({
+        ...variant,
+        productId: productCreate.dataValues.id,
+      }));
+      try {
+        await Variant.bulkCreate(variantAddProductId, {
+          transaction,
+          validate: true,
+          individualHooks: false,
+        });
+      } catch (e) {
+        await transaction.rollback();
+        const error = e as Error;
+        throw new Error(error.message);
+      }
+    }
     if (productCreate.dataValues) {
       const productWithRelations = productCreate as any;
-      await productWithRelations.setCategories(categories);
+      await productWithRelations.setCategories(categories, { transaction });
     }
+
+    await transaction.commit();
+
     const productResponse = await Product.findByPk(productCreate.dataValues.id, {
-      include: [{ model: Category, as: "categories", through: { attributes: [] } }],
+      include: [
+        { model: Category, as: "categories", through: { attributes: [] } },
+        { model: Variant, as: "variants" },
+      ],
     });
     if (!productResponse || !productResponse.dataValues.id) {
       throw new Error("Error al crear el producto");
     }
     return productResponse.dataValues;
   } catch (e) {
+    await transaction.rollback();
     const error = e as Error;
     throw new Error(error.message);
   }
@@ -223,7 +259,8 @@ export async function createProductService(
 
 export async function editProductService(
   id: string,
-  product: Omit<ProductType, "id" | "categories">,
+  product: Omit<ProductType, "id" | "categories" | "variants">,
+  variants: VariantType[],
   categories: string[],
 ) {
   const transaction = await sequelize.transaction();
@@ -252,6 +289,18 @@ export async function editProductService(
     // 3. Establecer las categorías
     await productWithRelations.setCategories(categories, { transaction });
 
+    const variantsWithProductId = variants.map((variant) => ({
+      ...variant,
+      productId: id,
+    }));
+
+    // bulkCreate con updateOnDuplicate actualizará los que ya existen
+    await Variant.bulkCreate(variantsWithProductId, {
+      transaction,
+      updateOnDuplicate: ["price", "priceOffer", "stock", "size", "colorName", "colorHex"],
+      validate: true,
+    });
+
     // 4. Hacer commit de la transacción
     await transaction.commit();
 
@@ -262,6 +311,10 @@ export async function editProductService(
           model: Category,
           as: "categories",
           through: { attributes: [] }, // Excluir tabla intermedia
+        },
+        {
+          model: Variant,
+          as: "variants",
         },
       ],
     });
@@ -333,7 +386,13 @@ export async function getShoppingCartService(shoppingCartIds: string[]) {
       where: {
         id: shoppingCartIds,
       },
-      attributes: ["id", "title", "price", "priceOffer", "variants", "images"],
+      include: [
+        {
+          model: Variant,
+          as: "variants",
+        },
+      ],
+      attributes: ["id", "title", "price", "priceOffer", "images"],
     });
     return products;
   } catch (e) {
@@ -346,7 +405,13 @@ export async function getPriceFilterService() {
   try {
     const products = await Product.findAll({
       where: { isActive: true },
-      attributes: ["id", "price", "priceOffer", "variants"],
+      attributes: ["id", "price", "priceOffer"],
+      include: [
+        {
+          model: Variant,
+          as: "variants",
+        },
+      ],
       raw: true,
     });
 
