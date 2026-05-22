@@ -266,7 +266,7 @@ export async function getShoppingCartController(shoppingCart: Omit<ShoppingCart,
         };
       }
 
-      const variant = (findProduct.dataValues.variant as VariantType[]).find(
+      const variant = (findProduct.dataValues.variants as VariantType[]).find(
         (variantItem: VariantType) => variantItem.id === product.variantId,
       );
       const size = variant?.size === product.variantSize;
@@ -282,9 +282,6 @@ export async function getShoppingCartController(shoppingCart: Omit<ShoppingCart,
         priceOffer: variant?.priceOffer || findProduct.dataValues.priceOffer,
         images: findProduct.dataValues.images,
         quantity: product.quantity,
-        // variant,
-        // varinatSize: size,
-        // variant: filteredVariant,
       };
     });
     const filteredData = data.filter((item) => item !== null) as ShoppingCart[];
