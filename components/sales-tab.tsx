@@ -24,11 +24,7 @@ import {
 import Image from "next/image";
 import { toast } from "sonner";
 import { createInventoryMovement, getInventoryMovements } from "@/lib/inventory";
-
-interface SalesTabProps {
-  products: ProductType[];
-  onUpdateStock: (productId: string, variantId: string | null, newStock: number) => void;
-}
+import { getProducts } from "@/lib/products";
 
 const movementTypeConfig: Record<
   string,
@@ -44,8 +40,8 @@ const movementTypeConfig: Record<
     label: "Venta",
     icon: ShoppingCart,
     bgColor: "bg-rose-50 ",
-    textColor: "text-rose-600 dark:text-rose-400",
-    borderColor: "border-rose-200 dark:border-rose-800",
+    textColor: "text-rose-600 ",
+    borderColor: "border-rose-200 ",
   },
   RETURN: {
     label: "Devolución",
@@ -58,8 +54,8 @@ const movementTypeConfig: Record<
     label: "Compra",
     icon: ArrowDownCircle,
     bgColor: "bg-emerald-50 ",
-    textColor: "text-emerald-600 dark:text-emerald-400",
-    borderColor: "border-emerald-200 dark:border-emerald-800",
+    textColor: "text-emerald-600",
+    borderColor: "border-emerald-200 ",
   },
   DAMAGED: {
     label: "Dañado",
@@ -77,15 +73,92 @@ const movementTypeConfig: Record<
   },
 };
 
-export function SalesTab({ products, onUpdateStock }: SalesTabProps) {
+export function SalesTab() {
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(null);
   const [history, setHistory] = useState<InventoryType[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(12);
+  const [products, setProducts] = useState<{
+    data: ProductType[];
+    isLoading: boolean;
+    totalPrice: number;
+    pagination?: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+      hasNextPage: boolean;
+      hasPrevPage: boolean;
+    };
+  }>({
+    data: [],
+    totalPrice: 0,
+    isLoading: true,
+  });
 
   useEffect(() => {
     loadHistory();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      setProducts((prev) => ({ ...prev, isLoading: true }));
+
+      const queryParams: any = {
+        page,
+        limit,
+        sortBy: "title",
+        sortOrder: "asc",
+      };
+
+      const response = await getProducts(queryParams);
+
+      if (response.success) {
+        setProducts({
+          isLoading: false,
+          data: response.data,
+          pagination: response.pagination,
+          totalPrice: response.totalPrice,
+        });
+      } else {
+        setProducts({
+          isLoading: false,
+          totalPrice: 0,
+          data: [],
+        });
+      }
+    })();
+  }, [page, limit]);
+
+  const handleNextPage = () => {
+    if (products.pagination?.hasNextPage) setPage((p) => p + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (page > 1) setPage((p) => p - 1);
+  };
+
+  const handleUpdateStock = (productId: string, variantId: string | null, newStock: number) => {
+    setProducts((prevProducts) => ({
+      ...prevProducts,
+      data: prevProducts.data.map((product) => {
+        if (product.id !== productId) return product;
+
+        if (variantId) {
+          return {
+            ...product,
+            variants: product.variants.map((variant) =>
+              variant.id === variantId ? { ...variant, stock: newStock } : variant,
+            ),
+          };
+        }
+
+        return { ...product, stock: newStock };
+      }),
+    }));
+  };
 
   async function loadHistory() {
     setIsLoading(true);
@@ -142,7 +215,7 @@ export function SalesTab({ products, onUpdateStock }: SalesTabProps) {
       return;
     }
 
-    onUpdateStock(product.id, null, newStock);
+    handleUpdateStock(product.id, null, newStock);
 
     if (delta < 0) {
       toast.success(`Venta registrada: ${product.title}`);
@@ -169,7 +242,7 @@ export function SalesTab({ products, onUpdateStock }: SalesTabProps) {
         note: delta < 0 ? "Venta POS" : "Agregar producto",
       });
 
-      onUpdateStock(selectedProduct.id, variant.id, newStock);
+      handleUpdateStock(selectedProduct.id, variant.id, newStock);
 
       setSelectedProduct({
         ...selectedProduct,
@@ -185,11 +258,11 @@ export function SalesTab({ products, onUpdateStock }: SalesTabProps) {
     }
   };
 
-  const activeProducts = products.filter((p) => p.isActive);
+  const activeProducts = products.data.filter((p) => p.isActive);
 
   return (
     <div className='flex flex-col gap-4 lg:gap-6'>
-      {/* Historial de movimientos - Ahora arriba en mobile */}
+      {/* Historial de movimientos */}
       <Card className='order-1 lg:order-2'>
         <CardHeader className='pb-3'>
           <div className='flex items-center justify-between'>
@@ -225,7 +298,7 @@ export function SalesTab({ products, onUpdateStock }: SalesTabProps) {
             </div>
           ) : (
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3'>
-              {history.slice(0, 8).map((movement) => {
+              {history.map((movement) => {
                 const config = movementTypeConfig[movement.type];
                 const Icon = config.icon;
                 const isNegative = movement.type === "SALE" || movement.type === "DAMAGED";
@@ -278,9 +351,7 @@ export function SalesTab({ products, onUpdateStock }: SalesTabProps) {
                         <div className='flex items-center gap-1.5 text-xs text-muted-foreground'>
                           <span
                             className='h-3 w-3 rounded-full ring-1 ring-border shrink-0'
-                            style={{
-                              backgroundColor: movement.variant.colorHex,
-                            }}
+                            style={{ backgroundColor: movement.variant.colorHex }}
                           />
                           <span className='truncate'>
                             {movement.variant.size} - {movement.variant.colorName}
@@ -303,7 +374,7 @@ export function SalesTab({ products, onUpdateStock }: SalesTabProps) {
         </CardContent>
       </Card>
 
-      {/* Productos - Grid responsive */}
+      {/* Productos */}
       <Card className='order-2 lg:order-1'>
         <CardHeader className='pb-3'>
           <div className='flex items-center justify-between'>
@@ -317,7 +388,17 @@ export function SalesTab({ products, onUpdateStock }: SalesTabProps) {
           </div>
         </CardHeader>
         <CardContent className='pt-0'>
-          {activeProducts.length === 0 ? (
+          {products.isLoading ? (
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className='animate-pulse rounded-xl border bg-muted/50 p-3 space-y-3'>
+                  <div className='aspect-square rounded-lg bg-muted' />
+                  <div className='h-4 bg-muted rounded w-3/4' />
+                  <div className='h-3 bg-muted rounded w-1/2' />
+                </div>
+              ))}
+            </div>
+          ) : activeProducts.length === 0 ? (
             <div className='flex flex-col items-center justify-center py-12 text-muted-foreground'>
               <Package className='h-12 w-12 mb-3 opacity-50' />
               <p className='font-medium'>No hay productos activos</p>
@@ -342,7 +423,6 @@ export function SalesTab({ products, onUpdateStock }: SalesTabProps) {
                       ${isOutOfStock ? "opacity-60" : ""}
                     `}
                   >
-                    {/* Imagen y badge de stock */}
                     <div className='relative aspect-square rounded-lg overflow-hidden bg-muted mb-3'>
                       {product.images?.length > 0 ? (
                         <Image
@@ -357,7 +437,6 @@ export function SalesTab({ products, onUpdateStock }: SalesTabProps) {
                         </div>
                       )}
 
-                      {/* Badge de stock */}
                       <div className='absolute top-2 right-2'>
                         <Badge
                           variant={
@@ -369,10 +448,9 @@ export function SalesTab({ products, onUpdateStock }: SalesTabProps) {
                         </Badge>
                       </div>
 
-                      {/* Indicador de bajo stock */}
                       {isLowStock && !isOutOfStock && (
                         <div className='absolute top-2 left-2'>
-                          <div className='flex items-center gap-1 bg-amber-500 text-white text-xs font-medium px-2 py-1 rounded-md shadow-md'>
+                          <div className='flex items-center gap-1 bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-md shadow-md'>
                             <AlertTriangle className='h-3 w-3' />
                             Bajo
                           </div>
@@ -380,21 +458,15 @@ export function SalesTab({ products, onUpdateStock }: SalesTabProps) {
                       )}
                     </div>
 
-                    {/* Info del producto */}
                     <div className='flex-1 space-y-1 mb-3'>
                       <h3 className='font-semibold text-sm leading-tight line-clamp-2'>
                         {product.title}
                       </h3>
-                      {/* {product.category && (
-                        <p className="text-xs text-muted-foreground">
-                          {product.category}
-                        </p>
-                      )} */}
                       <div className='flex items-baseline gap-2'>
                         <span className='font-bold text-base'>
                           {formatPrice(product.priceOffer || product.price)}
                         </span>
-                        {product.priceOffer && (
+                        {product.priceOffer > 0 && (
                           <span className='text-xs text-muted-foreground line-through'>
                             {formatPrice(product.price)}
                           </span>
@@ -402,7 +474,6 @@ export function SalesTab({ products, onUpdateStock }: SalesTabProps) {
                       </div>
                     </div>
 
-                    {/* Acciones */}
                     {hasVariants ? (
                       <Button
                         variant='outline'
@@ -443,12 +514,67 @@ export function SalesTab({ products, onUpdateStock }: SalesTabProps) {
         </CardContent>
       </Card>
 
+      {/* Paginación */}
+      {products.pagination && products.pagination.totalPages > 1 && (
+        <div className='flex items-center justify-between border-t pt-4'>
+          <div className='text-sm text-muted-foreground'>
+            Mostrando {(page - 1) * limit + 1} - {Math.min(page * limit, products.pagination.total)}{" "}
+            de {products.pagination.total} productos
+          </div>
+          <div className='flex items-center gap-2'>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={handlePrevPage}
+              disabled={!products.pagination.hasPrevPage}
+            >
+              Anterior
+            </Button>
+            <div className='flex items-center gap-1'>
+              {Array.from({ length: Math.min(5, products.pagination.totalPages) }, (_, i) => {
+                let pageNum;
+                if (products.pagination!.totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (page <= 3) {
+                  pageNum = i + 1;
+                } else if (page >= products.pagination!.totalPages - 2) {
+                  pageNum = products.pagination!.totalPages - 4 + i;
+                } else {
+                  pageNum = page - 2 + i;
+                }
+
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={page === pageNum ? "default" : "outline"}
+                    size='sm'
+                    onClick={() => setPage(pageNum)}
+                    className='w-8 h-8 p-0'
+                  >
+                    {pageNum}
+                  </Button>
+                );
+              })}
+              {products.pagination.totalPages > 5 && <span className='px-2'>...</span>}
+            </div>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={handleNextPage}
+              disabled={!products.pagination.hasNextPage}
+            >
+              Siguiente
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Dialog para variantes */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className='max-w-lg max-h-[90vh] sm:max-h-[85vh] overflow-hidden flex flex-col p-0 bg-secondary'>
           <DialogHeader className='shrink-0 p-4 sm:p-6 pb-0'>
             <div className='flex items-center gap-3 sm:gap-4'>
-              <div className='relative h-14 w-14 sm:h-16 sm:w-16 shrink-0 rounded-xl overflow-hidden  ring-1 ring-border'>
+              <div className='relative h-14 w-14 sm:h-16 sm:w-16 shrink-0 rounded-xl overflow-hidden ring-1 ring-border'>
                 {selectedProduct?.images && selectedProduct.images.length > 0 ? (
                   <Image
                     src={selectedProduct.images[0]}
