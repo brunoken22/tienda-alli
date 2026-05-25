@@ -62,10 +62,6 @@ export async function getProductsService(filters?: ProductQueryParams) {
     const products = await Product.findAll({
       where: whereConditions,
       include: includeConditions,
-      attributes: {
-        exclude: ["variants"],
-      },
-
       limit,
       offset,
       order: [[sortBy, sortOrder]],
@@ -193,6 +189,10 @@ export async function getProductIDService(id: string, options?: object): Promise
           model: Category,
           as: "categories",
           through: { attributes: [] },
+        },
+        {
+          model: Variant,
+          as: "variants",
         },
       ],
       ...options,
@@ -466,7 +466,13 @@ export async function getMetricsService() {
 
     // 3. Obtener todos los productos activos para calcular modelos y ofertas
     const products = await Product.findAll({
-      attributes: ["id", "variants", "price", "priceOffer"],
+      attributes: ["id", "price", "priceOffer"],
+      include: [
+        {
+          model: Variant,
+          as: "variants",
+        },
+      ],
       raw: true, // Esto devuelve objetos planos en lugar de instancias
     });
 

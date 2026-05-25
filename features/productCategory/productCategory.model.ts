@@ -1,6 +1,7 @@
 // models/ProductCategory.model.ts
 import { DataTypes } from "sequelize";
 import sequelize from "@/config/sequelize";
+import Category from "../category/category.model";
 
 const ProductCategory = sequelize.define(
   "ProductCategory",
@@ -23,7 +24,7 @@ const ProductCategory = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: "categories",
+        model: Category,
         key: "id",
       },
       onDelete: "CASCADE",
@@ -38,7 +39,7 @@ const ProductCategory = sequelize.define(
         fields: ["productId", "categoryId"], // Evita duplicados
       },
     ],
-  }
+  },
 );
 
 export default ProductCategory;

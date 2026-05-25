@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <main className='p-6  max-sm:p-2 space-y-8'>
       <div className='border-l-4 p-2 max-sm:border-0 max-sm:p-0 border-primary'>
-        <h1 className='text-2xl font-bold text-primary mb-2'>Registro de Ventas</h1>
+        <h1 className='text-2xl font-bold text  -primary mb-2'>Registro de Ventas</h1>
         <p className='text-muted-foreground mt-1'>
           {" "}
           Usa los botones - y + para registrar ventas o corregir errores
@@ -46,7 +46,7 @@ export default function Home() {
       </div>
 
       <SalesTab products={products} onUpdateStock={handleUpdateStock} />
-      <Toaster position='bottom-right' />
+      <Toaster position='bottom-right' richColors={true} />
     </main>
   );
 }

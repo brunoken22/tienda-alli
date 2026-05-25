@@ -207,7 +207,7 @@ export function ProductDialog({
             colorHex: v.colorHex ? expandShortHex(v.colorHex) : "#000000",
           })),
           isActive: product.isActive,
-          sizes: product.sizes || [],
+          // sizes: product.sizes || [],
         });
         setImagesUrl(filterImages);
 
@@ -245,7 +245,7 @@ export function ProductDialog({
       price: 0,
       priceOffer: 0,
       stock: 0,
-      sizes: [],
+      // sizes: [],
     });
     setImagesUrl([]);
     setSelectedColors([]);

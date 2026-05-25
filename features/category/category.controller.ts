@@ -20,6 +20,7 @@ export async function getCategoriesController(req: Request) {
     return { data: categoriesController, success: true };
   } catch (e) {
     const error = e as Error;
+    console.error("getCategoriesController: ", error);
     throw new Error(error.message);
   }
 }

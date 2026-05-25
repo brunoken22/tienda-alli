@@ -19,7 +19,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     console.error("Error in PATCH /api/admin/product/[id]:", e);
     return NextResponse.json(
       { error: e.message || "Internal server error", success: false },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

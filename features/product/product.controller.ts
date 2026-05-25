@@ -99,7 +99,7 @@ export async function createProductController(formData: FormData) {
       images: generateImg.map((image) => image.url),
       imagesId: generateImg.map((image) => image.public_id),
       // variants: variant.length ? variant : [],
-      sizes: formData.getAll("sizes") as string[],
+      // sizes: formData.getAll("sizes") as string[],
       isActive: true,
       stock: Number(formData.get("stock")),
     };
@@ -174,7 +174,7 @@ export async function editProductController(id: string, formData: FormData) {
       images: generateImg.map((image) => image?.url),
       imagesId: generateImg.map((image) => image?.public_id),
       // variants: variant,
-      sizes: formData.getAll("sizes") as string[],
+      // sizes: formData.getAll("sizes") as string[],
       isActive: true,
       stock: Number(formData.get("stock")),
     };

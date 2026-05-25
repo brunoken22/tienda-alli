@@ -55,9 +55,4 @@ const Variant = sequelize.define(
   },
 );
 
-Variant.belongsTo(Product, { foreignKey: "productId", as: "product" });
-Product.hasMany(Variant, {
-  foreignKey: "productId",
-  as: "variants",
-});
 export default Variant;

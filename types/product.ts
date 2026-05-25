@@ -20,7 +20,7 @@ export type ProductType = {
   images: string[];
   imagesId: string[];
   imagesFormData?: File[];
-  sizes: string[];
+  // sizes: string[];
 
   //PRODUCTOS SIN VARIANTES (ÚNICOS)
   stock: number;

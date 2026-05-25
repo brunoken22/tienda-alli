@@ -106,7 +106,7 @@ export default function DashboardPage() {
       title: "Ver Todos las categorias",
       description: "Gestiona tus categorias.",
       icon: Logs,
-      href: "/admin/dashboard/categorrias",
+      href: "/admin/dashboard/categorias",
       gradient: "from-blue-500 to-indigo-500",
     },
     {

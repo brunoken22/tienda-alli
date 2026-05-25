@@ -2,6 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "@/config/sequelize";
 import Category from "../category/category.model";
 import ProductCategory from "../productCategory/productCategory.model";
+import Variant from "../variant/variant.model";
 
 const Product = sequelize.define(
   "Product",
@@ -50,10 +51,10 @@ const Product = sequelize.define(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
-    sizes: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      defaultValue: [],
-    },
+    // sizes: {
+    //   type: DataTypes.ARRAY(DataTypes.STRING),
+    //   defaultValue: [],
+    // },
     // variants: {
     //   type: DataTypes.JSONB,
     //   defaultValue: [],
@@ -117,6 +118,12 @@ Category.belongsToMany(Product, {
   foreignKey: "categoryId",
   otherKey: "productId",
   as: "products",
+});
+
+Variant.belongsTo(Product, { foreignKey: "productId", as: "product" });
+Product.hasMany(Variant, {
+  foreignKey: "productId",
+  as: "variants",
 });
 
 export default Product;
