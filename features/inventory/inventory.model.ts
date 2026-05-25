@@ -15,11 +15,13 @@ const InventoryMovement = sequelize.define(
     productId: {
       type: DataTypes.UUID,
       allowNull: false,
+      onDelete: "CASCADE",
     },
 
     variantId: {
       type: DataTypes.UUID,
       allowNull: true,
+      onDelete: "CASCADE",
     },
 
     type: {
