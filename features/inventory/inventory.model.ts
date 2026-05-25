@@ -15,13 +15,11 @@ const InventoryMovement = sequelize.define(
     productId: {
       type: DataTypes.UUID,
       allowNull: false,
-      onDelete: "CASCADE",
     },
 
     variantId: {
       type: DataTypes.UUID,
-      allowNull: true,
-      onDelete: "CASCADE",
+      allowNull: false,
     },
 
     type: {
@@ -65,14 +63,17 @@ InventoryMovement.belongsTo(Variant, {
 Variant.hasMany(InventoryMovement, {
   foreignKey: "variantId",
   as: "inventoryMovements",
+  onDelete: "CASCADE",
 });
 InventoryMovement.belongsTo(Product, {
   foreignKey: "productId",
   as: "product",
+  onDelete: "CASCADE",
 });
 
 Product.hasMany(InventoryMovement, {
   foreignKey: "productId",
   as: "inventoryMovements",
+  onDelete: "CASCADE",
 });
 export default InventoryMovement;
