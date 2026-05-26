@@ -328,7 +328,7 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
               <Swiper {...swiperConfig} onSwiper={setMainSwiper}>
                 {product.images.map((image, index) => (
                   <SwiperSlide key={index}>
-                    <div className='aspect-square w-full'>
+                    <div className='swiper-zoom-container aspect-square w-full'>
                       <Image
                         src={image || "/tienda-alli-webp"}
                         width={600}
