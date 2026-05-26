@@ -599,68 +599,98 @@ export function SalesTab() {
             </div>
           </DialogHeader>
 
-          <div className='flex-1 overflow-y-auto p-4 sm:p-6 pt-4 space-y-2'>
-            {selectedProduct?.variants.map((variant) => {
-              const isOutOfStock = variant.stock === 0;
-              const isLowStock = variant.stock > 0 && variant.stock <= 3;
+          <div className='flex-1 overflow-y-auto p-4 sm:p-6 pt-4 space-y-4'>
+            {selectedProduct &&
+              (() => {
+                // Agrupar variantes por color
+                const colorGroups = selectedProduct.variants.reduce(
+                  (acc, variant) => {
+                    const key = variant.colorHex;
+                    if (!acc[key]) {
+                      acc[key] = {
+                        colorHex: variant.colorHex,
+                        colorName: variant.colorName,
+                        variants: [],
+                      };
+                    }
+                    acc[key].variants.push(variant);
+                    return acc;
+                  },
+                  {} as Record<
+                    string,
+                    { colorHex: string; colorName: string; variants: VariantType[] }
+                  >,
+                );
 
-              return (
-                <div
-                  key={variant.id}
-                  className={`
-                    flex items-center gap-3 p-3 rounded-xl border bg-card
-                    ${isOutOfStock ? "opacity-50" : ""}
-                  `}
-                >
-                  <div
-                    className='h-10 w-10 sm:h-12 sm:w-12 rounded-lg ring-1 ring-border shrink-0'
-                    style={{ backgroundColor: variant.colorHex }}
-                  />
-
-                  <div className='flex-1 min-w-0'>
-                    <div className='font-medium text-sm'>
-                      {variant.size} - {variant.colorName}
+                return Object.values(colorGroups).map((group) => (
+                  <div key={group.colorHex} className='space-y-2'>
+                    {/* Header del color */}
+                    <div className='flex items-center gap-2 pb-1 border-b'>
+                      <div
+                        className='h-5 w-5 rounded-full ring-1 ring-border shrink-0'
+                        style={{ backgroundColor: group.colorHex }}
+                      />
+                      <span className='text-sm font-semibold'>{group.colorName}</span>
                     </div>
-                    <div className='flex items-center gap-2 text-xs text-muted-foreground'>
-                      <span>{formatPrice(variant.priceOffer || variant.price)}</span>
-                      {isLowStock && (
-                        <span className='text-amber-600 dark:text-amber-400 font-medium'>
-                          Stock bajo
-                        </span>
-                      )}
+
+                    {/* Talles del color */}
+                    <div className='grid grid-cols-1 gap-2'>
+                      {group.variants.map((variant) => {
+                        const isOutOfStock = variant.stock === 0;
+                        const isLowStock = variant.stock > 0 && variant.stock <= 3;
+
+                        return (
+                          <div
+                            key={variant.id}
+                            className={`flex items-center gap-3 p-3 rounded-xl border bg-card ${
+                              isOutOfStock ? "opacity-50" : ""
+                            }`}
+                          >
+                            <div className='flex-1 min-w-0'>
+                              <div className='font-medium text-sm'>Talle {variant.size}</div>
+                              {isLowStock && (
+                                <span className='text-xs text-amber-600 dark:text-amber-400 font-medium'>
+                                  Stock bajo
+                                </span>
+                              )}
+                            </div>
+
+                            <div className='flex items-center gap-1.5 sm:gap-2'>
+                              <Button
+                                variant='default'
+                                size='icon'
+                                className='h-9 w-9 sm:h-10 sm:w-10'
+                                onClick={() => handleVariantSale(variant, -1)}
+                                disabled={isOutOfStock}
+                              >
+                                <Minus className='h-4 w-4' />
+                              </Button>
+
+                              <Badge
+                                variant={
+                                  isOutOfStock ? "destructive" : isLowStock ? "warning" : "success"
+                                }
+                                className='font-mono min-w-[36px] sm:min-w-[40px] justify-center text-xs sm:text-sm'
+                              >
+                                {variant.stock}
+                              </Badge>
+
+                              <Button
+                                variant='outline'
+                                size='icon'
+                                className='h-9 w-9 sm:h-10 sm:w-10'
+                                onClick={() => handleVariantSale(variant, 1)}
+                              >
+                                <Plus className='h-4 w-4' />
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
-
-                  <div className='flex items-center gap-1.5 sm:gap-2'>
-                    <Button
-                      variant='default'
-                      size='icon'
-                      className='h-9 w-9 sm:h-10 sm:w-10'
-                      onClick={() => handleVariantSale(variant, -1)}
-                      disabled={isOutOfStock}
-                    >
-                      <Minus className='h-4 w-4' />
-                    </Button>
-
-                    <Badge
-                      variant={isOutOfStock ? "destructive" : isLowStock ? "warning" : "success"}
-                      className='font-mono min-w-[36px] sm:min-w-[40px] justify-center text-xs sm:text-sm'
-                    >
-                      {variant.stock}
-                    </Badge>
-
-                    <Button
-                      variant='outline'
-                      size='icon'
-                      className='h-9 w-9 sm:h-10 sm:w-10'
-                      onClick={() => handleVariantSale(variant, 1)}
-                    >
-                      <Plus className='h-4 w-4' />
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
+                ));
+              })()}
           </div>
 
           <div className='shrink-0 p-4 sm:p-6 pt-0 border-t bg-muted/30'>
