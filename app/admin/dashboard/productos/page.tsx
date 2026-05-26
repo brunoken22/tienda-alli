@@ -239,28 +239,73 @@ export default function ProductsPage() {
     images: File[],
   ) => {
     try {
-      if (
-        !productData.title ||
-        !productData.price ||
-        !images.length ||
-        !productData.description ||
-        !productData.categoryFormData?.length ||
-        (productData.variants.length &&
-          productData.variants.some((v) => !v.colorName || !v.price || !v.size))
-      ) {
-        setAlertForm((alert) => ({
-          ...alert,
-          message: "Por favor completa todos los campos requeridos.",
-        }));
-        setTimeout(() => {
-          document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" });
-        }, 500);
+      // Validaciones con mensajes específicos
+      if (!productData.title) {
+        setAlertForm({ success: false, message: "El nombre del producto es obligatorio." });
+        setTimeout(
+          () => document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" }),
+          500,
+        );
         return false;
       }
-      setAlertForm({
-        message: "",
-        success: false,
-      });
+      if (!productData.price) {
+        setAlertForm({ success: false, message: "El precio del producto es obligatorio." });
+        setTimeout(
+          () => document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" }),
+          500,
+        );
+        return false;
+      }
+      if (!images.length) {
+        setAlertForm({ success: false, message: "Debes agregar al menos una imagen." });
+        setTimeout(
+          () => document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" }),
+          500,
+        );
+        return false;
+      }
+      if (!productData.description) {
+        setAlertForm({ success: false, message: "La descripción del producto es obligatoria." });
+        setTimeout(
+          () => document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" }),
+          500,
+        );
+        return false;
+      }
+      if (!productData.categoryFormData?.length) {
+        setAlertForm({ success: false, message: "Debes seleccionar al menos una categoría." });
+        setTimeout(
+          () => document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" }),
+          500,
+        );
+        return false;
+      }
+      if (productData.variants.length) {
+        const invalidVariant = productData.variants.find(
+          (v) => !v.colorName || !v.price || !v.size,
+        );
+        if (invalidVariant) {
+          const missing = [
+            !invalidVariant.colorName && "color",
+            !invalidVariant.price && "precio",
+            !invalidVariant.size && "talle",
+          ]
+            .filter(Boolean)
+            .join(", ");
+          setAlertForm({
+            success: false,
+            message: `Una o más variantes tienen campos incompletos: ${missing}.`,
+          });
+          setTimeout(
+            () =>
+              document.getElementById("error-alert-form")?.scrollIntoView({ behavior: "smooth" }),
+            500,
+          );
+          return false;
+        }
+      }
+
+      setAlertForm({ message: "", success: false });
       const formData = new FormData();
       formData.append(
         "title",
