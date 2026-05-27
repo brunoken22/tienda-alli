@@ -294,11 +294,11 @@ export async function editProductService(
       productId: id,
     }));
 
-    await Variant.destroy({
-      where: { productId: id },
-      transaction: transaction,
-      force: true, // Para eliminación física (no soft delete)
-    });
+    // await Variant.destroy({
+    //   where: { productId: id },
+    //   transaction: transaction,
+    //   force: true, // Para eliminación física (no soft delete)
+    // });
 
     // bulkCreate con updateOnDuplicate actualizará los que ya existen
     await Variant.bulkCreate(variantsWithProductId, {

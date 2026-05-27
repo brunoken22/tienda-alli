@@ -49,7 +49,7 @@ function DialogContent({
       <DialogPrimitive.Content
         data-slot='dialog-content'
         className={`
-  bg-background
+  bg-secondary
   data-[state=open]:animate-in
   data-[state=closed]:animate-out
   data-[state=closed]:fade-out-0
