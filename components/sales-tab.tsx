@@ -39,37 +39,37 @@ const movementTypeConfig: Record<
   SALE: {
     label: "Venta",
     icon: ShoppingCart,
-    bgColor: "bg-rose-50 /30",
+    bgColor: "bg-rose-50 ",
     textColor: "text-rose-600 ",
     borderColor: "border-rose-200 ",
   },
   RETURN: {
     label: "Devolución",
     icon: RotateCcw,
-    bgColor: "bg-blue-50 /30",
-    textColor: "text-blue-600 ",
-    borderColor: "border-blue-200 ",
+    bgColor: "bg-blue-50 dark:bg-blue-950/30",
+    textColor: "text-blue-600 dark:text-blue-400",
+    borderColor: "border-blue-200 dark:border-blue-800",
   },
   PURCHASE: {
     label: "Compra",
     icon: ArrowDownCircle,
-    bgColor: "bg-emerald-50 /30",
-    textColor: "text-emerald-600 ",
+    bgColor: "bg-emerald-50 ",
+    textColor: "text-emerald-600",
     borderColor: "border-emerald-200 ",
   },
   DAMAGED: {
     label: "Dañado",
     icon: Trash2,
-    bgColor: "bg-amber-50 /30",
-    textColor: "text-amber-600 ",
-    borderColor: "border-amber-200 ",
+    bgColor: "bg-amber-50 dark:bg-amber-950/30",
+    textColor: "text-amber-600 dark:text-amber-400",
+    borderColor: "border-amber-200 dark:border-amber-800",
   },
   ADJUSTMENT: {
     label: "Ajuste",
     icon: Settings2,
-    bgColor: "bg-violet-50 /30",
-    textColor: "text-violet-600 ",
-    borderColor: "border-violet-200 ",
+    bgColor: "bg-violet-50 ",
+    textColor: "text-violet-600 dark:text-violet-400",
+    borderColor: "border-violet-200 dark:border-violet-800",
   },
 };
 
@@ -97,9 +97,11 @@ export function SalesTab() {
     totalPrice: 0,
     isLoading: true,
   });
+
   useEffect(() => {
     loadHistory();
   }, []);
+
   useEffect(() => {
     (async () => {
       setProducts((prev) => ({ ...prev, isLoading: true }));
@@ -129,6 +131,14 @@ export function SalesTab() {
       }
     })();
   }, [page, limit]);
+
+  const handleNextPage = () => {
+    if (products.pagination?.hasNextPage) setPage((p) => p + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (page > 1) setPage((p) => p - 1);
+  };
 
   const handleUpdateStock = (productId: string, variantId: string | null, newStock: number) => {
     setProducts((prevProducts) => ({
@@ -227,9 +237,9 @@ export function SalesTab() {
     try {
       await createInventoryMovement({
         variantId: variant.id,
-        type: delta < 0 ? "SALE" : "ADJUSTMENT",
+        type: delta < 0 ? "SALE" : "PURCHASE",
         quantity: Math.abs(delta),
-        note: delta < 0 ? "Venta POS" : "Corrección manual",
+        note: delta < 0 ? "Venta POS" : "Agregar producto",
       });
 
       handleUpdateStock(selectedProduct.id, variant.id, newStock);
@@ -252,7 +262,7 @@ export function SalesTab() {
 
   return (
     <div className='flex flex-col gap-4 lg:gap-6'>
-      {/* Historial de movimientos - Ahora arriba en mobile */}
+      {/* Historial de movimientos */}
       <Card className='order-1 lg:order-2'>
         <CardHeader className='pb-3'>
           <div className='flex items-center justify-between'>
@@ -288,7 +298,7 @@ export function SalesTab() {
             </div>
           ) : (
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3'>
-              {history.slice(0, 8).map((movement) => {
+              {history.map((movement) => {
                 const config = movementTypeConfig[movement.type];
                 const Icon = config.icon;
                 const isNegative = movement.type === "SALE" || movement.type === "DAMAGED";
@@ -304,7 +314,7 @@ export function SalesTab() {
                     <div
                       className={`
                         flex items-center justify-center h-12 w-12 rounded-xl shrink-0
-                        bg-white  shadow-sm
+                        bg-white dark:bg-gray-900 shadow-sm
                         ${config.textColor}
                       `}
                     >
@@ -321,7 +331,7 @@ export function SalesTab() {
                         <span
                           className={`
                             inline-flex items-center gap-0.5 text-sm font-bold
-                            ${isNegative ? "text-rose-600 " : "text-emerald-600 "}
+                            ${isNegative ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"}
                           `}
                         >
                           {isNegative ? (
@@ -341,9 +351,7 @@ export function SalesTab() {
                         <div className='flex items-center gap-1.5 text-xs text-muted-foreground'>
                           <span
                             className='h-3 w-3 rounded-full ring-1 ring-border shrink-0'
-                            style={{
-                              backgroundColor: movement.variant.colorHex,
-                            }}
+                            style={{ backgroundColor: movement.variant.colorHex }}
                           />
                           <span className='truncate'>
                             {movement.variant.size} - {movement.variant.colorName}
@@ -366,7 +374,7 @@ export function SalesTab() {
         </CardContent>
       </Card>
 
-      {/* Productos - Grid responsive */}
+      {/* Productos */}
       <Card className='order-2 lg:order-1'>
         <CardHeader className='pb-3'>
           <div className='flex items-center justify-between'>
@@ -380,7 +388,17 @@ export function SalesTab() {
           </div>
         </CardHeader>
         <CardContent className='pt-0'>
-          {activeProducts.length === 0 ? (
+          {products.isLoading ? (
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className='animate-pulse rounded-xl border bg-muted/50 p-3 space-y-3'>
+                  <div className='aspect-square rounded-lg bg-muted' />
+                  <div className='h-4 bg-muted rounded w-3/4' />
+                  <div className='h-3 bg-muted rounded w-1/2' />
+                </div>
+              ))}
+            </div>
+          ) : activeProducts.length === 0 ? (
             <div className='flex flex-col items-center justify-center py-12 text-muted-foreground'>
               <Package className='h-12 w-12 mb-3 opacity-50' />
               <p className='font-medium'>No hay productos activos</p>
@@ -405,7 +423,6 @@ export function SalesTab() {
                       ${isOutOfStock ? "opacity-60" : ""}
                     `}
                   >
-                    {/* Imagen y badge de stock */}
                     <div className='relative aspect-square rounded-lg overflow-hidden bg-muted mb-3'>
                       {product.images?.length > 0 ? (
                         <Image
@@ -420,7 +437,6 @@ export function SalesTab() {
                         </div>
                       )}
 
-                      {/* Badge de stock */}
                       <div className='absolute top-2 right-2'>
                         <Badge
                           variant={
@@ -432,10 +448,9 @@ export function SalesTab() {
                         </Badge>
                       </div>
 
-                      {/* Indicador de bajo stock */}
                       {isLowStock && !isOutOfStock && (
                         <div className='absolute top-2 left-2'>
-                          <div className='flex items-center gap-1 bg-amber-500 text-white text-xs font-medium px-2 py-1 rounded-md shadow-md'>
+                          <div className='flex items-center gap-1 bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-md shadow-md'>
                             <AlertTriangle className='h-3 w-3' />
                             Bajo
                           </div>
@@ -443,17 +458,15 @@ export function SalesTab() {
                       )}
                     </div>
 
-                    {/* Info del producto */}
                     <div className='flex-1 space-y-1 mb-3'>
                       <h3 className='font-semibold text-sm leading-tight line-clamp-2'>
                         {product.title}
                       </h3>
-
                       <div className='flex items-baseline gap-2'>
                         <span className='font-bold text-base'>
                           {formatPrice(product.priceOffer || product.price)}
                         </span>
-                        {product.priceOffer && (
+                        {product.priceOffer > 0 && (
                           <span className='text-xs text-muted-foreground line-through'>
                             {formatPrice(product.price)}
                           </span>
@@ -461,7 +474,6 @@ export function SalesTab() {
                       </div>
                     </div>
 
-                    {/* Acciones */}
                     {hasVariants ? (
                       <Button
                         variant='outline'
@@ -502,12 +514,67 @@ export function SalesTab() {
         </CardContent>
       </Card>
 
+      {/* Paginación */}
+      {products.pagination && products.pagination.totalPages > 1 && (
+        <div className='flex items-center justify-between border-t pt-4'>
+          <div className='text-sm text-muted-foreground'>
+            Mostrando {(page - 1) * limit + 1} - {Math.min(page * limit, products.pagination.total)}{" "}
+            de {products.pagination.total} productos
+          </div>
+          <div className='flex items-center gap-2'>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={handlePrevPage}
+              disabled={!products.pagination.hasPrevPage}
+            >
+              Anterior
+            </Button>
+            <div className='flex items-center gap-1'>
+              {Array.from({ length: Math.min(5, products.pagination.totalPages) }, (_, i) => {
+                let pageNum;
+                if (products.pagination!.totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (page <= 3) {
+                  pageNum = i + 1;
+                } else if (page >= products.pagination!.totalPages - 2) {
+                  pageNum = products.pagination!.totalPages - 4 + i;
+                } else {
+                  pageNum = page - 2 + i;
+                }
+
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={page === pageNum ? "default" : "outline"}
+                    size='sm'
+                    onClick={() => setPage(pageNum)}
+                    className='w-8 h-8 p-0'
+                  >
+                    {pageNum}
+                  </Button>
+                );
+              })}
+              {products.pagination.totalPages > 5 && <span className='px-2'>...</span>}
+            </div>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={handleNextPage}
+              disabled={!products.pagination.hasNextPage}
+            >
+              Siguiente
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Dialog para variantes */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className='max-w-lg max-h-[90vh] sm:max-h-[85vh] overflow-hidden flex flex-col p-0'>
+        <DialogContent className='max-w-lg max-h-[90vh] sm:max-h-[85vh] overflow-hidden flex flex-col p-0 bg-secondary'>
           <DialogHeader className='shrink-0 p-4 sm:p-6 pb-0'>
             <div className='flex items-center gap-3 sm:gap-4'>
-              <div className='relative h-14 w-14 sm:h-16 sm:w-16 shrink-0 rounded-xl overflow-hidden bg-muted ring-1 ring-border'>
+              <div className='relative h-14 w-14 sm:h-16 sm:w-16 shrink-0 rounded-xl overflow-hidden ring-1 ring-border'>
                 {selectedProduct?.images && selectedProduct.images.length > 0 ? (
                   <Image
                     src={selectedProduct.images[0]}
@@ -532,98 +599,68 @@ export function SalesTab() {
             </div>
           </DialogHeader>
 
-          <div className='flex-1 overflow-y-auto p-4 sm:p-6 pt-4 space-y-4'>
-            {selectedProduct &&
-              (() => {
-                // Agrupar variantes por color
-                const colorGroups = selectedProduct.variants.reduce(
-                  (acc, variant) => {
-                    const key = variant.colorHex;
-                    if (!acc[key]) {
-                      acc[key] = {
-                        colorHex: variant.colorHex,
-                        colorName: variant.colorName,
-                        variants: [],
-                      };
-                    }
-                    acc[key].variants.push(variant);
-                    return acc;
-                  },
-                  {} as Record<
-                    string,
-                    { colorHex: string; colorName: string; variants: VariantType[] }
-                  >,
-                );
+          <div className='flex-1 overflow-y-auto p-4 sm:p-6 pt-4 space-y-2'>
+            {selectedProduct?.variants.map((variant) => {
+              const isOutOfStock = variant.stock === 0;
+              const isLowStock = variant.stock > 0 && variant.stock <= 3;
 
-                return Object.values(colorGroups).map((group) => (
-                  <div key={group.colorHex} className='space-y-2'>
-                    {/* Header del color */}
-                    <div className='flex items-center gap-2 pb-1 border-b'>
-                      <div
-                        className='h-5 w-5 rounded-full ring-1 ring-border shrink-0'
-                        style={{ backgroundColor: group.colorHex }}
-                      />
-                      <span className='text-sm font-semibold'>{group.colorName}</span>
+              return (
+                <div
+                  key={variant.id}
+                  className={`
+                    flex items-center gap-3 p-3 rounded-xl border bg-card
+                    ${isOutOfStock ? "opacity-50" : ""}
+                  `}
+                >
+                  <div
+                    className='h-10 w-10 sm:h-12 sm:w-12 rounded-lg ring-1 ring-border shrink-0'
+                    style={{ backgroundColor: variant.colorHex }}
+                  />
+
+                  <div className='flex-1 min-w-0'>
+                    <div className='font-medium text-sm'>
+                      {variant.size} - {variant.colorName}
                     </div>
-
-                    {/* Talles del color */}
-                    <div className='grid grid-cols-1 gap-2'>
-                      {group.variants.map((variant) => {
-                        const isOutOfStock = variant.stock === 0;
-                        const isLowStock = variant.stock > 0 && variant.stock <= 3;
-
-                        return (
-                          <div
-                            key={variant.id}
-                            className={`flex items-center gap-3 p-3 rounded-xl border bg-card ${
-                              isOutOfStock ? "opacity-50" : ""
-                            }`}
-                          >
-                            <div className='flex-1 min-w-0'>
-                              <div className='font-medium text-sm'>Talle {variant.size}</div>
-                              {isLowStock && (
-                                <span className='text-xs text-amber-600 dark:text-amber-400 font-medium'>
-                                  Stock bajo
-                                </span>
-                              )}
-                            </div>
-
-                            <div className='flex items-center gap-1.5 sm:gap-2'>
-                              <Button
-                                variant='default'
-                                size='icon'
-                                className='h-9 w-9 sm:h-10 sm:w-10'
-                                onClick={() => handleVariantSale(variant, -1)}
-                                disabled={isOutOfStock}
-                              >
-                                <Minus className='h-4 w-4' />
-                              </Button>
-
-                              <Badge
-                                variant={
-                                  isOutOfStock ? "destructive" : isLowStock ? "warning" : "success"
-                                }
-                                className='font-mono min-w-[36px] sm:min-w-[40px] justify-center text-xs sm:text-sm'
-                              >
-                                {variant.stock}
-                              </Badge>
-
-                              <Button
-                                variant='outline'
-                                size='icon'
-                                className='h-9 w-9 sm:h-10 sm:w-10'
-                                onClick={() => handleVariantSale(variant, 1)}
-                              >
-                                <Plus className='h-4 w-4' />
-                              </Button>
-                            </div>
-                          </div>
-                        );
-                      })}
+                    <div className='flex items-center gap-2 text-xs text-muted-foreground'>
+                      <span>{formatPrice(variant.priceOffer || variant.price)}</span>
+                      {isLowStock && (
+                        <span className='text-amber-600 dark:text-amber-400 font-medium'>
+                          Stock bajo
+                        </span>
+                      )}
                     </div>
                   </div>
-                ));
-              })()}
+
+                  <div className='flex items-center gap-1.5 sm:gap-2'>
+                    <Button
+                      variant='default'
+                      size='icon'
+                      className='h-9 w-9 sm:h-10 sm:w-10'
+                      onClick={() => handleVariantSale(variant, -1)}
+                      disabled={isOutOfStock}
+                    >
+                      <Minus className='h-4 w-4' />
+                    </Button>
+
+                    <Badge
+                      variant={isOutOfStock ? "destructive" : isLowStock ? "warning" : "success"}
+                      className='font-mono min-w-[36px] sm:min-w-[40px] justify-center text-xs sm:text-sm'
+                    >
+                      {variant.stock}
+                    </Badge>
+
+                    <Button
+                      variant='outline'
+                      size='icon'
+                      className='h-9 w-9 sm:h-10 sm:w-10'
+                      onClick={() => handleVariantSale(variant, 1)}
+                    >
+                      <Plus className='h-4 w-4' />
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           <div className='shrink-0 p-4 sm:p-6 pt-0 border-t bg-muted/30'>
