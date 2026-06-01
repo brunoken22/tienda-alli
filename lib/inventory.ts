@@ -79,7 +79,6 @@ export async function getWeeklySalesData() {
 
   const movements = await getInventoryMovements();
 
-  console.log(movements);
   movements.forEach((movement: InventoryType) => {
     if (movement.type !== "SALE") return;
 
