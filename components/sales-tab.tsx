@@ -369,7 +369,7 @@ export function SalesTab() {
             </div>
           ) : (
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3'>
-              {history.slice(0, 8).map((movement) => {
+              {history.map((movement) => {
                 const config = movementTypeConfig[movement.type];
                 const Icon = config.icon;
                 const isNegative = movement.type === "SALE" || movement.type === "DAMAGED";
@@ -441,7 +441,7 @@ export function SalesTab() {
                           </span>
                         )}
                         {movement.note && (
-                          <span className='inline-flex items-center gap-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full'>
+                          <span className='inline-flex items-center gap-1 text-xs bg-blue-100  text-blue-700 px-2 py-0.5 rounded-full'>
                             <FileText className='h-3 w-3' />
                             Nota
                           </span>
