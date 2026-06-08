@@ -28,14 +28,31 @@ export async function createInventoryMovement(
   return data;
 }
 
-export async function getInventoryMovements() {
-  const response = await fetch(`${baseURL}/api/admin/inventory`, {
+export async function getInventoryMovements(params?: { page?: number; limit?: number }) {
+  let url = `${baseURL}/api/admin/inventory`;
+
+  if (params) {
+    const { page, limit } = params;
+    const searchParams = new URLSearchParams();
+
+    if (page !== undefined) {
+      searchParams.append("page", page.toString());
+    }
+
+    if (limit !== undefined) {
+      searchParams.append("limit", limit.toString());
+    }
+
+    url += `?${searchParams.toString()}`;
+  }
+
+  const response = await fetch(url, {
     cache: "no-store",
   });
 
   const data = await response.json();
 
-  return data.data ?? [];
+  return data;
 }
 
 export async function getWeeklySalesData() {
@@ -79,7 +96,7 @@ export async function getWeeklySalesData() {
 
   const movements = await getInventoryMovements();
 
-  movements.forEach((movement: InventoryType) => {
+  movements.data.forEach((movement: InventoryType) => {
     if (movement.type !== "SALE") return;
 
     const movementDate = new Date(movement.createdAt);
@@ -100,13 +117,12 @@ export async function getWeeklySalesData() {
     }
 
     const productId = movement.productId;
-
     // Crear producto si no existe
     if (!productSales[productId]) {
       productSales[productId] = {
         title: movement.product?.title || "Producto",
         totalSold: 0,
-        currentStock: movement.product?.stock || 0,
+        currentStock: movement.variant?.stock || 0,
         price,
         variants: {},
       };

@@ -23,7 +23,7 @@ export type ProductType = {
   // sizes: string[];
 
   //PRODUCTOS SIN VARIANTES (ÚNICOS)
-  stock: number;
+  // stock: number;
   price: number;
   priceOffer: number;
 

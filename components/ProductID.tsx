@@ -265,7 +265,7 @@ export default function ProductTemplate({ product }: { product: ProductType }) {
       price: currentPrice,
       priceOffer: selectedVariant?.priceOffer || 0,
       quantity: quantity,
-      stock: selectedVariant?.stock || 0,
+      // stock: selectedVariant?.stock || 0,
       images: product.images,
       variantColorName: selectedColorName,
       variantColorHex: selectedColorHex,

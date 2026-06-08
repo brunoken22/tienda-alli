@@ -200,7 +200,7 @@ export function ProductDialog({
           images: [],
           price: product.price,
           priceOffer: product.priceOffer,
-          stock: product.stock,
+          // stock: product.stock,
           imagesFormData: imagesConvert,
           variants: product.variants.map((v) => ({
             ...v,
@@ -231,7 +231,7 @@ export function ProductDialog({
       resetForm();
     }
   }, [product, open, setAlert]);
-
+  console.log(formData);
   const resetForm = () => {
     setFormData({
       title: "",
@@ -244,7 +244,7 @@ export function ProductDialog({
       isActive: true,
       price: 0,
       priceOffer: 0,
-      stock: 0,
+      // stock: 0,
       // sizes: [],
     });
     setImagesUrl([]);

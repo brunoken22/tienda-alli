@@ -62,8 +62,16 @@ export async function createInventoryMovementService(
   }
 }
 
-export async function getInventoryMovementsService() {
-  return await InventoryMovement.findAll({
+export async function getInventoryMovementsService({
+  page = 1,
+  limit = 12,
+}: {
+  page?: number;
+  limit?: number;
+}) {
+  const offset = (page - 1) * limit;
+
+  const { rows, count } = await InventoryMovement.findAndCountAll({
     include: [
       {
         model: Variant,
@@ -75,5 +83,21 @@ export async function getInventoryMovementsService() {
       },
     ],
     order: [["createdAt", "DESC"]],
+    limit,
+    offset,
   });
+
+  const totalPages = Math.ceil(count / limit);
+
+  return {
+    data: rows,
+    pagination: {
+      total: count,
+      page,
+      limit,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1,
+    },
+  };
 }

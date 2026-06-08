@@ -4,7 +4,8 @@ import { SalesTab } from "@/components/sales-tab";
 import { SalesAnalytics } from "@/components/sales-analytics";
 import { Toaster } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart3, ShoppingCart } from "lucide-react";
+import { ArrowDownUp, BarChart3, ShoppingCart } from "lucide-react";
+import LatestMoves from "@/components/latest-moves";
 
 export default function Home() {
   return (
@@ -22,7 +23,7 @@ export default function Home() {
 
       <div className='container mx-auto px-4 py-6'>
         <Tabs defaultValue='analytics' className='space-y-6'>
-          <TabsList className='grid w-full max-w-md grid-cols-2'>
+          <TabsList className='grid w-full max-w-md grid-cols-3'>
             <TabsTrigger value='analytics' className='flex items-center gap-2'>
               <BarChart3 className='h-4 w-4' />
               <span className='hidden sm:inline'>Analíticas</span>
@@ -30,6 +31,10 @@ export default function Home() {
             <TabsTrigger value='sales' className='flex items-center gap-2'>
               <ShoppingCart className='h-4 w-4' />
               <span className='hidden sm:inline'>Ventas</span>
+            </TabsTrigger>
+            <TabsTrigger value='latest-moves' className='flex items-center gap-2'>
+              <ArrowDownUp className='h-4 w-4' />
+              <span className='hidden sm:inline'> Movimientos</span>
             </TabsTrigger>
           </TabsList>
 
@@ -39,6 +44,10 @@ export default function Home() {
 
           <TabsContent value='sales' className='space-y-4'>
             <SalesTab />
+          </TabsContent>
+
+          <TabsContent value='latest-moves' className='space-y-4'>
+            <LatestMoves />
           </TabsContent>
         </Tabs>
       </div>

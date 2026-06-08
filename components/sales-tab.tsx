@@ -2,85 +2,25 @@
 
 import { useEffect, useState } from "react";
 import { ProductType, VariantType } from "@/types/product";
-import { InventoryType, InventoryMovementType } from "@/types/inventory";
+import { InventoryMovementType } from "@/types/inventory";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import {
-  Package,
-  AlertTriangle,
-  RotateCcw,
-  ShoppingCart,
-  History,
-  ArrowDownCircle,
-  ArrowUpCircle,
-  Trash2,
-  Settings2,
-  ImageOff,
-  Percent,
-  FileText,
-} from "lucide-react";
+import { Package, AlertTriangle, Settings2, ImageOff } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
-import { createInventoryMovement, getInventoryMovements } from "@/lib/inventory";
+import { createInventoryMovement } from "@/lib/inventory";
 import { getProducts } from "@/lib/products";
 import { StockMovementModal, StockMovementData } from "@/components/stock-movement-modal";
 
-const movementTypeConfig: Record<
-  string,
-  {
-    label: string;
-    icon: React.ElementType;
-    bgColor: string;
-    textColor: string;
-    borderColor: string;
-  }
-> = {
-  SALE: {
-    label: "Venta",
-    icon: ShoppingCart,
-    bgColor: "bg-rose-50 ",
-    textColor: "text-rose-600 ",
-    borderColor: "border-rose-200 ",
-  },
-  RETURN: {
-    label: "Devolución",
-    icon: RotateCcw,
-    bgColor: "bg-blue-50 ",
-    textColor: "text-blue-600 ",
-    borderColor: "border-blue-200 ",
-  },
-  PURCHASE: {
-    label: "Compra",
-    icon: ArrowDownCircle,
-    bgColor: "bg-emerald-50 ",
-    textColor: "text-emerald-600 ",
-    borderColor: "border-emerald-200 ",
-  },
-  DAMAGED: {
-    label: "Dañado",
-    icon: Trash2,
-    bgColor: "bg-amber-50 ",
-    textColor: "text-amber-600 ",
-    borderColor: "border-amber-200 ",
-  },
-  ADJUSTMENT: {
-    label: "Ajuste",
-    icon: Settings2,
-    bgColor: "bg-violet-50 ",
-    textColor: "text-violet-600 ",
-    borderColor: "border-violet-200 ",
-  },
-};
-
 export function SalesTab() {
-  const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<(ProductType & { stock?: number }) | null>(
+    null,
+  );
   const [selectedVariant, setSelectedVariant] = useState<VariantType | null>(null);
-  const [history, setHistory] = useState<InventoryType[]>([]);
   const [variantDialogOpen, setVariantDialogOpen] = useState(false);
   const [movementModalOpen, setMovementModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [limit] = useState(12);
   const [products, setProducts] = useState<{
@@ -100,10 +40,6 @@ export function SalesTab() {
     totalPrice: 0,
     isLoading: true,
   });
-
-  useEffect(() => {
-    loadHistory();
-  }, []);
 
   useEffect(() => {
     (async () => {
@@ -163,18 +99,6 @@ export function SalesTab() {
     }));
   };
 
-  async function loadHistory() {
-    setIsLoading(true);
-    try {
-      const movements = await getInventoryMovements();
-      setHistory(movements);
-    } catch {
-      toast.error("Error al cargar historial");
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("es-AR", {
       style: "currency",
@@ -217,9 +141,6 @@ export function SalesTab() {
   };
 
   const handleOpenVariantMovementModal = (variant: VariantType) => {
-    console.log("variant", variant);
-    console.log("selectedProduct", selectedProduct);
-
     setSelectedVariant(variant);
     setMovementModalOpen(true);
   };
@@ -274,7 +195,7 @@ export function SalesTab() {
           ),
         });
       } else {
-        const newStock = selectedProduct.stock + stockChange;
+        const newStock = (selectedProduct.stock || 0) + stockChange;
 
         if (newStock < 0) {
           toast.error("Stock insuficiente");
@@ -300,7 +221,6 @@ export function SalesTab() {
       };
 
       toast.success(typeLabels[data.type] || "Movimiento registrado");
-      loadHistory();
       setSelectedVariant(null);
     } catch {
       toast.error("Error al registrar movimiento");
@@ -324,7 +244,7 @@ export function SalesTab() {
       id: selectedProduct.id,
       title: selectedProduct.title,
       price: Number(selectedProduct.priceOffer) || Number(selectedProduct.price),
-      stock: selectedProduct.stock,
+      stock: 0,
       images: selectedProduct.images,
     };
   };
@@ -333,129 +253,6 @@ export function SalesTab() {
 
   return (
     <div className='flex flex-col gap-4 lg:gap-6'>
-      {/* Historial de movimientos */}
-      <Card className='order-1 lg:order-2'>
-        <CardHeader className='pb-3'>
-          <div className='flex items-center justify-between'>
-            <CardTitle className='flex items-center gap-2 text-base sm:text-lg'>
-              <History className='h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground' />
-              Últimos Movimientos
-            </CardTitle>
-            <Button variant='ghost' size='sm' onClick={loadHistory} className='h-8 w-8 p-0'>
-              <RotateCcw className='h-4 w-4' />
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className='pt-0'>
-          {isLoading ? (
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3'>
-              {[...Array(4)].map((_, i) => (
-                <div
-                  key={i}
-                  className='animate-pulse flex items-center gap-3 p-3 rounded-xl bg-muted/50'
-                >
-                  <div className='h-12 w-12 rounded-xl bg-muted shrink-0' />
-                  <div className='flex-1 space-y-2'>
-                    <div className='h-4 bg-muted rounded w-3/4' />
-                    <div className='h-3 bg-muted rounded w-1/2' />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : history.length === 0 ? (
-            <div className='flex flex-col items-center justify-center py-8 text-muted-foreground'>
-              <History className='h-10 w-10 mb-2 opacity-50' />
-              <p className='text-sm'>Sin movimientos recientes</p>
-            </div>
-          ) : (
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3'>
-              {history.map((movement) => {
-                const config = movementTypeConfig[movement.type];
-                const Icon = config.icon;
-                const isNegative = movement.type === "SALE" || movement.type === "DAMAGED";
-                const hasDiscount = movement.note?.includes("Descuento:");
-                const hasNote = movement.note && !movement.note.startsWith("Descuento:");
-
-                return (
-                  <div
-                    key={movement.id}
-                    className={`flex flex-col gap-2 p-3 rounded-xl border-2 transition-all ${config.bgColor} ${config.borderColor}`}
-                  >
-                    <div className='flex items-start gap-3'>
-                      <div
-                        className={`flex items-center justify-center h-12 w-12 rounded-xl shrink-0 bg-white dark:bg-gray-900 shadow-sm ${config.textColor}`}
-                      >
-                        <Icon className='h-6 w-6' />
-                      </div>
-
-                      <div className='flex-1 min-w-0 space-y-1'>
-                        <div className='flex items-center gap-2'>
-                          <span
-                            className={`text-xs font-bold uppercase tracking-wide ${config.textColor}`}
-                          >
-                            {config.label}
-                          </span>
-                          <span
-                            className={`inline-flex items-center gap-0.5 text-sm font-bold ${isNegative ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"}`}
-                          >
-                            {isNegative ? (
-                              <ArrowDownCircle className='h-3.5 w-3.5' />
-                            ) : (
-                              <ArrowUpCircle className='h-3.5 w-3.5' />
-                            )}
-                            {movement.quantity}
-                          </span>
-                        </div>
-
-                        <p className='font-medium text-sm leading-tight line-clamp-1 text-foreground'>
-                          {movement.product?.title || "Producto"}
-                        </p>
-
-                        {movement.variant && (
-                          <div className='flex items-center gap-1.5 text-xs text-muted-foreground'>
-                            <span
-                              className='h-3 w-3 rounded-full ring-1 ring-border shrink-0'
-                              style={{ backgroundColor: movement.variant.colorHex }}
-                            />
-                            <span className='truncate'>
-                              {movement.variant.size} - {movement.variant.colorName}
-                            </span>
-                          </div>
-                        )}
-
-                        <div className='flex items-center justify-between text-xs text-muted-foreground pt-1'>
-                          <span>{formatDate(movement.createdAt)}</span>
-                          <span className='font-mono bg-muted/80 px-1.5 py-0.5 rounded'>
-                            {movement.previousStock} → {movement.newStock}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {(hasDiscount || hasNote) && (
-                      <div className='flex flex-wrap gap-1.5 pt-1 border-t border-current/10'>
-                        {hasDiscount && (
-                          <span className='inline-flex items-center gap-1 text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full'>
-                            <Percent className='h-3 w-3' />
-                            Descuento
-                          </span>
-                        )}
-                        {movement.note && (
-                          <span className='inline-flex items-center gap-1 text-xs bg-blue-100  text-blue-700 px-2 py-0.5 rounded-full'>
-                            <FileText className='h-3 w-3' />
-                            Nota
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
       {/* Productos */}
       <Card className='order-2 lg:order-1'>
         <CardHeader className='pb-3'>
@@ -492,7 +289,7 @@ export function SalesTab() {
                 const hasVariants = product.variants.length > 0;
                 const totalStock = hasVariants
                   ? product.variants.reduce((acc, v) => acc + v.stock, 0)
-                  : product.stock;
+                  : 0;
                 const isOutOfStock = totalStock === 0;
                 const isLowStock = totalStock > 0 && totalStock <= 5;
 

@@ -32,13 +32,22 @@ export async function createInventoryMovementController(formData: FormData) {
   }
 }
 
-export async function getInventoryMovementsController() {
+export async function getInventoryMovementsController({
+  page,
+  limit,
+}: {
+  page: number;
+  limit: number;
+}) {
   try {
-    const response = await getInventoryMovementsService();
+    const response = await getInventoryMovementsService({
+      page,
+      limit,
+    });
 
     return {
       success: true,
-      data: response,
+      ...response,
     };
   } catch (e) {
     const error = e as Error;

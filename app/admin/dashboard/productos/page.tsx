@@ -313,7 +313,7 @@ export default function ProductsPage() {
       );
       formData.append("price", productData.price.toString());
       formData.append("priceOffer", productData.priceOffer.toString());
-      formData.append("stock", productData.stock.toString());
+      // formData.append("stock", productData.stock.toString());
 
       formData.append(
         "description",

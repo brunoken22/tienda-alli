@@ -101,11 +101,11 @@ export async function createProductController(formData: FormData) {
       // variants: variant.length ? variant : [],
       // sizes: formData.getAll("sizes") as string[],
       isActive: true,
-      stock: Number(formData.get("stock")),
+      // stock: Number(formData.get("stock")),
     };
     if (
       !product.title ||
-      !product.price ||
+      // !product.price ||
       // !product.priceOffer ||
       !product.description ||
       // !product.category ||
@@ -176,11 +176,11 @@ export async function editProductController(id: string, formData: FormData) {
       // variants: variant,
       // sizes: formData.getAll("sizes") as string[],
       isActive: true,
-      stock: Number(formData.get("stock")),
+      // stock: Number(formData.get("stock")),
     };
     if (
       !product.title ||
-      !product.price ||
+      // !product.price ||
       // !product.priceOffer ||
       !product.description ||
       // !product.category ||

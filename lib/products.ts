@@ -114,7 +114,6 @@ export async function getProductID(id: string): Promise<ProductType> {
     const data = await response.json();
     return data.data;
   } catch (e) {
-    console.error("Error getProductID: ", e);
     return {
       id: "",
       title: "",
@@ -122,7 +121,6 @@ export async function getProductID(id: string): Promise<ProductType> {
       priceOffer: 0,
       images: [],
       imagesId: [],
-      stock: 0,
       categories: [],
       // sizes: [],
       variants: [],

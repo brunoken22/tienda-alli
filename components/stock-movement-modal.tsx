@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 
 interface StockMovementModalProps {
-  product: Pick<ProductType, "id" | "price" | "stock" | "title" | "images"> | null;
+  product: (Pick<ProductType, "id" | "price" | "title" | "images"> & { stock: number }) | null;
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (data: StockMovementData) => void;
@@ -115,7 +115,6 @@ export function StockMovementModal({
   const [discountType, setDiscountType] = useState<"percentage" | "fixed">("percentage");
   const [discountValue, setDiscountValue] = useState(0);
   const [note, setNote] = useState("");
-  console.log("product", product);
   const resetForm = () => {
     setQuantity(1);
     setSelectedType("SALE");
