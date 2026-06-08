@@ -12,7 +12,7 @@ import {
   ArrowRight,
   BarChart3,
 } from "lucide-react";
-import { getWeeklySalesData } from "@/lib/inventory";
+import { getInventoryAnalytics } from "@/lib/inventory";
 import {
   BarChart,
   Bar,
@@ -67,7 +67,7 @@ export function SalesAnalytics() {
   async function loadData() {
     setIsLoading(true);
     try {
-      const salesData = await getWeeklySalesData();
+      const salesData = await getInventoryAnalytics();
 
       setData(salesData);
     } catch {

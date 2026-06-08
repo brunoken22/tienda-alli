@@ -47,10 +47,10 @@ const Product = sequelize.define(
       type: DataTypes.ARRAY(DataTypes.STRING),
       defaultValue: [],
     },
-    stock: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
+    // stock: {
+    //   type: DataTypes.INTEGER,
+    //   defaultValue: 0,
+    // },
     // sizes: {
     //   type: DataTypes.ARRAY(DataTypes.STRING),
     //   defaultValue: [],

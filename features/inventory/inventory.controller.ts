@@ -1,5 +1,9 @@
 import { InventoryMovementType } from "@/types/inventory";
-import { createInventoryMovementService, getInventoryMovementsService } from "./inventory.service";
+import {
+  createInventoryMovementService,
+  getInventoryAnalyticsService,
+  getInventoryMovementsService,
+} from "./inventory.service";
 
 export async function createInventoryMovementController(formData: FormData) {
   try {
@@ -48,6 +52,20 @@ export async function getInventoryMovementsController({
     return {
       success: true,
       ...response,
+    };
+  } catch (e) {
+    const error = e as Error;
+    throw new Error(error.message);
+  }
+}
+
+export async function getInventoryAnalyticsController() {
+  try {
+    const data = await getInventoryAnalyticsService();
+
+    return {
+      success: true,
+      data,
     };
   } catch (e) {
     const error = e as Error;

@@ -219,3 +219,13 @@ export async function getWeeklySalesData() {
     totalRevenue,
   };
 }
+
+export async function getInventoryAnalytics() {
+  const response = await fetch(`${baseURL}/api/admin/inventory/analytics`, {
+    cache: "no-store",
+  });
+
+  const data = await response.json();
+
+  return data.data;
+}
