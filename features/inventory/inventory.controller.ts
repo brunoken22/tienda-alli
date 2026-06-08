@@ -59,9 +59,15 @@ export async function getInventoryMovementsController({
   }
 }
 
-export async function getInventoryAnalyticsController() {
+type AnalyticsParams = {
+  range?: string;
+  startDate?: string | null;
+  endDate?: string | null;
+};
+
+export async function getInventoryAnalyticsController(params: AnalyticsParams) {
   try {
-    const data = await getInventoryAnalyticsService();
+    const data = await getInventoryAnalyticsService(params);
 
     return {
       success: true,

@@ -1,9 +1,19 @@
 import { getInventoryAnalyticsController } from "@/features/inventory/inventory.controller";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const response = await getInventoryAnalyticsController();
+    const { searchParams } = new URL(req.url);
+
+    const range = searchParams.get("range") || "7d";
+    const startDate = searchParams.get("startDate");
+    const endDate = searchParams.get("endDate");
+
+    const response = await getInventoryAnalyticsController({
+      range,
+      startDate,
+      endDate,
+    });
 
     return NextResponse.json(response, {
       status: 200,

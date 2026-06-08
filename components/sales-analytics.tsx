@@ -14,15 +14,17 @@ import {
 } from "lucide-react";
 import { getInventoryAnalytics } from "@/lib/inventory";
 import {
-  BarChart,
+  ComposedChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Cell,
+  Line,
+  BarChart,
 } from "recharts";
+import { Button } from "./ui/button";
 
 type WeeklySalesData = {
   dailySales: {
@@ -31,6 +33,24 @@ type WeeklySalesData = {
     ventas: number;
     ingresos: number;
   }[];
+
+  averageDailySales: number;
+
+  bestDay: {
+    day: string;
+    ventas: number;
+  } | null;
+
+  bestRevenueDay: {
+    day: string;
+    ingresos: number;
+  } | null;
+
+  bestProduct: {
+    productId: string;
+    title: string;
+    totalSold: number;
+  } | null;
 
   topProducts: {
     productId: string;
@@ -59,19 +79,24 @@ type WeeklySalesData = {
 export function SalesAnalytics() {
   const [data, setData] = useState<WeeklySalesData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [range, setRange] = useState<"7d" | "30d" | "90d" | "month">("7d");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [range]);
 
   async function loadData() {
     setIsLoading(true);
-    try {
-      const salesData = await getInventoryAnalytics();
 
+    try {
+      const salesData = await getInventoryAnalytics({
+        range,
+        startDate: startDate || undefined,
+        endDate: endDate || undefined,
+      });
       setData(salesData);
-    } catch {
-      console.error("Error loading sales data");
     } finally {
       setIsLoading(false);
     }
@@ -104,123 +129,145 @@ export function SalesAnalytics() {
 
   if (!data) return null;
 
-  const maxSales = Math.max(...data.dailySales.map((d) => d.ventas));
-  const todaySales = data.dailySales[data.dailySales.length - 1]?.ventas || 0;
-  const yesterdaySales = data.dailySales[data.dailySales.length - 2]?.ventas || 0;
-  const salesTrend = todaySales >= yesterdaySales;
-
   return (
     <div className='grid grid-cols-1 lg:grid-cols-3 gap-4'>
       {/* Columna izquierda - Estadísticas y Gráfico */}
+
       <div className='lg:col-span-2 space-y-4'>
-        {/* Cards de resumen */}
-        <div className='grid grid-cols-2 gap-3'>
-          <Card className='border-emerald-200 bg-gradient-to-br from-emerald-50 to-white'>
+        {/* KPIs */}
+        <div className='grid grid-cols-2 lg:grid-cols-5 gap-3'>
+          <Card>
             <CardContent className='p-4'>
-              <div className='flex items-start justify-between'>
-                <div>
-                  <p className='text-xs font-medium text-emerald-600 uppercase tracking-wide'>
-                    Ventas Semana
-                  </p>
-                  <p className='text-2xl sm:text-3xl font-bold text-emerald-700 mt-1'>
-                    {data.totalSales}
-                  </p>
-                  <p className='text-xs text-emerald-600/80 mt-1'>unidades vendidas</p>
-                </div>
-                <div className='p-2 bg-emerald-100 rounded-lg'>
-                  <ShoppingBag className='h-5 w-5 text-emerald-600' />
-                </div>
-              </div>
+              <p className='text-xs text-muted-foreground'>Ventas</p>
+
+              <p className='text-3xl font-bold'>{data.totalSales}</p>
             </CardContent>
           </Card>
 
-          <Card className='border-blue-200 bg-gradient-to-br from-blue-50 to-white'>
+          <Card>
             <CardContent className='p-4'>
-              <div className='flex items-start justify-between'>
-                <div>
-                  <p className='text-xs font-medium text-blue-600 uppercase tracking-wide'>
-                    Ingresos
-                  </p>
-                  <p className='text-xl sm:text-2xl font-bold text-blue-700 mt-1'>
-                    {formatPrice(data.totalRevenue)}
-                  </p>
-                  <div className='flex items-center gap-1 mt-1'>
-                    {salesTrend ? (
-                      <TrendingUp className='h-3 w-3 text-emerald-500' />
-                    ) : (
-                      <TrendingDown className='h-3 w-3 text-rose-500' />
-                    )}
-                    <span
-                      className={`text-xs ${salesTrend ? "text-emerald-600" : "text-rose-600"}`}
-                    >
-                      vs ayer
-                    </span>
-                  </div>
-                </div>
-                <div className='p-2 bg-blue-100 rounded-lg'>
-                  <DollarSign className='h-5 w-5 text-blue-600' />
-                </div>
-              </div>
+              <p className='text-xs text-muted-foreground'>Ingresos</p>
+
+              <p className='text-lg font-bold'>{formatPrice(data.totalRevenue)}</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className='p-4'>
+              <p className='text-xs text-muted-foreground'>Promedio Diario</p>
+
+              <p className='text-3xl font-bold'>{data.averageDailySales}</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className='p-4'>
+              <p className='text-xs text-muted-foreground'>Mejor Día</p>
+
+              <p className='font-bold'>{data.bestDay?.day || "-"}</p>
+
+              <p className='text-xs text-muted-foreground'>{data.bestDay?.ventas || 0} ventas</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className='p-4'>
+              <p className='text-xs text-muted-foreground'>Producto Top</p>
+
+              <p className='font-bold truncate'>{data.bestProduct?.title || "-"}</p>
+
+              <p className='text-xs text-muted-foreground'>
+                {data.bestProduct?.totalSold || 0} vendidos
+              </p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Gráfico de ventas */}
+        {/* Gráfico principal */}
         <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='flex items-center gap-2 text-base'>
-              <BarChart3 className='h-5 w-5 text-muted-foreground' />
-              Ventas por Día
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className='h-56 sm:h-64'>
-              <ResponsiveContainer width='100%' height='100%'>
-                <BarChart
-                  data={data.dailySales}
-                  margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+          <CardHeader>
+            <div className='flex justify-between items-center flex-wrap gap-2'>
+              <CardTitle className='flex items-center gap-2'>
+                <BarChart3 className='h-5 w-5' />
+                Ventas por Fecha
+              </CardTitle>
+
+              <div className='flex gap-2'>
+                <Badge
+                  className='cursor-pointer'
+                  variant={range === "7d" ? "default" : "outline"}
+                  onClick={() => setRange("7d")}
                 >
-                  <CartesianGrid strokeDasharray='3 3' vertical={false} stroke='#e5e7eb' />
-                  <XAxis
-                    dataKey='dayShort'
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 12, fill: "#6b7280" }}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 12, fill: "#6b7280" }}
-                    allowDecimals={false}
-                  />
+                  7 días
+                </Badge>
+
+                <Badge
+                  className='cursor-pointer'
+                  variant={range === "30d" ? "default" : "outline"}
+                  onClick={() => setRange("30d")}
+                >
+                  30 días
+                </Badge>
+
+                <Badge
+                  className='cursor-pointer'
+                  variant={range === "month" ? "default" : "outline"}
+                  onClick={() => setRange("month")}
+                >
+                  Este mes
+                </Badge>
+              </div>
+              <div className='flex flex-wrap gap-2 mt-3'>
+                <input
+                  type='date'
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className='border rounded-md px-3 py-2 text-sm'
+                />
+
+                <input
+                  type='date'
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className='border rounded-md px-3 py-2 text-sm'
+                />
+
+                <Button
+                  variant='primary'
+                  className='px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm'
+                  onClick={loadData}
+                >
+                  Filtrar
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+
+          <CardContent>
+            <div className='h-80'>
+              <ResponsiveContainer width='100%' height='100%'>
+                <ComposedChart data={data.dailySales}>
+                  <CartesianGrid strokeDasharray='3 3' />
+
+                  <XAxis dataKey='dayShort' interval='preserveStartEnd' minTickGap={25} />
+                  <YAxis yAxisId='left' allowDecimals={false} />
+
+                  <YAxis yAxisId='right' orientation='right' />
+
                   <Tooltip
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        const data = payload[0].payload;
-                        return (
-                          <div className='bg-white border rounded-lg shadow-lg p-3'>
-                            <p className='font-semibold text-sm'>{data.day}</p>
-                            <p className='text-emerald-600 text-sm'>
-                              {data.ventas} unidades vendidas
-                            </p>
-                            <p className='text-blue-600 text-sm'>
-                              {formatPrice(data.ingresos)} en ingresos
-                            </p>
-                          </div>
-                        );
+                    formatter={(value, name) => {
+                      if (name === "ingresos") {
+                        return [formatPrice(Number(value)), "Ingresos"];
                       }
-                      return null;
+
+                      return [value, "Ventas"];
                     }}
                   />
-                  <Bar dataKey='ventas' radius={[6, 6, 0, 0]}>
-                    {data.dailySales.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={entry.ventas === maxSales ? "#10b981" : "#6ee7b7"}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
+
+                  <Bar yAxisId='left' dataKey='ventas' radius={[6, 6, 0, 0]} />
+
+                  <Line yAxisId='right' dataKey='ingresos' type='monotone' strokeWidth={3} />
+                </ComposedChart>
               </ResponsiveContainer>
             </div>
           </CardContent>

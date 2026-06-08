@@ -2,6 +2,7 @@ import { InventoryMovementType } from "@/types/inventory";
 import Variant from "../variant/variant.model";
 import InventoryMovement from "./inventory.model";
 import Product from "../product/product.model";
+import { Op } from "sequelize";
 
 export async function createInventoryMovementService(
   variantId: string,
@@ -102,18 +103,72 @@ export async function getInventoryMovementsService({
   };
 }
 
-export async function getInventoryAnalyticsService() {
-  const days = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+type AnalyticsParams = {
+  range?: string;
+  startDate?: string | null;
+  endDate?: string | null;
+};
 
-  const fullDays = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+export async function getInventoryAnalyticsService({
+  range = "7d",
+  startDate,
+  endDate,
+}: AnalyticsParams) {
+  const today = new Date();
+  let fromDate = new Date();
 
-  const salesByDay: Record<
+  if (startDate && endDate) {
+    fromDate = new Date(`${startDate}T00:00:00`);
+  } else {
+    switch (range) {
+      case "30d":
+        fromDate.setDate(today.getDate() - 30);
+        break;
+
+      case "90d":
+        fromDate.setDate(today.getDate() - 90);
+        break;
+
+      case "month":
+        fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        break;
+
+      default:
+        fromDate.setDate(today.getDate() - 7);
+    }
+  }
+
+  const finalEndDate = endDate ? new Date(`${endDate}T23:59:59.999`) : today;
+
+  const movements = await InventoryMovement.findAll({
+    where: {
+      type: "SALE",
+      createdAt: {
+        [Op.between]: [fromDate, finalEndDate],
+      },
+    },
+    include: [
+      {
+        model: Variant,
+        as: "variant",
+      },
+      {
+        model: Product,
+        as: "product",
+      },
+    ],
+    order: [["createdAt", "ASC"]],
+  });
+
+  const dailySalesMap: Record<
     string,
     {
       ventas: number;
       ingresos: number;
     }
   > = {};
+
+  const hourlySalesMap: Record<number, number> = {};
 
   const productSales: Record<
     string,
@@ -131,43 +186,18 @@ export async function getInventoryAnalyticsService() {
           size: string;
           totalSold: number;
           currentStock: number;
+          recommendation: number;
         }
       >;
     }
   > = {};
 
-  const today = new Date();
-
-  for (let i = 6; i >= 0; i--) {
-    const date = new Date(today);
-    date.setDate(date.getDate() - i);
-
-    salesByDay[date.getDay()] = {
-      ventas: 0,
-      ingresos: 0,
-    };
-  }
-
-  const movements = await InventoryMovement.findAll({
-    include: [
-      {
-        model: Variant,
-        as: "variant",
-      },
-      {
-        model: Product,
-        as: "product",
-      },
-    ],
-    where: {
-      type: "SALE",
-    },
-    order: [["createdAt", "DESC"]],
-  });
-
   movements.forEach((movement: any) => {
-    const movementDate = new Date(movement.createdAt);
-    const dayIndex = movementDate.getDay();
+    const date = new Date(movement.createdAt);
+
+    const dateKey = date.toLocaleDateString("es-AR");
+
+    const hour = date.getHours();
 
     const price =
       Number(movement.variant?.priceOffer) > 0
@@ -178,10 +208,17 @@ export async function getInventoryAnalyticsService() {
             ? Number(movement.product.priceOffer)
             : Number(movement.product?.price) || 0;
 
-    if (salesByDay[dayIndex]) {
-      salesByDay[dayIndex].ventas += movement.quantity;
-      salesByDay[dayIndex].ingresos += movement.quantity * price;
+    if (!dailySalesMap[dateKey]) {
+      dailySalesMap[dateKey] = {
+        ventas: 0,
+        ingresos: 0,
+      };
     }
+
+    dailySalesMap[dateKey].ventas += movement.quantity;
+    dailySalesMap[dateKey].ingresos += movement.quantity * price;
+
+    hourlySalesMap[hour] = (hourlySalesMap[hour] || 0) + movement.quantity;
 
     const productId = movement.productId;
 
@@ -203,11 +240,12 @@ export async function getInventoryAnalyticsService() {
       if (!productSales[productId].variants[variantId]) {
         productSales[productId].variants[variantId] = {
           variantId,
-          colorName: movement.variant.colorName,
-          colorHex: movement.variant.colorHex,
-          size: movement.variant.size,
+          colorName: movement.variant.colorName || "",
+          colorHex: movement.variant.colorHex || "#cccccc",
+          size: movement.variant.size || "",
           totalSold: 0,
           currentStock: movement.variant.stock ?? 0,
+          recommendation: 0,
         };
       }
 
@@ -220,64 +258,81 @@ export async function getInventoryAnalyticsService() {
 
   const dailySales = [];
 
-  for (let i = 6; i >= 0; i--) {
-    const date = new Date(today);
-    date.setDate(date.getDate() - i);
-
-    const dayIndex = date.getDay();
+  for (let d = new Date(fromDate); d <= finalEndDate; d.setDate(d.getDate() + 1)) {
+    const dateKey = d.toLocaleDateString("es-AR");
 
     dailySales.push({
-      day: fullDays[dayIndex],
-      dayShort: days[dayIndex],
-      ventas: salesByDay[dayIndex]?.ventas || 0,
-      ingresos: salesByDay[dayIndex]?.ingresos || 0,
+      day: dateKey,
+      dayShort: range === "90d" || range === "30d" ? `${d.getDate()}/${d.getMonth() + 1}` : dateKey,
+      ventas: dailySalesMap[dateKey]?.ventas || 0,
+      ingresos: dailySalesMap[dateKey]?.ingresos || 0,
     });
   }
 
+  const daysCount =
+    Math.ceil((finalEndDate.getTime() - fromDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
   const topProducts = Object.entries(productSales)
-    .map(([productId, data]) => {
-      const avgDailySales = data.totalSold / 7;
+    .map(([productId, product]) => {
+      const avgDailySales = product.totalSold / daysCount;
 
-      const recommendation = Math.max(0, Math.ceil(avgDailySales * 14) - data.currentStock);
+      const recommendation = Math.max(0, Math.ceil(avgDailySales * 14) - product.currentStock);
 
-      const variants = Object.values(data.variants)
-        .map((variant) => {
-          const avgVariantDailySales = variant.totalSold / 7;
+      const variants = Object.values(product.variants).map((variant) => {
+        const avgVariantDailySales = variant.totalSold / daysCount;
 
-          return {
-            ...variant,
-            recommendation: Math.max(
-              0,
-              Math.ceil(avgVariantDailySales * 14) - variant.currentStock,
-            ),
-          };
-        })
-        .sort((a, b) => b.totalSold - a.totalSold);
+        const variantRecommendation = Math.max(
+          0,
+          Math.ceil(avgVariantDailySales * 14) - variant.currentStock,
+        );
+
+        return {
+          ...variant,
+          recommendation: variantRecommendation,
+        };
+      });
 
       return {
         productId,
-        title: data.title,
-        totalSold: data.totalSold,
-        currentStock: data.currentStock,
+        title: product.title,
+        totalSold: product.totalSold,
+        currentStock: product.currentStock,
         avgDailySales: Number(avgDailySales.toFixed(1)),
         recommendation,
-        price: data.price,
+        price: product.price,
         variants,
       };
     })
     .sort((a, b) => b.totalSold - a.totalSold);
 
-  const totalSales = Object.values(productSales).reduce(
-    (acc, product) => acc + product.totalSold,
-    0,
-  );
+  const totalSales = dailySales.reduce((acc, item) => acc + item.ventas, 0);
 
-  const totalRevenue = dailySales.reduce((acc, day) => acc + day.ingresos, 0);
+  const totalRevenue = dailySales.reduce((acc, item) => acc + item.ingresos, 0);
 
+  const bestDay = [...dailySales].sort((a, b) => b.ventas - a.ventas)[0] || null;
+
+  const bestProduct =
+    topProducts.length > 0
+      ? {
+          productId: topProducts[0].productId,
+          title: topProducts[0].title,
+          totalSold: topProducts[0].totalSold,
+        }
+      : null;
+  const averageDailySales =
+    dailySales.length > 0 ? Number((totalSales / dailySales.length).toFixed(1)) : 0;
+
+  const bestRevenueDay = [...dailySales].sort((a, b) => b.ingresos - a.ingresos)[0] || null;
   return {
-    dailySales,
-    topProducts,
     totalSales,
     totalRevenue,
+    averageDailySales,
+
+    bestDay,
+    bestRevenueDay,
+    bestProduct,
+
+    dailySales,
+    topProducts,
   };
 }
