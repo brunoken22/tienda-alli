@@ -169,10 +169,7 @@ export function SalesAnalytics() {
             >
               <Activity className='h-5 w-5' />
             </span>
-            <h1
-              className='text-2xl font-semibold tracking-tight text-balance'
-              style={{ color: "rgb(var(--foreground-rgb))" }}
-            >
+            <h1 className='text-2xl font-semibold tracking-tight text-balance'>
               Panel de Ventas e Inventario
             </h1>
           </div>
