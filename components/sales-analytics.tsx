@@ -264,7 +264,12 @@ export function SalesAnalytics() {
                     }}
                   />
 
-                  <Bar yAxisId='left' dataKey='ventas' radius={[6, 6, 0, 0]} />
+                  <Bar
+                    yAxisId='left'
+                    dataKey='ventas'
+                    radius={[6, 6, 0, 0]}
+                    fill='var(--primary)'
+                  />
 
                   <Line yAxisId='right' dataKey='ingresos' type='monotone' strokeWidth={3} />
                 </ComposedChart>
